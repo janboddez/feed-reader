@@ -39,8 +39,8 @@ class Feed_Reader {
 		add_action( 'init', array( $this, 'init' ) );
 		add_action( 'feed_reader_poll_feeds', array( Poll_Feeds::class, 'poll_feeds' ) );
 
-		$this->admin = new Router();
-		$this->admin->register();
+		$this->router = new Router();
+		$this->router->register();
 	}
 
 	public function init() {
