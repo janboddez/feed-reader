@@ -1,3 +1,9 @@
+<?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <div class="wrap">
 	<h1><?php isset( $category ) ? esc_html_e( 'Edit Category', 'feed-reader' ) : esc_html_e( 'Add Category', 'feed-reader' ); ?></h1>
 
