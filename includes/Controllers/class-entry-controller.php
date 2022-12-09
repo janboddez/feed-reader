@@ -1,0 +1,106 @@
+<?php
+
+namespace Feed_Reader\Controllers;
+
+use Feed_Reader\Models\Entry;
+
+class Entry_Controller extends Controller {
+	public static function index() {
+		$all = isset( $_GET['all'] ) && '1' === $_GET['all']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		$entries     = Entry::paginate( 15, $all );
+		$count       = Entry::count();
+		$total_pages = ceil( $count / 15 );
+		$paged       = isset( $_GET['paged'] ) ? (int) $_GET['paged'] : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		static::render( 'entries/list', compact( 'entries', 'paged', 'total_pages' ) );
+	}
+
+	public static function view() {
+		$entry = wp_cache_get( 'feed-reader:model' );
+
+		wp_cache_delete( 'feed-reader:model' );
+
+		if ( ! $entry ) {
+			wp_die( esc_html_e( 'Unknown entry.', 'feed-reader' ) );
+		}
+
+		if ( 0 === intval( $entry->is_read ) ) {
+			// Immediately mark as read, for now.
+			$result = Entry::update(
+				array( 'is_read' => 1 ),
+				array( 'id' => $entry->id )
+			);
+
+			if ( $result ) {
+				// No need to refetch.
+				$entry->is_read = 1;
+			}
+		}
+
+		static::render( 'entries/view', compact( 'entry' ) );
+	}
+
+	public static function delete() {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
+		}
+
+		if ( empty( $_POST['_wpnonce'] ) || empty( $_POST['id'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'feed-reader-entries:delete:' . intval( $_POST['id'] ) ) ) {
+			// Missing or invalid nonce or category ID.
+			wp_die( esc_html__( 'This page should not be accessed directly.', 'feed-reader' ) );
+		}
+
+		$entry = Entry::find( (int) $_POST['id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		if ( $entry ) {
+			Entry::delete( $entry->id );
+		}
+
+		wp_die();
+	}
+
+	public static function mark_read() {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
+		}
+
+		if ( empty( $_POST['_wpnonce'] ) || empty( $_POST['id'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'feed-reader-entries:mark-read:' . intval( $_POST['id'] ) ) ) {
+			// Missing or invalid nonce or category ID.
+			wp_die( esc_html__( 'This page should not be accessed directly.', 'feed-reader' ) );
+		}
+
+		$entry = Entry::find( (int) $_POST['id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		if ( $entry ) {
+			Entry::update(
+				array( 'is_read' => 1 ),
+				array( 'id' => $entry->id )
+			);
+		}
+
+		wp_die();
+	}
+
+	public static function mark_unread() {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
+		}
+
+		if ( empty( $_POST['_wpnonce'] ) || empty( $_POST['id'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'feed-reader-entries:mark-unread:' . intval( $_POST['id'] ) ) ) {
+			// Missing or invalid nonce or category ID.
+			wp_die( esc_html__( 'This page should not be accessed directly.', 'feed-reader' ) );
+		}
+
+		$entry = Entry::find( (int) $_POST['id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		if ( $entry ) {
+			Entry::update(
+				array( 'is_read' => 0 ),
+				array( 'id' => $entry->id )
+			);
+		}
+
+		wp_die();
+	}
+}
