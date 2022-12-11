@@ -95,8 +95,11 @@
 
 .feed-reader ol,
 .feed-reader ul {
-	list-style: initial;
 	margin-inline-start: 1.25em;
+}
+
+.feed-reader ul {
+	list-style: initial;
 }
 
 .feed-reader blockquote {
