@@ -23,41 +23,43 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</h1>
 	<?php endif; ?>
 
-	<?php if ( ! empty( $entries ) ) : ?>
-		<?php foreach ( $entries as $entry ) : ?>
-			<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>">
-				<?php if ( ! empty( $entry->name ) ) : ?>
-					<h2 class="entry-title"><a href="<?php echo esc_url( \Feed_Reader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( $entry->name ); ?></a></h2>
-				<?php elseif ( ! empty( $entry->summary ) ) : ?>
-					<h2 class="screen-reader-text"><a href="<?php echo esc_url( \Feed_Reader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( $entry->summary ); ?></a></h2>
+	<div class="hfeed">
+		<?php if ( ! empty( $entries ) ) : ?>
+			<?php foreach ( $entries as $entry ) : ?>
+				<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>">
+					<?php if ( ! empty( $entry->name ) ) : ?>
+						<h2 class="entry-title"><a href="<?php echo esc_url( \Feed_Reader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( $entry->name ); ?></a></h2>
+					<?php elseif ( ! empty( $entry->summary ) ) : ?>
+						<h2 class="screen-reader-text"><a href="<?php echo esc_url( \Feed_Reader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( $entry->summary ); ?></a></h2>
+						<?php
+					endif;
+
+					if ( ! empty( $entry->name ) ) :
+						static::render( 'entries/partials/entry-meta', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope
+					endif;
+					?>
+
+					<div class="entry-summary">
+						<?php echo $entry->summary; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<?php /* translators: %s: Entry title */ ?>
+						<a href="<?php echo esc_url( \Feed_Reader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php printf( esc_html__( 'Continue reading %s', 'feed-reader' ), '<span class="screen-reader-text">' . esc_html( $entry->name ) . '</span>' ); ?></a>
+					</div>
+
 					<?php
-				endif;
-
-				if ( ! empty( $entry->name ) ) :
-					static::render( 'entries/partials/entry-meta', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope
-				endif;
-				?>
-
-				<div class="entry-summary">
-					<?php echo $entry->summary; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-					<?php /* translators: %s: Entry title */ ?>
-					<a href="<?php echo esc_url( \Feed_Reader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php printf( esc_html__( 'Continue reading %s', 'feed-reader' ), '<span class="screen-reader-text">' . esc_html( $entry->name ) . '</span>' ); ?></a>
-				</div>
-
+					if ( empty( $entry->name ) ) :
+						static::render( 'entries/partials/entry-meta', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope
+					endif;
+					?>
+				</article>
 				<?php
-				if ( empty( $entry->name ) ) :
-					static::render( 'entries/partials/entry-meta', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope
-				endif;
-				?>
-			</article>
-			<?php
-		endforeach;
+			endforeach;
+		else :
+			?>
+			<section class="hentry">
+				<p><?php esc_html_e( 'Seems you&rsquo;re all caught up!', 'feed-reader' ); ?></p>
+			</section>
+		<?php endif; ?>
+	</div>
 
-		\Feed_Reader\cursor_pagination( $before, $after );
-	else :
-		?>
-		<section class="hentry">
-			<p><?php esc_html_e( 'It seems you&rsquo;ve all caught up!', 'feed-reader' ); ?></p>
-		</section>
-	<?php endif; ?>
+	<?php \Feed_Reader\cursor_pagination( $before, $after ); ?>
 </div>

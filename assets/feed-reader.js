@@ -5,16 +5,27 @@ jQuery( document ).ready( function ( $ ) {
 		var button = $( this );
 		var data   = {
 			'action': 'feed_reader_entries_mark_read',
-			'id': button.data( 'entry-id' ), // Current post ID.
-			'_wpnonce': button.data( 'nonce' ) // Nonce.
+			'id': button.data( 'entry-id' ),
+			'_wpnonce': button.data( 'nonce' )
 		};
 
 		$.post( ajaxurl, data, function( response ) {
+			var feed = button.closest( '.hfeed' );
+			if ( feed && ! ( new URLSearchParams( window.location.search ) ).has( 'all' ) ) {
+				button.closest( '.hentry' ).remove();
+
+				if ( ! $( '.hentry' ).length ) {
+					feed.html( feed_reader_obj.all_done );
+				}
+
+				return;
+			}
+
 			button.unbind( 'click', mark_read );
 			button.bind( 'click', mark_unread );
 
 			button.toggleClass( 'mark-read mark-unread' );
-			button.text( 'Mark as unread' );
+			button.text( feed_reader_obj.mark_unread );
 		} );
 	}
 
@@ -24,8 +35,8 @@ jQuery( document ).ready( function ( $ ) {
 		var button = $( this );
 		var data   = {
 			'action': 'feed_reader_entries_mark_unread',
-			'id': button.data( 'entry-id' ), // Current post ID.
-			'_wpnonce': button.data( 'nonce' ) // Nonce.
+			'id': button.data( 'entry-id' ),
+			'_wpnonce': button.data( 'nonce' )
 		};
 
 		$.post( ajaxurl, data, function( response ) {
@@ -33,7 +44,7 @@ jQuery( document ).ready( function ( $ ) {
 			button.bind( 'click', mark_read );
 
 			button.toggleClass( 'mark-read mark-unread' );
-			button.text( 'Mark as read' );
+			button.text( feed_reader_obj.mark_read );
 		} );
 	}
 

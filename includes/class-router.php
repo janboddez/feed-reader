@@ -176,7 +176,10 @@ class Router {
 					'confirm'     => esc_attr__( 'Are you sure?', 'feed-reader' ),
 					'mark_read'   => esc_attr__( 'Mark as read', 'feed-reader' ),
 					'mark_unread' => esc_attr__( 'Mark as unread', 'feed-reader' ),
-					'all_done'    => esc_attr__( 'It looks like you&rsquo;ve all caught up!', 'feed-reader' ),
+					'all_done'    => sprintf(
+						'<section class="hentry"><p>%s</p></section>',
+						__( 'Seems you&rsquo;re all caught up!', 'feed-reader' )
+					),
 				)
 			);
 		}
