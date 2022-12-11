@@ -95,26 +95,6 @@ function kses( $string ) {
 	return wp_kses( $string, $allowed_html );
 }
 
-function pagination( $paged, $total_pages ) {
-	?>
-	<nav class="pagination">
-		<ul>
-			<?php if ( $paged <= 1 ) : ?>
-				<li><span class="disabled"><?php echo esc_html_e( '&larr; Previous', 'feed-reader' ); ?></span></li>
-			<?php else : ?>
-				<li><a href="<?php echo esc_url( add_query_arg( array( 'paged' => $paged - 1 ), get_current_admin_url() ) ); ?>"><?php esc_html_e( '&larr; Previous', 'feed-reader' ); ?></a></li>
-			<?php endif; ?>
-
-			<?php if ( $paged >= $total_pages ) : ?>
-				<li><span class="disabled"><?php echo esc_html_e( 'Next &rarr;', 'feed-reader' ); ?></span></li>
-			<?php else : ?>
-				<li><a href="<?php echo esc_url( add_query_arg( array( 'paged' => $paged + 1 ), get_current_admin_url() ) ); ?>"><?php esc_html_e( 'Next &rarr;', 'feed-reader' ); ?></a></li>
-			<?php endif; ?>
-		</ul>
-	</nav>
-	<?php
-}
-
 function cursor_pagination( $before, $after ) {
 	?>
 	<nav class="pagination">

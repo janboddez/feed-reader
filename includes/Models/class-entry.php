@@ -6,41 +6,19 @@ class Entry extends Model {
 	/** @var string $table */
 	protected static $table = 'feed_reader_entries';
 
-	public static function paginate( $limit = 15, $all = false ) {
-		$paged  = isset( $_GET['paged'] ) ? (int) $_GET['paged'] : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$offset = max( 0, $paged - 1 ) * $limit;
-
-		global $wpdb;
-
-		if ( $all ) {
-			$sql = 'SELECT * FROM %s WHERE deleted_at IS NULL AND user_id = %%d ORDER BY published DESC, id DESC LIMIT %d OFFSET %d';
-		} else {
-			$sql = 'SELECT * FROM %s WHERE is_read = 0 AND deleted_at IS NULL AND user_id = %%d ORDER BY published DESC, id DESC LIMIT %d OFFSET %d';
-		}
-
-		$sql = sprintf(
-			'SELECT e.*, f.name AS feed_name
-			 FROM (%s) AS e
-			 LEFT JOIN %s AS f ON f.id = e.feed_id
-			 ORDER BY e.published DESC, e.id DESC',
-			sprintf( $sql, static::table(), $limit, $offset ),
-			Feed::table()
-		);
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
-		return $wpdb->get_results( $wpdb->prepare( $sql, get_current_user_id() ) );
-	}
-
 	public static function cursor_paginate( $limit = 15, $all = false, $feed_id = null, $category_id = null ) {
 		global $wpdb;
 
 		// Let's start building our (sub)query. We use "soft deletes" and an
 		// explicit `user_id` scope.
-		$sql = 'SELECT * FROM %s WHERE deleted_at IS NULL AND user_id = %%d';
+		$sql = $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+			sprintf( 'SELECT * FROM %s WHERE deleted_at IS NULL AND user_id = %%d', static::table() ), // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			get_current_user_id()
+		);
 
 		if ( ! $all ) {
 			// Unread entries only.
-			$sql .= ' AND is_read = 0';
+			$sql .= $wpdb->prepare( ' AND is_read = %d', 0 );
 		}
 
 		if ( $feed_id ) {
@@ -71,35 +49,34 @@ class Entry extends Model {
 
 		if ( isset( $before ) ) {
 			// Newer entries.
-			$sql .= ' AND (published > %%s OR (published = %%s AND id >= %%d)) ORDER BY published ASC, id ASC LIMIT %%d';
+			$sql .= $wpdb->prepare(
+				' AND (published > %s OR (published = %s AND id >= %d)) ORDER BY published ASC, id ASC LIMIT %d',
+				$before[0],
+				$before[0],
+				$before[1],
+				$limit + 1
+			);
+
+			// We'll also be counting the total number of items to the left of
+			// (and including) our "cursor." Rather than build an entirely new
+			// query, let's keep things simple and use some regex trickery.
+			$total = preg_replace( '~^SELECT \*~', 'SELECT COUNT(*)', $sql );
+			$total = preg_replace( '~LIMIT \d+$~', '', $total );
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+			$total = (int) $wpdb->get_var( $total );
 		} elseif ( isset( $after ) ) {
 			// Older entries.
-			$sql .= ' AND (published < %%s OR (published = %%s AND id <= %%d)) ORDER BY published DESC, id DESC LIMIT %%d';
+			$sql .= $wpdb->prepare(
+				' AND (published < %s OR (published = %s AND id <= %d)) ORDER BY published DESC, id DESC LIMIT %d',
+				$after[0],
+				$after[0],
+				$after[1],
+				$limit + 1
+			);
 		} else {
 			// First page.
-			$sql .= ' ORDER BY published DESC, id DESC LIMIT %%d';
-		}
-
-		// Parse in the table name.
-		$sql = sprintf( $sql, static::table() );
-
-		if ( isset( $before ) ) {
-			// We'll also be counting the total number of items to the left of
-			// (and including) our cursor. Rather than rebuild the entire
-			// (sub)query, let's keep things simple and use some regex trickery.
-			$total = preg_replace( '~^SELECT \*~', 'SELECT COUNT(*)', $sql );
-			$total = preg_replace( '~LIMIT %d$~', '', $total ); // `%d` and not `%%d`, because of the `sprintf()` call above.
-		}
-
-		if ( isset( $before ) ) {
-			// Parse in (and escape) the user ID, and cursor date and ID.
-			$sql   = $wpdb->prepare( $sql, get_current_user_id(), $before[0], $before[0], $before[1], $limit + 1 ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$total = $wpdb->prepare( $total, get_current_user_id(), $before[0], $before[0], $before[1] ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		} elseif ( isset( $after ) ) {
-			// Parse in (and escape) the user ID, and cursor date and ID.
-			$sql = $wpdb->prepare( $sql, get_current_user_id(), $after[0], $after[0], $after[1], $limit + 1 ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		} else {
-			$sql = $wpdb->prepare( $sql, get_current_user_id(), $limit + 1 );// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$sql .= $wpdb->prepare( ' ORDER BY published DESC, id DESC LIMIT %d', $limit + 1 );
 		}
 
 		// Add it all together.
@@ -115,10 +92,10 @@ class Entry extends Model {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
 		$items = $wpdb->get_results( $sql );
 
-		// Build a "before" cursor.
+		// Build a new "before" cursor.
 		$before = isset( $items[0] ) ? \Feed_Reader\build_cursor( $items[0] ) : null;
 
-		// Build an "after" cursor only if there is a next page.
+		// Build a new "after" cursor only if there is a next page.
 		$after = isset( $items[ $limit ] ) ? \Feed_Reader\build_cursor( $items[ $limit ] ) : null;
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -127,20 +104,14 @@ class Entry extends Model {
 			$before = null;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( isset( $total ) ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
-			$total = (int) $wpdb->get_var( $total );
-
-			if ( $total <= count( $items ) ) {
-				// The total number of items left of our cursor is smaller than or
-				// equal to the number of items on the current page. I.e., we're on
-				// the first page.
-				$before = null;
-			}
+		if ( isset( $total ) && $total <= count( $items ) ) {
+			// The total number of items left of our cursor is smaller than or
+			// equal to the number of items on the current page. I.e., we're on
+			// the first page.
+			$before = null;
 		}
 
-		// This item, if any, is really part of the next page.
+		// This item, if it exists, is really part of the next page.
 		unset( $items[ $limit ] );
 
 		return array( $items, $before, $after );
