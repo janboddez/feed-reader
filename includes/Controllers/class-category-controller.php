@@ -5,6 +5,7 @@ namespace Feed_Reader\Controllers;
 use Feed_Reader\Category_List_Table;
 use Feed_Reader\Controllers\Controller;
 use Feed_Reader\Models\Category;
+use Feed_Reader\Models\Entry;
 use Feed_Reader\Models\Feed;
 
 class Category_Controller extends Controller {
@@ -26,12 +27,9 @@ class Category_Controller extends Controller {
 
 		$all = isset( $_GET['all'] ) && '1' === $_GET['all']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		$entries     = Category::entries( $category->id, 15, $all );
-		$count       = Category::entries_count( $category->id );
-		$paged       = isset( $_GET['paged'] ) ? (int) $_GET['paged'] : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$total_pages = ceil( $count / 15 );
+		list( $entries, $before, $after ) = Entry::cursor_paginate( 15, $all, null, $category->id );
 
-		static::render( 'entries/list', compact( 'category', 'entries', 'paged', 'total_pages' ) );
+		static::render( 'entries/list', compact( 'category', 'entries', 'before', 'after' ) );
 	}
 
 	public static function create() {

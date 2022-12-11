@@ -53,7 +53,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php
 		endforeach;
 
-		\Feed_Reader\pagination( $paged, $total_pages );
+		// \Feed_Reader\pagination( $paged, $total_pages );
+		\Feed_Reader\cursor_pagination( $before, $after );
 	else :
 		?>
 		<section class="hentry">

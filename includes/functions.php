@@ -115,6 +115,26 @@ function pagination( $paged, $total_pages ) {
 	<?php
 }
 
+function cursor_pagination( $before, $after ) {
+	?>
+	<nav class="pagination">
+		<ul>
+			<?php if ( $before ) : ?>
+				<li><a href="<?php echo esc_url( add_query_arg( array( 'before' => $before ), get_current_admin_url() ) ); ?>"><?php esc_html_e( '&larr; Previous', 'feed-reader' ); ?></a></li>
+			<?php else : ?>
+				<li><span class="disabled"><?php esc_html_e( '&larr; Previous', 'feed-reader' ); ?></span></li>
+			<?php endif; ?>
+
+			<?php if ( $after ) : ?>
+				<li><a href="<?php echo esc_url( add_query_arg( array( 'after' => $after ), get_current_admin_url() ) ); ?>"><?php esc_html_e( 'Next &rarr;', 'feed-reader' ); ?></a></li>
+			<?php else : ?>
+				<li><span class="disabled"><?php esc_html_e( 'Next &rarr;', 'feed-reader' ); ?></span></li>
+			<?php endif; ?>
+		</ul>
+	</nav>
+	<?php
+}
+
 function get_current_admin_url() {
 	if ( ! is_admin() ) {
 		return null;
@@ -125,8 +145,35 @@ function get_current_admin_url() {
 	$url = $pagenow;
 
 	if ( ! empty( $_SERVER['QUERY_STRING'] ) ) {
-		$url .= '?' . $_SERVER['QUERY_STRING']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		parse_str( $_SERVER['QUERY_STRING'], $args ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		unset( $args['before'] );
+		unset( $args['after'] );
+		$url .= '?' . http_build_query( $args ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
+	// @todo: Remove cursor parameters.
+
 	return $url;
+}
+
+function build_cursor( $entry ) {
+	return strtotime( $entry->published ) . ',' . $entry->id;
+}
+
+function validate_cursor( $cursor ) {
+	if ( preg_match( '~^(\d+),(\d+)$~', $cursor, $matches ) ) {
+		return $matches;
+	}
+
+	return false;
+}
+
+function parse_cursor( $cursor ) {
+	$matches = validate_cursor( $cursor );
+
+	if ( $matches ) {
+		return array( date( 'Y-m-d H:i:s', $matches[1] ), $matches[2] );
+	}
+
+	return null;
 }

@@ -206,6 +206,12 @@ class Router {
 	}
 
 	private function get_current_model( $controller ) {
+		$result = wp_cache_get( 'feed-reader:model' );
+
+		if ( false !== $result ) {
+			return $result;
+		}
+
 		if ( empty( $_GET['id'] ) || ! ctype_digit( $_GET['id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			return null;
 		}

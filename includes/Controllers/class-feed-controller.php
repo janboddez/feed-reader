@@ -26,14 +26,11 @@ class Feed_Controller extends Controller {
 			wp_die( esc_html_e( 'Unknown feed.', 'feed-reader' ) );
 		}
 
-		$all   = isset( $_GET['all'] ) && '1' === $_GET['all']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$paged = isset( $_GET['paged'] ) ? (int) $_GET['paged'] : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$all = isset( $_GET['all'] ) && '1' === $_GET['all']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		$count       = Feed::entries_count( $feed->id, $all );
-		$entries     = Feed::entries( $feed->id, 15, $all );
-		$total_pages = ceil( $count / 15 );
+		list( $entries, $before, $after ) = Entry::cursor_paginate( 15, $all, $feed->id );
 
-		static::render( 'entries/list', compact( 'feed', 'entries', 'paged', 'total_pages' ) );
+		static::render( 'entries/list', compact( 'feed', 'entries', 'before', 'after' ) );
 	}
 
 	public static function create() {

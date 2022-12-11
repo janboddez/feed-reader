@@ -8,12 +8,9 @@ class Entry_Controller extends Controller {
 	public static function index() {
 		$all = isset( $_GET['all'] ) && '1' === $_GET['all']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		$entries     = Entry::paginate( 15, $all );
-		$count       = Entry::count();
-		$total_pages = ceil( $count / 15 );
-		$paged       = isset( $_GET['paged'] ) ? (int) $_GET['paged'] : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		list( $entries, $before, $after ) = Entry::cursor_paginate( 15, $all );
 
-		static::render( 'entries/list', compact( 'entries', 'paged', 'total_pages' ) );
+		static::render( 'entries/list', compact( 'entries', 'before', 'after' ) );
 	}
 
 	public static function view() {
