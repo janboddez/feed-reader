@@ -44,7 +44,7 @@ class Category_List_Table extends \WP_List_Table {
 
 	public function column_name( $item ) {
 		$actions = array(
-			'view'   => '<a href="' . esc_url( get_url( 'categories', 'view', $item->id ) ) . '">' . esc_html__( 'View', 'feed-reader' ) . '</a>',
+			'view'   => '<a href="' . esc_url( get_url( 'categories', 'view', $item->id, true ) ) . '">' . esc_html__( 'View', 'feed-reader' ) . '</a>',
 			'edit'   => '<a href="' . esc_url( get_url( 'categories', 'edit', $item->id ) ) . '">' . esc_html__( 'Edit', 'feed-reader' ) . '</a>',
 			'delete' => '<a href="' . esc_url( $this->get_delete_url( $item->id ) ) . '">' . esc_html__( 'Delete', 'feed-reader' ) . '</a>',
 		);

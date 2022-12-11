@@ -54,7 +54,7 @@ class Feed_List_Table extends WP_List_Table {
 		$name = ! empty( $item->name ) ? $item->name : preg_replace( '~^www\.~', '', wp_parse_url( $item->url, PHP_URL_HOST ) );
 
 		$actions = array(
-			'view'   => '<a href="' . esc_url( get_url( 'feeds', 'view', $item->id ) ) . '">' . esc_html__( 'View', 'feed-reader' ) . '</a>',
+			'view'   => '<a href="' . esc_url( get_url( 'feeds', 'view', $item->id, true ) ) . '">' . esc_html__( 'View', 'feed-reader' ) . '</a>',
 			'edit'   => '<a href="' . esc_url( get_url( 'feeds', 'edit', $item->id ) ) . '">' . esc_html__( 'Edit', 'feed-reader' ) . '</a>',
 			'delete' => '<a href="' . esc_url( $this->get_delete_url( $item->id ) ) . '">' . esc_html__( 'Delete', 'feed-reader' ) . '</a>',
 		);

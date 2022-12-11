@@ -52,6 +52,7 @@
 	font-size: 1.25em;
 }
 
+.feed-reader .feed-links,
 .feed-reader .entry-meta {
 	margin: 0.25em 0 0.75em;
 }

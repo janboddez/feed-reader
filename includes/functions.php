@@ -2,11 +2,7 @@
 
 namespace Feed_Reader;
 
-function get_url( $controller, $method = null, $id = null, $all = null ) {
-	$all = in_array( $controller, array( 'feeds', 'categories' ), true ) && in_array( $method, array( null, 'view' ), true )
-		? '1'
-		: $all;
-
+function get_url( $controller, $method = null, $id = null, $all = false ) {
 	return add_query_arg(
 		array_filter(
 			array(

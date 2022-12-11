@@ -149,14 +149,12 @@ class Router {
 			return $parent_file;
 		}
 
-		$page = isset( $_GET['page'] ) ? $_GET['page'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$controller = $this->get_controller();
 
-		if ( preg_match( '~^feed-reader-(entries|feeds|categories)~', $page, $matches ) ) {
-			if ( 'entries' === $matches[1] ) {
-				$submenu_file = 'feed-reader'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-			} else {
-				$submenu_file = "feed-reader-{$matches[1]}"; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-			}
+		if ( 'entries' === $controller ) {
+			$submenu_file = 'feed-reader'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		} else {
+			$submenu_file = "feed-reader-{$controller}"; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		}
 
 		return $parent_file;
@@ -192,7 +190,7 @@ class Router {
 		$title = ucwords( $controller );
 
 		if ( in_array( $method, array( 'view', 'edit' ), true ) ) {
-			$model = $this->get_current_model( $controller );
+			$model = $this->get_model( $controller );
 
 			if ( ! empty( $model->name ) ) {
 				return $model->name;
@@ -208,7 +206,7 @@ class Router {
 		return $title;
 	}
 
-	private function get_current_model( $controller ) {
+	private function get_model( $controller ) {
 		$result = wp_cache_get( 'feed-reader:model' );
 
 		if ( false !== $result ) {
@@ -233,13 +231,8 @@ class Router {
 
 	private function get_controller() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( isset( $_GET['page'] ) && preg_match( '~^feed-reader-categories~', $_GET['page'] ) ) {
-			return 'categories';
-		}
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( isset( $_GET['page'] ) && preg_match( '~^feed-reader-feeds~', $_GET['page'] ) ) {
-			return 'feeds';
+		if ( isset( $_GET['page'] ) && preg_match( '~^feed-reader-(categories|feeds)~', $_GET['page'], $matches ) ) {
+			return $matches[1];
 		}
 
 		return 'entries';
@@ -247,10 +240,10 @@ class Router {
 
 	private function get_method() {
 		if ( isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$action = preg_replace( '~^feed-reader-(?:entries|feeds|categories)-~', '', $_GET['page'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$method = preg_replace( '~^feed-reader-(?:entries|feeds|categories)-~', '', $_GET['page'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-			if ( in_array( $action, array( 'view', 'edit' ), true ) ) {
-				return $action;
+			if ( in_array( $method, array( 'view', 'edit' ), true ) ) {
+				return $method;
 			}
 		}
 
