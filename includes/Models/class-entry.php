@@ -128,7 +128,7 @@ class Entry extends Model {
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( isset( $total ) && \Feed_Reader\validate_cursor( $_GET['before'] ) ) {
+		if ( isset( $total ) ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
 			$total = (int) $wpdb->get_var( $total );
 
