@@ -21,7 +21,7 @@ class Entry extends Model {
 		$sql = sprintf(
 			'SELECT e.*, f.name AS feed_name
 			 FROM (%s) AS e
-			 JOIN %s AS f ON f.id = e.feed_id
+			 LEFT JOIN %s AS f ON f.id = e.feed_id
 			 ORDER BY e.published DESC, e.id DESC',
 			sprintf( $sql, static::table(), $limit, $offset ),
 			Feed::table()
@@ -88,7 +88,7 @@ class Entry extends Model {
 			// (and including) our cursor. Rather than rebuild the entire
 			// (sub)query, let's keep things simple and use some regex trickery.
 			$total = preg_replace( '~^SELECT \*~', 'SELECT COUNT(*)', $sql );
-			$total = preg_replace( '~LIMIT %d~', '', $total ); // `%d` and not `%%d`, because of the `sprintf()` call above.
+			$total = preg_replace( '~LIMIT %d$~', '', $total ); // `%d` and not `%%d`, because of the `sprintf()` call above.
 		}
 
 		if ( isset( $before ) ) {
