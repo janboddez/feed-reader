@@ -15,8 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php endif; ?>
 			<span aria-hidden="true">/</span>
 			<a href="<?php echo esc_url( \Feed_Reader\get_url( 'feeds', 'edit', $feed->id ) ); ?>"><?php esc_html_e( 'Edit Feed', 'feed-reader' ); ?></a>
-			<span aria-hidden="true">/</span>
-			<button class="button-link"><?php esc_html_e( 'Mark Read', 'feed-reader' ); ?></button>
 		</div>
 	<?php elseif ( ! empty( $category->name ) ) : ?>
 		<h1 class="page-title"><?php echo esc_html( $category->name ); ?></h1>
