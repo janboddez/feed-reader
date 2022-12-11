@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Reader
- * Description: A feed reader.
- * Plugin URI:  https://jan.boddez.net/wordpress/
+ * Plugin Name: Feed Reader
+ * Description: A dead-simple feed reader.
+ * Plugin URI:  https://jan.boddez.net/wordpress/feed-reader
  * Author:      Jan Boddez
  * Author URI:  https://jan.boddez.net/
  * License:     GNU General Public License v3

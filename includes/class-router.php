@@ -187,6 +187,14 @@ class Router {
 		$controller = $this->get_controller();
 		$method     = $this->get_method();
 
+		if ( 'entries' === $controller && 'index' === $method ) {
+			if ( isset( $_GET['all'] ) && '1' === $_GET['all'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				return esc_html__( 'All Entries', 'feed-reader' );
+			} else {
+				return esc_html__( 'Unread', 'feed-reader' );
+			}
+		}
+
 		$title = ucwords( $controller );
 
 		if ( in_array( $method, array( 'view', 'edit' ), true ) ) {
