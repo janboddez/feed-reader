@@ -20,15 +20,23 @@ function get_url( $controller, $method = null, $id = null, $all = null ) {
 }
 
 function pluralize( $value ) {
-	$inflector = \Feed_Reader\Feed_Reader::inflector();
+	$args = array(
+		'category' => 'categories',
+		'entry'    => 'entries',
+		'feed'     => 'feeds',
+	);
 
-	return $inflector->pluralize( $value );
+	return array_key_exists( $value, $args ) ? $args[ $value ] : $value;
 }
 
 function singularize( $value ) {
-	$inflector = \Feed_Reader\Feed_Reader::inflector();
+	$args = array(
+		'categories' => 'category',
+		'entries'    => 'entry',
+		'feeds'      => 'feed',
+	);
 
-	return $inflector->singularize( $value );
+	return array_key_exists( $value, $args ) ? $args[ $value ] : $value;
 }
 
 function kses( $string ) {

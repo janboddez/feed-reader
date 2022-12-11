@@ -2,8 +2,5 @@
     "autoload": {
         "classmap": ["includes/"],
         "files": ["includes/functions.php"]
-    },
-    "require": {
-        "doctrine/inflector": "^2.0"
     }
 }
