@@ -60,9 +60,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 					?>
 
 					<div class="entry-summary">
-						<?php echo $entry->summary; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-						<?php /* translators: %s: Entry title */ ?>
-						<a href="<?php echo esc_url( \Feed_Reader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php printf( esc_html__( 'Continue reading %s', 'feed-reader' ), '<span class="screen-reader-text">' . esc_html( $entry->name ) . '</span>' ); ?></a>
+						<p>
+							<?php echo $entry->summary; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<?php /* translators: %s: Entry title */ ?>
+							<a href="<?php echo esc_url( \Feed_Reader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php printf( esc_html__( 'Continue reading %s', 'feed-reader' ), '<span class="screen-reader-text">' . esc_html( $entry->name ) . '</span>' ); ?></a>
+						</p>
 					</div>
 
 					<?php
@@ -75,8 +77,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 			endforeach;
 		else :
 			?>
-			<section class="hentry">
-				<p><?php esc_html_e( 'Seems you&rsquo;re all caught up!', 'feed-reader' ); ?></p>
+			<section class="hentry note">
+				<div class="entry-summary">
+					<p><?php esc_html_e( 'Seems you&rsquo;re all caught up!', 'feed-reader' ); ?></p>
+				</div>
 			</section>
 		<?php endif; ?>
 	</div>

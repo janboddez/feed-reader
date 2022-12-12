@@ -175,7 +175,7 @@ class Router {
 					'mark_read'   => esc_attr__( 'Mark as read', 'feed-reader' ),
 					'mark_unread' => esc_attr__( 'Mark as unread', 'feed-reader' ),
 					'all_done'    => sprintf(
-						'<section class="hentry"><p>%s</p></section>',
+						'<section class="hentry note"><div class="entry-summary"><p>%s</p></div></section>',
 						__( 'Seems you&rsquo;re all caught up!', 'feed-reader' )
 					),
 				)

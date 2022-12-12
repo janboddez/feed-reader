@@ -21,6 +21,10 @@
 	padding-top: 1.5em;
 }
 
+.feed-reader .note:first-child {
+	padding-top: 0.25em;
+}
+
 .feed-reader .hentry + .hentry {
 	border-top: 1px solid #ccc;
 	margin-top: 2em;
