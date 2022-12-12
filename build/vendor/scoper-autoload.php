@@ -6,15 +6,15 @@ $loader = require_once __DIR__.'/autoload.php';
 
 // Aliases for the whitelisted classes. For more information see:
 // https://github.com/humbug/php-scoper/blob/master/README.md#class-whitelisting
-if (!class_exists('ComposerAutoloaderInit38719e00d84c2c01cd58caafcffef79f', false) && !interface_exists('ComposerAutoloaderInit38719e00d84c2c01cd58caafcffef79f', false) && !trait_exists('ComposerAutoloaderInit38719e00d84c2c01cd58caafcffef79f', false)) {
-    spl_autoload_call('Feed_Reader\ComposerAutoloaderInit38719e00d84c2c01cd58caafcffef79f');
+if (!class_exists('ComposerAutoloaderInit1562bc503a1d9fc176f2d829811bca0b', false) && !interface_exists('ComposerAutoloaderInit1562bc503a1d9fc176f2d829811bca0b', false) && !trait_exists('ComposerAutoloaderInit1562bc503a1d9fc176f2d829811bca0b', false)) {
+    spl_autoload_call('FeedReader\ComposerAutoloaderInit1562bc503a1d9fc176f2d829811bca0b');
 }
 
 // Functions whitelisting. For more information see:
 // https://github.com/humbug/php-scoper/blob/master/README.md#functions-whitelisting
-if (!function_exists('composerRequire38719e00d84c2c01cd58caafcffef79f')) {
-    function composerRequire38719e00d84c2c01cd58caafcffef79f() {
-        return \Feed_Reader\composerRequire38719e00d84c2c01cd58caafcffef79f(...func_get_args());
+if (!function_exists('composerRequire1562bc503a1d9fc176f2d829811bca0b')) {
+    function composerRequire1562bc503a1d9fc176f2d829811bca0b() {
+        return \FeedReader\composerRequire1562bc503a1d9fc176f2d829811bca0b(...func_get_args());
     }
 }
 

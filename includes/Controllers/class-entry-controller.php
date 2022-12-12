@@ -1,8 +1,8 @@
 <?php
 
-namespace Feed_Reader\Controllers;
+namespace FeedReader\Controllers;
 
-use Feed_Reader\Models\Entry;
+use FeedReader\Models\Entry;
 
 class Entry_Controller extends Controller {
 	public static function index() {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Feed_Reader;
+namespace FeedReader;
 
-use Feed_Reader\Controllers\Category_Controller;
-use Feed_Reader\Controllers\Entry_Controller;
-use Feed_Reader\Controllers\Feed_Controller;
-use Feed_Reader\Controllers\OPML_Controller;
+use FeedReader\Controllers\Category_Controller;
+use FeedReader\Controllers\Entry_Controller;
+use FeedReader\Controllers\Feed_Controller;
+use FeedReader\Controllers\OPML_Controller;
 
 class Router {
 	public function register() {
@@ -163,10 +163,10 @@ class Router {
 	public function enqueue_scripts( $hook_suffix ) {
 		if ( false !== strpos( $hook_suffix, 'feed-reader' ) ) {
 			// Enqueue CSS and JS.
-			wp_enqueue_style( 'feed-reader-fonts', plugins_url( '/assets/fonts.css', __DIR__ ), array(), \Feed_Reader\Feed_Reader::PLUGIN_VERSION );
-			wp_enqueue_style( 'feed-reader', plugins_url( '/assets/style.css', __DIR__ ), array( 'feed-reader-fonts' ), \Feed_Reader\Feed_Reader::PLUGIN_VERSION );
+			wp_enqueue_style( 'feed-reader-fonts', plugins_url( '/assets/fonts.css', __DIR__ ), array(), \FeedReader\FeedReader::PLUGIN_VERSION );
+			wp_enqueue_style( 'feed-reader', plugins_url( '/assets/style.css', __DIR__ ), array( 'feed-reader-fonts' ), \FeedReader\FeedReader::PLUGIN_VERSION );
 
-			wp_enqueue_script( 'feed-reader', plugins_url( '/assets/feed-reader.js', __DIR__ ), array( 'jquery' ), \Feed_Reader\Feed_Reader::PLUGIN_VERSION, true );
+			wp_enqueue_script( 'feed-reader', plugins_url( '/assets/feed-reader.js', __DIR__ ), array( 'jquery' ), \FeedReader\FeedReader::PLUGIN_VERSION, true );
 			wp_localize_script(
 				'feed-reader',
 				'feed_reader_obj',
@@ -208,7 +208,7 @@ class Router {
 			}
 
 			// Singular for view and edit screens.
-			$title = ucwords( \Feed_Reader\singularize( $controller ) );
+			$title = ucwords( \FeedReader\singularize( $controller ) );
 		}
 
 		return $title;
@@ -225,7 +225,7 @@ class Router {
 			return null;
 		}
 
-		$model  = '\\Feed_Reader\\Models\\' . ucwords( \Feed_Reader\singularize( $controller ) );
+		$model  = '\\FeedReader\\Models\\' . ucwords( \FeedReader\singularize( $controller ) );
 		$result = $model::find( $_GET['id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		if ( ! $result ) {

@@ -2,5 +2,8 @@
     "autoload": {
         "classmap": ["includes/"],
         "files": ["includes/functions.php"]
+    },
+    "require": {
+        "deruli/html-minifier": "^0.5.1"
     }
 }

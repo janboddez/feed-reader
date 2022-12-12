@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $wpdb;
 ?>
-CREATE TABLE <?php echo \Feed_Reader\Models\Category::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> (
+CREATE TABLE <?php echo \FeedReader\Models\Category::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> (
 	id mediumint(9) UNSIGNED NOT NULL AUTO_INCREMENT,
 	name varchar(191),
 	created_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE <?php echo \Feed_Reader\Models\Category::table(); // phpcs:ignore W
 	PRIMARY KEY (id)
 ) <?php echo $wpdb->get_charset_collate(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
 
-CREATE TABLE <?php echo \Feed_Reader\Models\Feed::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> (
+CREATE TABLE <?php echo \FeedReader\Models\Feed::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> (
 	id mediumint(9) UNSIGNED NOT NULL AUTO_INCREMENT,
 	url varchar(191),
 	name varchar(191),
@@ -33,10 +33,10 @@ CREATE TABLE <?php echo \Feed_Reader\Models\Feed::table(); // phpcs:ignore WordP
 	category_id mediumint(9) UNSIGNED,
 	user_id bigint(20) UNSIGNED,
 	PRIMARY KEY (id),
-	FOREIGN KEY (category_id) REFERENCES <?php echo \Feed_Reader\Models\Category::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>(id)
+	FOREIGN KEY (category_id) REFERENCES <?php echo \FeedReader\Models\Category::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>(id)
 ) <?php echo $wpdb->get_charset_collate(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
 
-CREATE TABLE <?php echo \Feed_Reader\Models\Entry::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> (
+CREATE TABLE <?php echo \FeedReader\Models\Entry::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> (
 	id mediumint(9) UNSIGNED NOT NULL AUTO_INCREMENT,
 	uid varchar(191) DEFAULT '' NOT NULL,
 	url varchar(191),
@@ -54,5 +54,5 @@ CREATE TABLE <?php echo \Feed_Reader\Models\Entry::table(); // phpcs:ignore Word
 	user_id bigint(20) UNSIGNED,
 	data text,
 	PRIMARY KEY (id),
-	FOREIGN KEY (feed_id) REFERENCES <?php echo \Feed_Reader\Models\Feed::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>(id)
+	FOREIGN KEY (feed_id) REFERENCES <?php echo \FeedReader\Models\Feed::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>(id)
 ) <?php echo $wpdb->get_charset_collate(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;

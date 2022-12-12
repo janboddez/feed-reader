@@ -1,9 +1,10 @@
 <?php
 
-namespace Feed_Reader\Jobs;
+namespace FeedReader\Jobs;
 
-use Feed_Reader\Models\Entry;
-use Feed_Reader\Models\Feed;
+use FeedReader\Models\Entry;
+use FeedReader\Models\Feed;
+use FeedReader\zz\Html\HTMLMinify;
 use SimplePie_IRI;
 
 class Poll_Feeds {
@@ -30,7 +31,13 @@ class Poll_Feeds {
 
 	public static function poll_feed( $feed ) {
 		if ( empty( $feed->url ) || ! wp_http_validate_url( $feed->url ) ) {
-			error_log( '[Reader] Oops.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( '[Reader] Oops. Could it be the feed at ' . esc_url_raw( $feed->url ) . ' is invalid?' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+
+			if ( filter_var( $feed->url, FILTER_VALIDATE_URL ) ) {
+				// For diagnostics.
+				error_log( "[Reader] `filter_var()` seems to think it's OK." ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			}
+
 			return;
 		}
 
@@ -177,7 +184,10 @@ class Poll_Feeds {
 				$content = static::absolutize_urls( $content, $entry['url'] );
 			}
 
-			$content = wpautop( \Feed_Reader\kses( $content ) );
+			// Strip unnecessary whitespace. Slowish, but improves `wpautop()`
+			// results.
+			$content = HTMLMinify::minify( $content );
+			$content = wpautop( \FeedReader\kses( $content ) );
 
 			$entry['content'] = array(
 				'html' => $content,
@@ -185,7 +195,7 @@ class Poll_Feeds {
 			);
 
 			/* @todo: Look for an actual summary first. */
-			$entry['summary'] = wp_trim_words( $entry['content']['html'], 30, ' [&hellip;]' ); // 55 seemed too long.
+			$entry['summary'] = wp_trim_words( $entry['content']['html'], 25, ' [&hellip;]' ); // 55 seemed too long.
 		}
 
 		$title = $item->get_title();

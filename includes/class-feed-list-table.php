@@ -1,9 +1,9 @@
 <?php
 
-namespace Feed_Reader;
+namespace FeedReader;
 
-use Feed_Reader\Models\Category;
-use Feed_Reader\Models\Feed;
+use FeedReader\Models\Category;
+use FeedReader\Models\Feed;
 use WP_List_Table;
 
 class Feed_List_Table extends WP_List_Table {
@@ -31,7 +31,7 @@ class Feed_List_Table extends WP_List_Table {
 		$search = null;
 
 		if ( ! empty( $_GET['s'] ) && is_string( $_GET['s'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$search = sanitize_key( wp_unslash( $_GET['s'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$search = sanitize_text_field( wp_unslash( $_GET['s'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
 		list( $feeds, $total ) = Feed::paginate( 15, $search );
@@ -80,7 +80,7 @@ class Feed_List_Table extends WP_List_Table {
 
 	public function column_category( $item ) {
 		if ( ! empty( $item->category_name ) ) {
-			return '<a href="' . esc_url( \Feed_Reader\get_url( 'categories', 'view', $item->category_id ) ) . '">' . esc_html( $item->category_name ) . '</a>';
+			return '<a href="' . esc_url( \FeedReader\get_url( 'categories', 'view', $item->category_id ) ) . '">' . esc_html( $item->category_name ) . '</a>';
 		};
 
 		return '&mdash;';

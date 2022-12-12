@@ -9,10 +9,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Feed_Reader\Composer;
+namespace FeedReader\Composer;
 
-use Feed_Reader\Composer\Autoload\ClassLoader;
-use Feed_Reader\Composer\Semver\VersionParser;
+use FeedReader\Composer\Autoload\ClassLoader;
+use FeedReader\Composer\Semver\VersionParser;
 /**
  * This class is copied in every Composer installed project and available to all
  *
@@ -275,7 +275,7 @@ class InstalledVersions
     private static function getInstalled()
     {
         if (null === self::$canGetVendors) {
-            self::$canGetVendors = \method_exists('Feed_Reader\\Composer\\Autoload\\ClassLoader', 'getRegisteredLoaders');
+            self::$canGetVendors = \method_exists('FeedReader\\Composer\\Autoload\\ClassLoader', 'getRegisteredLoaders');
         }
         $installed = array();
         if (self::$canGetVendors) {

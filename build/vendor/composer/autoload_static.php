@@ -4,35 +4,56 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit38719e00d84c2c01cd58caafcffef79f
+class ComposerStaticInit1562bc503a1d9fc176f2d829811bca0b
 {
     public static $files = array (
         'a01125dfebcda7ec3333dcd2d57ad8f2' => __DIR__ . '/../..' . '/../includes/functions.php',
     );
 
+    public static $prefixLengthsPsr4 = array (
+        'F' => 
+        array (
+            'FeedReader\\zz\\' => 14,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'FeedReader\\zz\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/deruli/html-minifier/src/zz',
+        ),
+    );
+
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'Feed_Reader\\Category_List_Table' => __DIR__ . '/../..' . '/../includes/class-category-list-table.php',
-        'Feed_Reader\\Controllers\\Category_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-category-controller.php',
-        'Feed_Reader\\Controllers\\Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-controller.php',
-        'Feed_Reader\\Controllers\\Entry_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-entry-controller.php',
-        'Feed_Reader\\Controllers\\Feed_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-feed-controller.php',
-        'Feed_Reader\\Controllers\\OPML_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-opml-controller.php',
-        'Feed_Reader\\Feed_List_Table' => __DIR__ . '/../..' . '/../includes/class-feed-list-table.php',
-        'Feed_Reader\\Feed_Reader' => __DIR__ . '/../..' . '/../includes/class-feed-reader.php',
-        'Feed_Reader\\Jobs\\Poll_Feeds' => __DIR__ . '/../..' . '/../includes/Jobs/class-poll-feeds.php',
-        'Feed_Reader\\Models\\Category' => __DIR__ . '/../..' . '/../includes/Models/class-category.php',
-        'Feed_Reader\\Models\\Entry' => __DIR__ . '/../..' . '/../includes/Models/class-entry.php',
-        'Feed_Reader\\Models\\Feed' => __DIR__ . '/../..' . '/../includes/Models/class-feed.php',
-        'Feed_Reader\\Models\\Model' => __DIR__ . '/../..' . '/../includes/Models/class-model.php',
-        'Feed_Reader\\OPML_Parser' => __DIR__ . '/../..' . '/../includes/class-opml-parser.php',
-        'Feed_Reader\\Router' => __DIR__ . '/../..' . '/../includes/class-router.php',
+        'FeedReader\\Category_List_Table' => __DIR__ . '/../..' . '/../includes/class-category-list-table.php',
+        'FeedReader\\Controllers\\Category_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-category-controller.php',
+        'FeedReader\\Controllers\\Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-controller.php',
+        'FeedReader\\Controllers\\Entry_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-entry-controller.php',
+        'FeedReader\\Controllers\\Feed_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-feed-controller.php',
+        'FeedReader\\Controllers\\OPML_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-opml-controller.php',
+        'FeedReader\\FeedReader' => __DIR__ . '/../..' . '/../includes/class-feed-reader.php',
+        'FeedReader\\Feed_List_Table' => __DIR__ . '/../..' . '/../includes/class-feed-list-table.php',
+        'FeedReader\\Jobs\\Poll_Feeds' => __DIR__ . '/../..' . '/../includes/Jobs/class-poll-feeds.php',
+        'FeedReader\\Models\\Category' => __DIR__ . '/../..' . '/../includes/Models/class-category.php',
+        'FeedReader\\Models\\Entry' => __DIR__ . '/../..' . '/../includes/Models/class-entry.php',
+        'FeedReader\\Models\\Feed' => __DIR__ . '/../..' . '/../includes/Models/class-feed.php',
+        'FeedReader\\Models\\Model' => __DIR__ . '/../..' . '/../includes/Models/class-model.php',
+        'FeedReader\\OPML_Parser' => __DIR__ . '/../..' . '/../includes/class-opml-parser.php',
+        'FeedReader\\Router' => __DIR__ . '/../..' . '/../includes/class-router.php',
+        'FeedReader\\zz\\Html\\HTMLMinify' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/HTMLMinify.php',
+        'FeedReader\\zz\\Html\\HTMLNames' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/HTMLNames.php',
+        'FeedReader\\zz\\Html\\HTMLToken' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/HTMLToken.php',
+        'FeedReader\\zz\\Html\\HTMLTokenizer' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/HTMLTokenizer.php',
+        'FeedReader\\zz\\Html\\SegmentedString' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/SegmentedString.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit38719e00d84c2c01cd58caafcffef79f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit1562bc503a1d9fc176f2d829811bca0b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit1562bc503a1d9fc176f2d829811bca0b::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit1562bc503a1d9fc176f2d829811bca0b::$classMap;
 
         }, null, ClassLoader::class);
     }

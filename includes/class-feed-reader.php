@@ -1,19 +1,19 @@
 <?php
 
-namespace Feed_Reader;
+namespace FeedReader;
 
-use Feed_Reader\Doctrine\Inflector\InflectorFactory;
-use Feed_Reader\Jobs\Poll_Feeds;
-use Feed_Reader\Router;
+use FeedReader\Doctrine\Inflector\InflectorFactory;
+use FeedReader\Jobs\Poll_Feeds;
+use FeedReader\Router;
 
-class Feed_Reader {
+class FeedReader {
 	const DB_VERSION     = '1.0';
 	const PLUGIN_VERSION = '0.1.0';
 
 	/** @var Router $router */
 	private $router;
 
-	/** @var Feed_Reader $instance */
+	/** @var FeedReader $instance */
 	private static $instance;
 
 	/** @var InflectorFactory $inflector */

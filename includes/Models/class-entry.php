@@ -1,6 +1,6 @@
 <?php
 
-namespace Feed_Reader\Models;
+namespace FeedReader\Models;
 
 class Entry extends Model {
 	/** @var string $table */
@@ -41,10 +41,10 @@ class Entry extends Model {
 		// And now the cursor-based pagination bit.
 		if ( isset( $_GET['before'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$before = \Feed_Reader\parse_cursor( $_GET['before'] ); // Returns a cursor, or `null`.
+			$before = \FeedReader\parse_cursor( $_GET['before'] ); // Returns a cursor, or `null`.
 		} elseif ( isset( $_GET['after'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$after = \Feed_Reader\parse_cursor( $_GET['after'] ); // Returns a cursor, or `null`.
+			$after = \FeedReader\parse_cursor( $_GET['after'] ); // Returns a cursor, or `null`.
 		}
 
 		if ( isset( $before ) ) {
@@ -93,10 +93,10 @@ class Entry extends Model {
 		$items = $wpdb->get_results( $sql );
 
 		// Build a new "before" cursor.
-		$before = isset( $items[0] ) ? \Feed_Reader\build_cursor( $items[0] ) : null;
+		$before = isset( $items[0] ) ? \FeedReader\build_cursor( $items[0] ) : null;
 
 		// Build a new "after" cursor only if there is a next page.
-		$after = isset( $items[ $limit ] ) ? \Feed_Reader\build_cursor( $items[ $limit ] ) : null;
+		$after = isset( $items[ $limit ] ) ? \FeedReader\build_cursor( $items[ $limit ] ) : null;
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( empty( $_GET['before'] ) && empty( $_GET['after'] ) ) {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Feed_Reader\Controllers;
+namespace FeedReader\Controllers;
 
-use Feed_Reader\Controllers\Controller;
-use Feed_Reader\Feed_List_Table;
-use Feed_Reader\Jobs\Poll_Feeds;
-use Feed_Reader\Models\Category;
-use Feed_Reader\Models\Entry;
-use Feed_Reader\Models\Feed;
+use FeedReader\Controllers\Controller;
+use FeedReader\Feed_List_Table;
+use FeedReader\Jobs\Poll_Feeds;
+use FeedReader\Models\Category;
+use FeedReader\Models\Entry;
+use FeedReader\Models\Feed;
 
 class Feed_Controller extends Controller {
 	public static function index() {
@@ -90,7 +90,7 @@ class Feed_Controller extends Controller {
 			}
 		}
 
-		wp_safe_redirect( esc_url_raw( \Feed_Reader\get_url( 'feeds' ) ) );
+		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds' ) ) );
 		exit;
 	}
 
@@ -156,7 +156,7 @@ class Feed_Controller extends Controller {
 			}
 		}
 
-		wp_safe_redirect( esc_url_raw( \Feed_Reader\get_url( 'feeds' ) ) );
+		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds' ) ) );
 		exit;
 	}
 
@@ -191,7 +191,7 @@ class Feed_Controller extends Controller {
 			Feed::delete( $feed->id );
 		}
 
-		wp_safe_redirect( esc_url_raw( \Feed_Reader\get_url( 'feeds' ) ) );
+		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds' ) ) );
 		exit;
 	}
 }

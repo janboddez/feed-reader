@@ -1,6 +1,6 @@
 <?php
 
-namespace Feed_Reader;
+namespace FeedReader;
 
 function get_url( $controller, $method = null, $id = null, $all = false ) {
 	return add_query_arg(

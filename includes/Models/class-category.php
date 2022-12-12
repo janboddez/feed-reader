@@ -1,8 +1,8 @@
 <?php
 
-namespace Feed_Reader\Models;
+namespace FeedReader\Models;
 
-use Feed_Reader\Models\Feed;
+use FeedReader\Models\Feed;
 
 class Category extends Model {
 	/** @var string $table */
@@ -17,7 +17,8 @@ class Category extends Model {
 		$sql = sprintf( 'SELECT * FROM %s', static::table() );
 
 		if ( $search ) {
-			$sql .= $wpdb->prepare( ' WHERE user_id = %d AND name LIKE %s ORDER BY name ASC LIMIT %d OFFSET %d', get_current_user_id(), "%$search%", $limit, $offset );
+			$search = str_replace( '%', '', $search );
+			$sql   .= $wpdb->prepare( ' WHERE user_id = %d AND name LIKE %s ORDER BY name ASC LIMIT %d OFFSET %d', get_current_user_id(), "%$search%", $limit, $offset );
 		} else {
 			$sql .= $wpdb->prepare( ' WHERE user_id = %d ORDER BY name ASC LIMIT %d OFFSET %d', get_current_user_id(), $limit, $offset );
 		}

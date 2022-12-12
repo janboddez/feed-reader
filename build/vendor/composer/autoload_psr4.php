@@ -6,4 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'FeedReader\\zz\\' => array($vendorDir . '/deruli/html-minifier/src/zz'),
 );

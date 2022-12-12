@@ -1,6 +1,6 @@
 <?php
 
-namespace Feed_Reader\Models;
+namespace FeedReader\Models;
 
 abstract class Model {
 	/** @var string $table */

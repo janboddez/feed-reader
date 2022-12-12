@@ -6,10 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="entry-meta">
 	<?php if ( ! empty( $entry->author ) ) : ?>
-		<a href="<?php echo esc_url( \Feed_Reader\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( $entry->author ); ?></a>
+		<a href="<?php echo esc_url( \FeedReader\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( $entry->author ); ?></a>
 		<span aria-hidden="true">&bull;</span>
 	<?php elseif ( ! empty( $entry->feed_name ) ) : ?>
-		<a href="<?php echo esc_url( \Feed_Reader\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( $entry->feed_name ); ?></a>
+		<a href="<?php echo esc_url( \FeedReader\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( $entry->feed_name ); ?></a>
 		<span aria-hidden="true">&bull;</span>
 	<?php endif; ?>
 

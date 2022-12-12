@@ -1,6 +1,6 @@
 <?php
 
-use Feed_Reader\Controllers\Controller;
+use FeedReader\Controllers\Controller;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -9,9 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="wrap feed-reader">
 	<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>">
 		<?php if ( ! empty( $entry->name ) ) : ?>
-			<h1 class="entry-title"><a href="<?php echo esc_url( \Feed_Reader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( $entry->name ); ?></a></h1>
+			<h1 class="entry-title"><a href="<?php echo esc_url( \FeedReader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( $entry->name ); ?></a></h1>
 		<?php elseif ( ! empty( $entry->summary ) ) : ?>
-			<h1 class="screen-reader-text"><a href="<?php echo esc_url( \Feed_Reader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( $entry->summary ); ?></a></h1>
+			<h1 class="screen-reader-text"><a href="<?php echo esc_url( \FeedReader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( $entry->summary ); ?></a></h1>
 		<?php endif; ?>
 
 		<?php

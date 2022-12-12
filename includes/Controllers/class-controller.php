@@ -1,6 +1,6 @@
 <?php
 
-namespace Feed_Reader\Controllers;
+namespace FeedReader\Controllers;
 
 abstract class Controller {
 	protected static function render( $name, $data = null ) {

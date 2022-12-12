@@ -1,8 +1,8 @@
 <?php
 
-namespace Feed_Reader\Models;
+namespace FeedReader\Models;
 
-use Feed_Reader\Models\Category;
+use FeedReader\Models\Category;
 
 class Feed extends Model {
 	/** @var string $table */
@@ -17,6 +17,8 @@ class Feed extends Model {
 		$sql = sprintf( 'SELECT * FROM %s', static::table() );
 
 		if ( $search ) {
+			$search = str_replace( '%', '', $search );
+
 			$sql .= $wpdb->prepare(
 				' WHERE user_id = %d AND (url LIKE %s OR name LIKE %s) ORDER BY url ASC LIMIT %d OFFSET %d',
 				get_current_user_id(),

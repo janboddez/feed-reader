@@ -12,10 +12,10 @@
  *
  * @author  Jan Boddez <jan@janboddez.be>
  * @license http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
- * @package Feed_Reader
+ * @package FeedReader
  */
 
-namespace Feed_Reader;
+namespace FeedReader;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,5 +33,5 @@ if ( ! class_exists( '\\WP_List_Table' ) ) {
 
 require_once __DIR__ . '/build/vendor/scoper-autoload.php';
 
-$feed_reader = Feed_Reader::get_instance();
+$feed_reader = FeedReader::get_instance();
 $feed_reader->register();

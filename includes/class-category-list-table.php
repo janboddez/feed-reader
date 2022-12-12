@@ -1,14 +1,13 @@
 <?php
 
-namespace Feed_Reader;
+namespace FeedReader;
 
-use Feed_Reader\Models\Category;
+use FeedReader\Models\Category;
 
 class Category_List_Table extends \WP_List_Table {
 	public function get_columns() {
 		return array(
 			'name' => __( 'Name', 'feed-reader' ),
-			'uid'  => __( 'UID', 'feed-reader' ),
 		);
 	}
 
@@ -25,7 +24,7 @@ class Category_List_Table extends \WP_List_Table {
 		$search = null;
 
 		if ( ! empty( $_GET['s'] ) && is_string( $_GET['s'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$search = sanitize_key( wp_unslash( $_GET['s'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$search = sanitize_text_field( wp_unslash( $_GET['s'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
 		list( $categories, $total ) = Category::paginate( 15, $search );
