@@ -10,5 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<hr class="wp-header-end" />
 
+	<div id="feeds-filter">
+		<?php $feed_table->search_box( esc_html__( 'Search Feeds' ), 'feed-reader-feed' ); ?>
+		<div style="clear: both;"></div>
+	</div>
+
 	<?php $feed_table->display(); ?>
 </div>

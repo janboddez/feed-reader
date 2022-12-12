@@ -8,25 +8,46 @@ class Feed extends Model {
 	/** @var string $table */
 	protected static $table = 'feed_reader_feeds';
 
-	public static function paginate( $limit = 15 ) {
+	public static function paginate( $limit = 15, $search = null ) {
 		$paged  = isset( $_GET['paged'] ) ? (int) $_GET['paged'] : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$offset = max( 0, $paged - 1 ) * $limit;
 
 		global $wpdb;
 
+		$sql = sprintf( 'SELECT * FROM %s', static::table() );
+
+		if ( $search ) {
+			$sql .= $wpdb->prepare(
+				' WHERE user_id = %d AND (url LIKE %s OR name LIKE %s) ORDER BY url ASC LIMIT %d OFFSET %d',
+				get_current_user_id(),
+				"%$search%",
+				"%$search%",
+				$limit,
+				$offset
+			);
+		} else {
+			$sql .= $wpdb->prepare( ' WHERE user_id = %d ORDER BY url ASC LIMIT %d OFFSET %d', get_current_user_id(), $limit, $offset );
+		}
+
+		$total = preg_replace( '~^SELECT \*~', 'SELECT COUNT(*)', $sql );
+		$total = preg_replace( '~LIMIT \d+ OFFSET \d+$~', '', $total );
+
 		$sql = sprintf(
 			'SELECT f.*, c.name AS category_name
-			 FROM (SELECT * FROM %s WHERE user_id = %%d  ORDER BY url ASC LIMIT %d OFFSET %d) AS f
+			 FROM (%s) AS f
 			 LEFT JOIN %s AS c ON c.id = f.category_id
 			 ORDER BY f.url',
-			static::table(),
-			$limit,
-			$offset,
+			$sql,
 			Category::table()
 		);
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
-		return $wpdb->get_results( $wpdb->prepare( $sql, get_current_user_id() ) );
+		$items = $wpdb->get_results( $sql );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+		$total = (int) $wpdb->get_var( $total );
+
+		return array( $items, $total );
 	}
 
 	public static function entries( $id, $limit = 15, $all = false ) {

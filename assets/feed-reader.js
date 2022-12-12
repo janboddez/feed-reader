@@ -50,4 +50,30 @@ jQuery( document ).ready( function ( $ ) {
 
 	$( '.feed-reader .mark-read' ).click( mark_read );
 	$( '.feed-reader .mark-unread' ).click( mark_unread );
+
+	$( '#feed-reader-category-search-input' ).keyup( function( e ) {
+		if ( 'Enter' === e.key ) {
+			$( '#categories-filter #search-submit' ).click();
+		}
+	} );
+
+	$( '#categories-filter #search-submit' ).click( function( e ) {
+		var url = new URL( window.location.href );
+		url.searchParams.delete( 'paged' );
+		url.searchParams.set( 's', $( '#feed-reader-category-search-input' ).val() );
+		location.assign( url );
+	} );
+
+	$( '#feed-reader-feed-search-input' ).keyup( function( e ) {
+		if ( 'Enter' === e.key ) {
+			$( '#feeds-filter #search-submit' ).click();
+		}
+	} );
+
+	$( '#feeds-filter #search-submit' ).click( function( e ) {
+		var url = new URL( window.location.href );
+		url.searchParams.delete( 'paged' );
+		url.searchParams.set( 's', $( '#feed-reader-feed-search-input' ).val() );
+		location.assign( url );
+	} );
 } );

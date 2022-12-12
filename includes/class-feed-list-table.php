@@ -28,7 +28,13 @@ class Feed_List_Table extends WP_List_Table {
 
 		$this->_column_headers = array( $columns, $hidden, $this->get_sortable_columns() );
 
-		$feeds = Feed::paginate();
+		$search = null;
+
+		if ( ! empty( $_GET['s'] ) && is_string( $_GET['s'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$search = sanitize_key( wp_unslash( $_GET['s'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		list( $feeds, $total ) = Feed::paginate( 15, $search );
 
 		if ( ! is_array( $feeds ) ) {
 			return;
@@ -36,7 +42,7 @@ class Feed_List_Table extends WP_List_Table {
 
 		$this->set_pagination_args(
 			array(
-				'total_items' => Feed::count(),
+				'total_items' => $total,
 				'per_page'    => 15,
 			)
 		);

@@ -134,3 +134,8 @@
 	gap: 1.5em;
 	justify-content: space-between;
 }
+
+#categories-filter,
+#feeds-filter {
+	margin-bottom: 0.25em;
+}

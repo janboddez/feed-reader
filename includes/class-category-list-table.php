@@ -22,7 +22,13 @@ class Category_List_Table extends \WP_List_Table {
 
 		$this->_column_headers = array( $columns, $hidden, $this->get_sortable_columns() );
 
-		$categories = Category::paginate();
+		$search = null;
+
+		if ( ! empty( $_GET['s'] ) && is_string( $_GET['s'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$search = sanitize_key( wp_unslash( $_GET['s'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		list( $categories, $total ) = Category::paginate( 15, $search );
 
 		if ( ! is_array( $categories ) ) {
 			return;
@@ -30,7 +36,7 @@ class Category_List_Table extends \WP_List_Table {
 
 		$this->set_pagination_args(
 			array(
-				'total_items' => Category::count(),
+				'total_items' => $total,
 				'per_page'    => 15,
 			)
 		);
