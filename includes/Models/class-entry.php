@@ -7,6 +7,13 @@ class Entry extends Model {
 	protected static $table = 'feed_reader_entries';
 
 	public static function cursor_paginate( $limit = 15, $all = false, $feed_id = null, $category_id = null ) {
+		if ( $feed_id ) {
+			$feeds = array( array( 'id' => $feed_id ) );
+		} elseif ( $category_id ) {
+			// Fetch all of this category's feeds.
+			$feeds = Category::feeds( $category_id );
+		}
+
 		global $wpdb;
 
 		// Let's start building our (sub)query. We use "soft deletes" and an
@@ -19,14 +26,6 @@ class Entry extends Model {
 		if ( ! $all ) {
 			// Unread entries only.
 			$sql .= $wpdb->prepare( ' AND is_read = %d', 0 );
-		}
-
-		if ( $feed_id ) {
-			// This one's easy.
-			$feeds = array( array( 'id' => $feed_id ) );
-		} elseif ( $category_id ) {
-			// Fetch all of this category's feeds.
-			$feeds = Category::feeds( $category_id );
 		}
 
 		if ( ! empty( $feeds ) ) {
