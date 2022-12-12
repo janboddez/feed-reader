@@ -8,11 +8,11 @@ global $wpdb;
 ?>
 CREATE TABLE <?php echo \FeedReader\Models\Category::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> (
 	id mediumint(9) UNSIGNED NOT NULL AUTO_INCREMENT,
+	uid varchar(191) DEFAULT '' NOT NULL,
 	name varchar(191),
 	created_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 	modified_at datetime,
 	user_id bigint(20) UNSIGNED,
-	uid varchar(191) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
 ) <?php echo $wpdb->get_charset_collate(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
 
@@ -27,7 +27,7 @@ CREATE TABLE <?php echo \FeedReader\Models\Feed::table(); // phpcs:ignore WordPr
 	empty_poll_count tinyint(4) DEFAULT 0 NOT NULL,
 	poll_frequency tinyint(4) DEFAULT 1 NOT NULL,
 	next_check datetime,
-	is_hidden boolean DEFAULT 0,
+	is_hidden boolean DEFAULT 0 NOT NULL,
 	created_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 	modified_at datetime,
 	category_id mediumint(9) UNSIGNED,
@@ -42,10 +42,10 @@ CREATE TABLE <?php echo \FeedReader\Models\Entry::table(); // phpcs:ignore WordP
 	url varchar(191),
 	name varchar(191),
 	author varchar(191),
-	avatar varchar(191),
 	content text,
 	summary text,
-	is_read boolean DEFAULT 0,
+	is_read boolean DEFAULT 0 NOT NULL,
+	is_starred boolean DEFAULT 0 NOT NULL,
 	published datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 	created_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 	modified_at datetime,
