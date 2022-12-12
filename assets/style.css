@@ -18,17 +18,17 @@
 }
 
 .feed-reader .note {
-	padding-top: 1.5em;
+	padding-top: 0.25em;
 }
 
-.feed-reader .hfeed .note:first-child {
-	/** Less padding if it's the first item *in a feed*. */
-	padding-top: 0.25em;
+.feed-reader > .note {
+	/** More padding on entry pages. */
+	padding-top: 1.5em;
 }
 
 .feed-reader .hentry + .hentry {
 	border-top: 1px solid #ccc;
-	margin-top: 2em;
+	margin-top: 1.75em;
 }
 
 .feed-reader .page-title,

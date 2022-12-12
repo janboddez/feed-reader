@@ -17,7 +17,7 @@ class Feed extends Model {
 		$sql = sprintf( 'SELECT * FROM %s', static::table() );
 
 		if ( $search ) {
-			$search = str_replace( '%', '', $search );
+			$search = str_replace( array( '\\', '_', '%' ), array( '\\\\', '\\_', '\\%' ), $search );
 
 			$sql .= $wpdb->prepare(
 				' WHERE user_id = %d AND (url LIKE %s OR name LIKE %s) ORDER BY url ASC LIMIT %d OFFSET %d',

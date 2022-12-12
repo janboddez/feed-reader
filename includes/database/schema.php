@@ -32,8 +32,7 @@ CREATE TABLE <?php echo \FeedReader\Models\Feed::table(); // phpcs:ignore WordPr
 	modified_at datetime,
 	category_id mediumint(9) UNSIGNED,
 	user_id bigint(20) UNSIGNED,
-	PRIMARY KEY (id),
-	FOREIGN KEY (category_id) REFERENCES <?php echo \FeedReader\Models\Category::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>(id)
+	PRIMARY KEY (id)
 ) <?php echo $wpdb->get_charset_collate(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
 
 CREATE TABLE <?php echo \FeedReader\Models\Entry::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> (
@@ -53,6 +52,5 @@ CREATE TABLE <?php echo \FeedReader\Models\Entry::table(); // phpcs:ignore WordP
 	feed_id mediumint(9) UNSIGNED,
 	user_id bigint(20) UNSIGNED,
 	data text,
-	PRIMARY KEY (id),
-	FOREIGN KEY (feed_id) REFERENCES <?php echo \FeedReader\Models\Feed::table(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>(id)
+	PRIMARY KEY (id)
 ) <?php echo $wpdb->get_charset_collate(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;

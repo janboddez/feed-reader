@@ -51,20 +51,9 @@ class Category_List_Table extends \WP_List_Table {
 		$actions = array(
 			'view'   => '<a href="' . esc_url( get_url( 'categories', 'view', $item->id, true ) ) . '">' . esc_html__( 'View', 'feed-reader' ) . '</a>',
 			'edit'   => '<a href="' . esc_url( get_url( 'categories', 'edit', $item->id ) ) . '">' . esc_html__( 'Edit', 'feed-reader' ) . '</a>',
-			'delete' => '<a href="' . esc_url( $this->get_delete_url( $item->id ) ) . '">' . esc_html__( 'Delete', 'feed-reader' ) . '</a>',
+			'delete' => '<a href="' . esc_url( get_url( 'categories', 'delete', $item->id ) ) . '">' . esc_html__( 'Delete', 'feed-reader' ) . '</a>',
 		);
 
 		return '<strong><a href="' . esc_url( get_url( 'categories', 'view', $item->id ) ) . '">' . esc_html( $item->name ) . '</a></strong>' . PHP_EOL . $this->row_actions( $actions );
-	}
-
-	protected function get_delete_url( $id ) {
-		return add_query_arg(
-			array(
-				'action'   => 'feed_reader_categories_delete',
-				'id'       => $id,
-				'_wpnonce' => wp_create_nonce( "feed-reader-categories:delete:$id" ),
-			),
-			admin_url( 'admin-post.php' )
-		);
 	}
 }

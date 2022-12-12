@@ -58,10 +58,14 @@ jQuery( document ).ready( function ( $ ) {
 	} );
 
 	$( '#categories-filter #search-submit' ).click( function( e ) {
+		var search = $( '#feed-reader-category-search-input' ).val();
+
+		if ( search ) {
 		var url = new URL( window.location.href );
-		url.searchParams.delete( 'paged' );
-		url.searchParams.set( 's', $( '#feed-reader-category-search-input' ).val() );
-		location.assign( url );
+			url.searchParams.delete( 'paged' );
+			url.searchParams.set( 's', search );
+			location.assign( url );
+		}
 	} );
 
 	$( '#feed-reader-feed-search-input' ).keyup( function( e ) {
@@ -71,9 +75,13 @@ jQuery( document ).ready( function ( $ ) {
 	} );
 
 	$( '#feeds-filter #search-submit' ).click( function( e ) {
-		var url = new URL( window.location.href );
-		url.searchParams.delete( 'paged' );
-		url.searchParams.set( 's', $( '#feed-reader-feed-search-input' ).val() );
-		location.assign( url );
+		var search = $( '#feed-reader-feed-search-input' ).val();
+
+		if ( search ) {
+			var url = new URL( window.location.href );
+			url.searchParams.delete( 'paged' );
+			url.searchParams.set( 's', search );
+			location.assign( url );
+		}
 	} );
 } );

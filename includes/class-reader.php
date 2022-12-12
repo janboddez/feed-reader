@@ -4,16 +4,19 @@ namespace FeedReader;
 
 use FeedReader\Doctrine\Inflector\InflectorFactory;
 use FeedReader\Jobs\Poll_Feeds;
+use FeedReader\Models\Category;
+use FeedReader\Models\Entry;
+use FeedReader\Models\Feed;
 use FeedReader\Router;
 
-class FeedReader {
-	const DB_VERSION     = '1.0';
+class Reader {
 	const PLUGIN_VERSION = '0.1.0';
+	const DB_VERSION     = '2';
 
 	/** @var Router $router */
 	private $router;
 
-	/** @var FeedReader $instance */
+	/** @var Feed_Reader $instance */
 	private static $instance;
 
 	/** @var InflectorFactory $inflector */
@@ -63,6 +66,31 @@ class FeedReader {
 		$sql = ob_get_clean();
 
 		dbDelta( $sql );
+
+		if ( (int) get_option( 'feed_reader_db_version' ) < 2 ) {
+			Category::insert(
+				array(
+					'name'    => 'General',
+					'user_id' => get_current_user_id(),
+				)
+			);
+
+			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				sprintf(
+					'ALTER table %s ADD FOREIGN KEY (category_id) REFERENCES %s(id)', // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+					Feed::table(), // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+					Category::table() // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				)
+			);
+
+			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				sprintf(
+					'ALTER table %s ADD FOREIGN KEY (feed_id) REFERENCES %s(id) ON DELETE CASCADE', // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+					Entry::table(), // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+					Feed::table() // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				)
+			);
+		}
 
 		update_option( 'feed_reader_db_version', self::DB_VERSION );
 	}

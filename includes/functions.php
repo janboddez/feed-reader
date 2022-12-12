@@ -3,6 +3,17 @@
 namespace FeedReader;
 
 function get_url( $controller, $method = null, $id = null, $all = false ) {
+	if ( 'delete' === $method ) {
+		return add_query_arg(
+			array(
+				'action'   => "feed_reader_{$controller}_{$method}",
+				'id'       => $id,
+				'_wpnonce' => wp_create_nonce( "feed-reader-{$controller}:{$method}:{$id}" ),
+			),
+			admin_url( 'admin-post.php' )
+		);
+	}
+
 	return add_query_arg(
 		array_filter(
 			array(

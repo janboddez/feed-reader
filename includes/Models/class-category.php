@@ -17,7 +17,7 @@ class Category extends Model {
 		$sql = sprintf( 'SELECT * FROM %s', static::table() );
 
 		if ( $search ) {
-			$search = str_replace( '%', '', $search );
+			$search = str_replace( array( '\\', '_', '%' ), array( '\\\\', '\\_', '\\%' ), $search );
 			$sql   .= $wpdb->prepare( ' WHERE user_id = %d AND name LIKE %s ORDER BY name ASC LIMIT %d OFFSET %d', get_current_user_id(), "%$search%", $limit, $offset );
 		} else {
 			$sql .= $wpdb->prepare( ' WHERE user_id = %d ORDER BY name ASC LIMIT %d OFFSET %d', get_current_user_id(), $limit, $offset );

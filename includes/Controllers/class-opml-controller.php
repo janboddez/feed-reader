@@ -101,7 +101,7 @@ class OPML_Controller extends Controller {
 						array(
 							'url'         => esc_url_raw( $feed['url'] ),
 							'name'        => isset( $feed['name'] ) ? sanitize_text_field( $feed['name'] ) : preg_replace( '~^www~', '', wp_parse_url( $feed['feed'], PHP_URL_HOST ) ),
-							'name'        => isset( $feed['site_url'] ) && filter_var( $feed['url'], FILTER_VALIDATE_URL ) ? esc_url_raw( $feed['site_url'] ) : null,
+							'site_url'    => isset( $feed['site_url'] ) && filter_var( $feed['url'], FILTER_VALIDATE_URL ) ? esc_url_raw( $feed['site_url'] ) : null,
 							'category_id' => isset( $category_id ) ? $category_id : null,
 							'user_id'     => get_current_user_id(),
 						)

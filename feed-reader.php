@@ -33,5 +33,5 @@ if ( ! class_exists( '\\WP_List_Table' ) ) {
 
 require_once __DIR__ . '/build/vendor/scoper-autoload.php';
 
-$feed_reader = FeedReader::get_instance();
-$feed_reader->register();
+$reader = Reader::get_instance();
+$reader->register();

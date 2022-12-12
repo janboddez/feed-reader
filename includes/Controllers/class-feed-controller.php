@@ -181,13 +181,7 @@ class Feed_Controller extends Controller {
 		if ( $feed ) {
 			global $wpdb;
 
-			// (Permanently) delete entries.
-			$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-				Entry::table(),
-				array( 'feed_id' => $feed->id )
-			);
-
-			// Delete feed.
+			// Delete feed. Linked entries are handled by the cascade.
 			Feed::delete( $feed->id );
 		}
 
