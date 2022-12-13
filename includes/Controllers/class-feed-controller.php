@@ -188,4 +188,34 @@ class Feed_Controller extends Controller {
 		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds' ) ) );
 		exit;
 	}
+
+	public static function mark_read() {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		if ( empty( $_GET['_wpnonce'] ) || empty( $_POST['id'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'feed-reader-feeds:mark-read:' . intval( $_GET['id'] ) ) ) {
+			wp_die( esc_html__( 'This page should not be accessed directly.', 'feed-reader' ) );
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$feed = Feed::find( (int) $_GET['id'] ); // Ensure feed exists and belongs to the current user.
+
+		if ( $feed ) {
+			Entry::update(
+				array( 'is_read' => 1 ),
+				array(
+					'feed_id' => $feed->id,
+					'user_id' => get_current_user_id(), // Redundant, but whatevs.
+				)
+			);
+
+			wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds', 'view', $feed->id ) ) );
+			exit;
+		}
+
+		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds' ) ) );
+		exit;
+	}
 }
