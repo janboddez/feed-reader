@@ -21,6 +21,7 @@ class Router {
 		add_action( 'admin_post_feed_reader_feeds_store', array( Feed_Controller::class, 'store' ) );
 		add_action( 'admin_post_feed_reader_feeds_update', array( Feed_Controller::class, 'update' ) );
 		add_action( 'admin_post_feed_reader_feeds_delete', array( Feed_Controller::class, 'delete' ) );
+		add_action( 'admin_post_feed_reader_feeds_mark_read', array( Feed_Controller::class, 'mark_read' ) );
 
 		add_action( 'admin_post_feed_reader_opml_import', array( OPML_Controller::class, 'import' ) );
 
