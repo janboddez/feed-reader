@@ -73,6 +73,15 @@ class Entry extends Model {
 				$after[1],
 				$limit + 1
 			);
+
+			// We'll also be counting the total number of items to the right of
+			// (and including) our "cursor." Rather than build an entirely new
+			// query, let's keep things simple and use some regex trickery.
+			$total = preg_replace( '~^SELECT \*~', 'SELECT COUNT(*)', $sql );
+			$total = preg_replace( '~LIMIT \d+$~', '', $total );
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+			$total = (int) $wpdb->get_var( $total );
 		} else {
 			// First page.
 			$sql .= $wpdb->prepare( ' ORDER BY published DESC, id DESC LIMIT %d', $limit + 1 );
@@ -95,7 +104,7 @@ class Entry extends Model {
 		$before = isset( $items[0] ) ? \FeedReader\build_cursor( $items[0] ) : null;
 
 		// Build a new "after" cursor only if there is a next page.
-		$after = isset( $items[ $limit ] ) ? \FeedReader\build_cursor( $items[ $limit ] ) : null;
+		$after = isset( $items[ count( $items ) - 1 ] ) ? \FeedReader\build_cursor( $items[ count( $items ) - 1 ] ) : null;
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( empty( $_GET['before'] ) && empty( $_GET['after'] ) ) {
@@ -103,11 +112,18 @@ class Entry extends Model {
 			$before = null;
 		}
 
-		if ( isset( $total ) && $total <= count( $items ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( ! empty( $_GET['before'] ) && \FeedReader\validate_cursor( $_GET['before'] ) && isset( $total ) && $total <= count( $items ) ) {
 			// The total number of items left of our cursor is smaller than or
 			// equal to the number of items on the current page. I.e., we're on
 			// the first page.
 			$before = null;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		} elseif ( ! empty( $_GET['after'] ) && \FeedReader\validate_cursor( $_GET['after'] ) && isset( $total ) && $total <= count( $items ) ) {
+			// The total number of items right of our cursor is smaller than or
+			// equal to the number of items on the current page. I.e., we're on
+			// the last page.
+			$after = null;
 		}
 
 		// This item, if it exists, is really part of the next page.

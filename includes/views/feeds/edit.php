@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			<tr valign="top">
 				<th scope="row"><label for="category"><?php esc_html_e( 'Category', 'feed-reader' ); ?></th>
-				<td><select id="category" name="category">
+				<td><select id="category" name="category" style="min-width: 10%;">
 					<option><?php esc_html_e( '&mdash;', 'feed-reader' ); ?></option>
 					<?php foreach ( \FeedReader\Models\Category::all() as $category ) : ?>
 						<option value="<?php echo esc_attr( $category->id ); ?>" <?php selected( isset( $feed->category_id ) ? $feed->category_id : null, $category->id ); ?>><?php echo esc_html( $category->name ); ?></option>

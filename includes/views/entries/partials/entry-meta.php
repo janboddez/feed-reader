@@ -7,11 +7,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="entry-meta">
 	<?php if ( ! empty( $entry->author ) ) : ?>
 		<a href="<?php echo esc_url( \FeedReader\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( $entry->author ); ?></a>
-		<span aria-hidden="true">&bull;</span>
 	<?php elseif ( ! empty( $entry->feed_name ) ) : ?>
 		<a href="<?php echo esc_url( \FeedReader\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( $entry->feed_name ); ?></a>
-		<span aria-hidden="true">&bull;</span>
+	<?php else : ?>
+		<a href="<?php echo esc_url( \FeedReader\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( preg_replace( '~^www.~', '', wp_parse_url( esc_html( $entry->url ), PHP_URL_HOST ) ) ); ?></a>
 	<?php endif; ?>
+
+	<span aria-hidden="true">&bull;</span>
 
 	<?php if ( ! empty( $entry->url ) ) : ?>
 		<time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>">

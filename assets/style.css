@@ -22,8 +22,14 @@
 }
 
 .feed-reader > .note {
-	/** More padding on entry pages. */
+	/** More padding on single-note pages. */
 	padding-top: 1.5em;
+}
+
+.feed-reader .hfeed > .note:first-child {
+	/** No padding, but some margin, above the first note in a feed. */
+	margin-top: 1.75em;
+	padding-top: 0;
 }
 
 .feed-reader .hentry + .hentry {
@@ -121,6 +127,12 @@
 .feed-reader figure {
 	margin-inline-start: 0;
 	margin-inline-end: 0;
+}
+
+.feed-reader figcaption {
+	color: rgb(100, 105, 112);
+	font-style: italic;
+	margin-top: 0.125em;
 }
 
 .feed-reader figure img {

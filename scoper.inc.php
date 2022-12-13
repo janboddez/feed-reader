@@ -24,5 +24,5 @@ return [
         Finder::create()->append([
             'composer.json',
         ]),
-    ]
+    ],
 ];

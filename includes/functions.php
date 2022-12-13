@@ -46,6 +46,14 @@ function singularize( $value ) {
 	return array_key_exists( $value, $args ) ? $args[ $value ] : $value;
 }
 
+function show_in_full( $entry ) {
+	if ( empty( $entry->content ) ) {
+		return false;
+	}
+
+	return mb_strlen( wp_strip_all_tags( $entry->content ) ) <= 500;
+}
+
 function kses( $string ) {
 	$allowed_html = array(
 		'a'          => array(
@@ -67,14 +75,15 @@ function kses( $string ) {
 			'datetime' => true,
 		),
 		'em'         => array(),
-		'figure'     => array(
-			'figcaption' => array(),
-		),
+		'figure'     => array(),
+		'figcaption' => array(),
 		'i'          => array(),
 		'img'        => array(
-			'height' => true,
+			'alt'    => true,
 			'src'    => true,
+			'srcset' => true,
 			'width'  => true,
+			'height' => true,
 		),
 		'p'          => array(),
 		'q'          => array(
@@ -105,6 +114,32 @@ function kses( $string ) {
 		'h4'         => array(),
 		'h5'         => array(),
 		'h6'         => array(),
+		'picture'    => array(
+			'srcset' => true,
+			'type'   => true,
+		),
+		'video'      => array(
+			'controls' => true,
+			'poster'   => true,
+			'src'      => true,
+		),
+		'audio'      => array(
+			'duration' => true,
+			'src'      => true,
+		),
+		'track'      => array(
+			'label'   => true,
+			'src'     => true,
+			'srclang' => true,
+			'kind'    => true,
+		),
+		'source'     => array(
+			'src'    => true,
+			'srcset' => true,
+			'type'   => true,
+
+		),
+		'hr'         => array(),
 	);
 
 	return wp_kses( $string, $allowed_html );

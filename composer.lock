@@ -4,71 +4,69 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c81e79e7b5617aa22a566c4ec1fb54f3",
+    "content-hash": "e22399f57b1a162f176c2fad6f155eda",
     "packages": [
         {
-            "name": "deruli/html-minifier",
-            "version": "0.5.1",
+            "name": "mf2/mf2",
+            "version": "v0.5.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/derUli/html-minifier.git",
-                "reference": "c07f1a732fb27e27e438ad2010c0af48461dc1c1"
+                "url": "https://github.com/microformats/php-mf2.git",
+                "reference": "ddc56de6be62ed4a21f569de9b80e17af678ca50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/derUli/html-minifier/zipball/c07f1a732fb27e27e438ad2010c0af48461dc1c1",
-                "reference": "c07f1a732fb27e27e438ad2010c0af48461dc1c1",
+                "url": "https://api.github.com/repos/microformats/php-mf2/zipball/ddc56de6be62ed4a21f569de9b80e17af678ca50",
+                "reference": "ddc56de6be62ed4a21f569de9b80e17af678ca50",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=5.6.0"
             },
             "require-dev": {
-                "satooshi/php-coveralls": "v2.0.0"
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+                "mf2/tests": "dev-master#e9e2b905821ba0a5b59dab1a8eaf40634ce9cd49",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpunit/phpunit": "^5.7",
+                "squizlabs/php_codesniffer": "^3.6.2"
             },
+            "suggest": {
+                "barnabywalters/mf-cleaner": "To more easily handle the canonical data php-mf2 gives you",
+                "masterminds/html5": "Alternative HTML parser for PHP, for better HTML5 support."
+            },
+            "bin": [
+                "bin/fetch-mf2",
+                "bin/parse-mf2"
+            ],
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "zz": "src/"
-                }
+                "files": [
+                    "Mf2/Parser.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3-Clause"
+                "CC0-1.0"
             ],
             "authors": [
                 {
-                    "name": "Google inc",
-                    "homepage": "http://www.chromium.org/blink",
-                    "role": "Author"
-                },
-                {
-                    "name": "zaininnari",
-                    "homepage": "https://github.com/zaininnari/",
-                    "role": "Developer"
-                },
-                {
-                    "name": "raivisdejus",
-                    "homepage": "https://github.com/raivisdejus/",
-                    "role": "Developer"
-                },
-                {
-                    "name": "derUli",
-                    "homepage": "https://github.com/derUli/",
-                    "role": "Developer"
+                    "name": "Barnaby Walters",
+                    "homepage": "http://waterpigs.co.uk"
                 }
             ],
-            "description": "The Blink HTMLTokenizer ported to PHP. Fork by derUli.",
-            "homepage": "https://github.com/derUli/html-minifier",
+            "description": "A pure, generic microformats2 parser — makes HTML as easy to consume as a JSON API",
             "keywords": [
-                "Blink",
-                "HTML minify",
-                "php"
+                "html",
+                "microformats",
+                "microformats 2",
+                "parser",
+                "semantic"
             ],
             "support": {
-                "source": "https://github.com/derUli/html-minifier/tree/master"
+                "issues": "https://github.com/microformats/php-mf2/issues",
+                "source": "https://github.com/microformats/php-mf2/tree/v0.5.0"
             },
-            "time": "2019-02-24T18:52:13+00:00"
+            "time": "2022-02-10T01:05:27+00:00"
         }
     ],
     "packages-dev": [],

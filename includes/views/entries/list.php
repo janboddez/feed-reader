@@ -61,13 +61,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 					endif;
 					?>
 
-					<div class="entry-summary">
-						<p>
-							<?php echo $entry->summary; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-							<?php /* translators: %s: Entry title */ ?>
-							<a href="<?php echo esc_url( \FeedReader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php printf( esc_html__( 'Continue reading %s', 'feed-reader' ), '<span class="screen-reader-text">' . esc_html( $entry->name ) . '</span>' ); ?></a>
-						</p>
-					</div>
+					<?php if ( \FeedReader\show_in_full( $entry ) ) : ?>
+						<div class="entry-content">
+							<?php echo $entry->content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						</div>
+					<?php else : ?>
+						<div class="entry-summary">
+							<p>
+								<?php echo $entry->summary; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+								<?php /* translators: %s: Entry title */ ?>
+								<a href="<?php echo esc_url( \FeedReader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php printf( esc_html__( 'Continue reading %s', 'feed-reader' ), '<span class="screen-reader-text">' . esc_html( $entry->name ) . '</span>' ); ?></a>
+							</p>
+						</div>
+					<?php endif; ?>
 
 					<?php
 					if ( empty( $entry->name ) ) :

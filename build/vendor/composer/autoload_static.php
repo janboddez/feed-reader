@@ -4,24 +4,11 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1562bc503a1d9fc176f2d829811bca0b
+class ComposerStaticInit8864d1b6a4583b2f1066d0649180cd8b
 {
     public static $files = array (
+        '757772e28a0943a9afe83def8db95bdf' => __DIR__ . '/..' . '/mf2/mf2/Mf2/Parser.php',
         'a01125dfebcda7ec3333dcd2d57ad8f2' => __DIR__ . '/../..' . '/../includes/functions.php',
-    );
-
-    public static $prefixLengthsPsr4 = array (
-        'F' => 
-        array (
-            'FeedReader\\zz\\' => 14,
-        ),
-    );
-
-    public static $prefixDirsPsr4 = array (
-        'FeedReader\\zz\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/deruli/html-minifier/src/zz',
-        ),
     );
 
     public static $classMap = array (
@@ -33,6 +20,9 @@ class ComposerStaticInit1562bc503a1d9fc176f2d829811bca0b
         'FeedReader\\Controllers\\Feed_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-feed-controller.php',
         'FeedReader\\Controllers\\OPML_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-opml-controller.php',
         'FeedReader\\Feed_List_Table' => __DIR__ . '/../..' . '/../includes/class-feed-list-table.php',
+        'FeedReader\\Formats\\Format' => __DIR__ . '/../..' . '/../includes/Formats/class-format.php',
+        'FeedReader\\Formats\\JSON_Feed' => __DIR__ . '/../..' . '/../includes/Formats/class-json-feed.php',
+        'FeedReader\\Formats\\XML' => __DIR__ . '/../..' . '/../includes/Formats/class-xml.php',
         'FeedReader\\Jobs\\Poll_Feeds' => __DIR__ . '/../..' . '/../includes/Jobs/class-poll-feeds.php',
         'FeedReader\\Models\\Category' => __DIR__ . '/../..' . '/../includes/Models/class-category.php',
         'FeedReader\\Models\\Entry' => __DIR__ . '/../..' . '/../includes/Models/class-entry.php',
@@ -41,19 +31,12 @@ class ComposerStaticInit1562bc503a1d9fc176f2d829811bca0b
         'FeedReader\\OPML_Parser' => __DIR__ . '/../..' . '/../includes/class-opml-parser.php',
         'FeedReader\\Reader' => __DIR__ . '/../..' . '/../includes/class-reader.php',
         'FeedReader\\Router' => __DIR__ . '/../..' . '/../includes/class-router.php',
-        'FeedReader\\zz\\Html\\HTMLMinify' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/HTMLMinify.php',
-        'FeedReader\\zz\\Html\\HTMLNames' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/HTMLNames.php',
-        'FeedReader\\zz\\Html\\HTMLToken' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/HTMLToken.php',
-        'FeedReader\\zz\\Html\\HTMLTokenizer' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/HTMLTokenizer.php',
-        'FeedReader\\zz\\Html\\SegmentedString' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/SegmentedString.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1562bc503a1d9fc176f2d829811bca0b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1562bc503a1d9fc176f2d829811bca0b::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit1562bc503a1d9fc176f2d829811bca0b::$classMap;
+            $loader->classMap = ComposerStaticInit8864d1b6a4583b2f1066d0649180cd8b::$classMap;
 
         }, null, ClassLoader::class);
     }
