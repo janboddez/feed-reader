@@ -63,7 +63,6 @@ class Entry_Controller extends Controller {
 		}
 
 		if ( empty( $_POST['_wpnonce'] ) || empty( $_POST['id'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'feed-reader-entries:mark-read:' . intval( $_POST['id'] ) ) ) {
-			// Missing or invalid nonce or category ID.
 			wp_die( esc_html__( 'This page should not be accessed directly.', 'feed-reader' ) );
 		}
 
@@ -85,7 +84,6 @@ class Entry_Controller extends Controller {
 		}
 
 		if ( empty( $_POST['_wpnonce'] ) || empty( $_POST['id'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'feed-reader-entries:mark-unread:' . intval( $_POST['id'] ) ) ) {
-			// Missing or invalid nonce or category ID.
 			wp_die( esc_html__( 'This page should not be accessed directly.', 'feed-reader' ) );
 		}
 

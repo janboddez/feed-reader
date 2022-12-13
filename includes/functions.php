@@ -3,10 +3,10 @@
 namespace FeedReader;
 
 function get_url( $controller, $method = null, $id = null, $all = false ) {
-	if ( 'delete' === $method ) {
+	if ( in_array( $method, array( 'delete', 'mark-read' ), true ) ) {
 		return add_query_arg(
 			array(
-				'action'   => "feed_reader_{$controller}_{$method}",
+				'action'   => "feed_reader_{$controller}_" . str_replace( '-', '_', $method ),
 				'id'       => $id,
 				'_wpnonce' => wp_create_nonce( "feed-reader-{$controller}:{$method}:{$id}" ),
 			),

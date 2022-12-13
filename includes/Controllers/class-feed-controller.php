@@ -195,7 +195,7 @@ class Feed_Controller extends Controller {
 		}
 
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-		if ( empty( $_GET['_wpnonce'] ) || empty( $_POST['id'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'feed-reader-feeds:mark-read:' . intval( $_GET['id'] ) ) ) {
+		if ( empty( $_GET['_wpnonce'] ) || empty( $_GET['id'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'feed-reader-feeds:mark-read:' . intval( $_GET['id'] ) ) ) {
 			wp_die( esc_html__( 'This page should not be accessed directly.', 'feed-reader' ) );
 		}
 
@@ -205,10 +205,7 @@ class Feed_Controller extends Controller {
 		if ( $feed ) {
 			Entry::update(
 				array( 'is_read' => 1 ),
-				array(
-					'feed_id' => $feed->id,
-					'user_id' => get_current_user_id(), // Redundant, but whatevs.
-				)
+				array( 'feed_id' => $feed->id )
 			);
 
 			wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds', 'view', $feed->id ) ) );
