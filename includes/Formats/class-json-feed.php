@@ -8,6 +8,11 @@ class JSON_Feed extends Format {
 	public static function parse( $body, $feed ) {
 		$items = array();
 		$data  = json_decode( $body );
+		
+		if ( empty( $data->items ) ) {
+			/** @todo: Update `$feed` here rather than in the poll job? */
+			return $items;
+		}
 
 		foreach ( $data->items as $item ) {
 			$items[] = static::parse_item( $item, $data, $feed );
@@ -19,7 +24,8 @@ class JSON_Feed extends Format {
 	protected static function parse_item( $item, $data, $feed ) {
 		$entry = array();
 
-		$entry['uid']       = ! empty( $item->id ) ? $item->id : null;
+		$entry['uid'] = ! empty( $item->id ) ? $item->id : null;
+		/** @todo: Validate UID, and generate one if needed. And validate these dates. */
 		$entry['published'] = ! empty( $item->date_published ) ? $item->date_published : null;
 		$entry['updated']   = ! empty( $item->date_modified ) ? $item->date_modified : null;
 
