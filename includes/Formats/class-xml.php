@@ -13,8 +13,8 @@ class XML extends Format {
 		try {
 			$simplepie = new SimplePie();
 
-			$simplepie->set_stupidly_fast( true );  // Bypass sanitization (and a few more things), which we'll tackle in a second.
-			$simplepie->set_url_replacements( array() ); // Bypass relative URL resolution, handled in `self::hEntryFromFeedItem()`.
+			$simplepie->set_stupidly_fast( true ); // Bypass sanitization (and a few more things), which we'll tackle in a second.
+			$simplepie->set_url_replacements( array() ); // Bypass relative URL resolution, handled in below.
 			$simplepie->set_raw_data( $body );
 			$simplepie->init();
 			$simplepie->handle_content_type();
