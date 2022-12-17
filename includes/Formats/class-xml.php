@@ -50,15 +50,19 @@ class XML extends Format {
 		$entry = array();
 
 		$published = $item->get_gmdate( 'c' );
+
 		if ( in_array( strtotime( $published ), array( false, 0 ), true ) || strtotime( $published ) > time() ) {
 			$published = current_time( 'mysql', 1 );
 		}
+
 		$entry['published'] = $published;
 
 		$base = $simplepie->get_link() ?: $feed->url;
+
 		if ( 0 !== strpos( $base, 'http' ) || 0 !== strpos( $base, '//' ) ) {
 			$base = (string) SimplePie_IRI::absolutize( $feed->url, $base );
 		}
+
 		$base = (string) SimplePie_IRI::absolutize( $base, './' ); // Converts, e.g., `http://example.org/blog/feed.xml` to `http://example.org/blog/`. I think.
 
 		// We'll want to use original URLs as the base to absolutize asset URLs

@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<span aria-hidden="true">&bull;</span>
 
 	<?php if ( ! empty( $entry->url ) ) : ?>
+		<?php /** @todo: Have dates, inside feed views, point to the single entry. Maybe provide a separate link to the actual item. */ ?>
 		<time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>">
 			<?php /* translators: %s: Human-readable time ago */ ?>
 			<a href="<?php echo esc_url( $entry->url ); ?>"><?php echo esc_html( sprintf( __( '%s ago', 'feed-reader' ), human_time_diff( strtotime( $entry->published ), time() ) ) ); ?></a>
@@ -38,4 +39,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php esc_html_e( 'Mark as unread', 'feed-reader' ); ?>
 		</button>
 	<?php endif; ?>
+
+	<span aria-hidden="true">&bull;</span>
+
+	<button class="button-link delete" data-entry-id="<?php echo esc_attr( $entry->id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( "feed-reader-entries:delete:{$entry->id}" ) ); ?>">
+		<?php esc_html_e( 'Delete', 'feed-reader' ); ?>
+	</button>
 </div>

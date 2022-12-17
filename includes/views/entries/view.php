@@ -7,33 +7,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="wrap feed-reader">
-	<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>">
+	<?php if ( ! empty( $entry->url ) ) : ?>
+		<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>" data-url="<?php echo esc_url( $entry->url ); ?>">
+	<?php else : ?>
+		<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>">
+	<?php endif; ?>
 		<?php if ( ! empty( $entry->name ) ) : ?>
 			<h1 class="entry-title"><a href="<?php echo esc_url( \FeedReader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( $entry->name ); ?></a></h1>
 		<?php elseif ( ! empty( $entry->summary ) ) : ?>
 			<h1 class="screen-reader-text"><a href="<?php echo esc_url( \FeedReader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( $entry->summary ); ?></a></h1>
 		<?php endif; ?>
 
-		<?php
-		if ( ! empty( $entry ) ) :
-			if ( ! empty( $entry->name ) ) :
-				static::render( 'entries/partials/entry-meta', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope
-			endif;
-			?>
+		<?php static::render( 'entries/partials/entry-meta', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope ?>
 
+		<?php if ( ! empty( $entry->content ) ) : ?>
 			<div class="entry-content">
 				<?php echo $entry->content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
-
-			<?php
-			if ( empty( $entry->name ) ) :
-				static::render( 'entries/partials/entry-meta', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope
-			endif;
-		else :
-			?>
-			<p><?php esc_html_e( 'Looks like we couldn&rsquo;t find what you were looking for.', 'feed-reader' ); ?></p>
 			<?php
 		endif;
+
+		static::render( 'entries/partials/entry-actions', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope
 		?>
 	</article>
 </div>

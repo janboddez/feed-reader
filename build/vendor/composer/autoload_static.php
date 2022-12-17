@@ -19,6 +19,7 @@ class ComposerStaticInit8864d1b6a4583b2f1066d0649180cd8b
         'FeedReader\\Controllers\\Entry_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-entry-controller.php',
         'FeedReader\\Controllers\\Feed_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-feed-controller.php',
         'FeedReader\\Controllers\\OPML_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-opml-controller.php',
+        'FeedReader\\Controllers\\Post_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-post-controller.php',
         'FeedReader\\Feed_List_Table' => __DIR__ . '/../..' . '/../includes/class-feed-list-table.php',
         'FeedReader\\Formats\\Format' => __DIR__ . '/../..' . '/../includes/Formats/class-format.php',
         'FeedReader\\Formats\\JSON_Feed' => __DIR__ . '/../..' . '/../includes/Formats/class-json-feed.php',

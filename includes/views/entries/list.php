@@ -48,7 +48,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="hfeed">
 		<?php if ( ! empty( $entries ) ) : ?>
 			<?php foreach ( $entries as $entry ) : ?>
-				<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>">
+				<?php if ( ! empty( $entry->url ) ) : ?>
+					<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>" data-url="<?php echo esc_url( $entry->url ); ?>">
+				<?php else : ?>
+					<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>">
+				<?php endif; ?>
 					<?php if ( ! empty( $entry->name ) ) : ?>
 						<h2 class="entry-title"><a href="<?php echo esc_url( \FeedReader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( $entry->name ); ?></a></h2>
 					<?php elseif ( ! empty( $entry->summary ) ) : ?>
@@ -56,29 +60,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php
 					endif;
 
-					if ( ! empty( $entry->name ) ) :
-						static::render( 'entries/partials/entry-meta', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope
-					endif;
+					static::render( 'entries/partials/entry-meta', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope
 					?>
 
 					<?php if ( \FeedReader\show_in_full( $entry ) ) : ?>
 						<div class="entry-content">
+							<?php /** @todo: Check content exists. */ ?>
 							<?php echo $entry->content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						</div>
-					<?php else : ?>
+					<?php elseif ( ! empty( $entry->summary ) ) : ?>
 						<div class="entry-summary">
 							<p>
+								<?php /** @todo: Check a summary exists. And maybe add the paragraph tags during parsing already. */ ?>
 								<?php echo $entry->summary; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 								<?php /* translators: %s: Entry title */ ?>
-								<a href="<?php echo esc_url( \FeedReader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php printf( esc_html__( 'Continue reading %s', 'feed-reader' ), '<span class="screen-reader-text">' . esc_html( $entry->name ) . '</span>' ); ?></a>
+								<a href="<?php echo esc_url( \FeedReader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php printf( esc_html__( 'Continue reading %s &rarr;', 'feed-reader' ), '<span class="screen-reader-text">' . esc_html( $entry->name ) . '</span>' ); ?></a>
 							</p>
 						</div>
-					<?php endif; ?>
-
-					<?php
-					if ( empty( $entry->name ) ) :
-						static::render( 'entries/partials/entry-meta', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope
+						<?php
 					endif;
+
+					static::render( 'entries/partials/entry-actions', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope
 					?>
 				</article>
 				<?php

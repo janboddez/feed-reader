@@ -6,11 +6,13 @@ use FeedReader\Controllers\Category_Controller;
 use FeedReader\Controllers\Entry_Controller;
 use FeedReader\Controllers\Feed_Controller;
 use FeedReader\Controllers\OPML_Controller;
+use FeedReader\Controllers\Post_Controller;
 
 class Router {
 	public function register() {
 		add_action( 'admin_menu', array( $this, 'create_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'admin_footer', array( $this, 'include_icon_sprites' ) );
 
 		add_filter( 'parent_file', array( $this, 'highlight_menu_page' ) );
 
@@ -28,6 +30,8 @@ class Router {
 		add_action( 'wp_ajax_feed_reader_entries_delete', array( Entry_Controller::class, 'delete' ) );
 		add_action( 'wp_ajax_feed_reader_entries_mark_read', array( Entry_Controller::class, 'mark_read' ) );
 		add_action( 'wp_ajax_feed_reader_entries_mark_unread', array( Entry_Controller::class, 'mark_unread' ) );
+
+		add_action( 'wp_ajax_feed_reader_post', array( Post_Controller::class, 'process' ) );
 	}
 
 	public function create_menu() {
@@ -181,6 +185,15 @@ class Router {
 					),
 				)
 			);
+		}
+	}
+
+	public function include_icon_sprites() {
+		/** @todo: Load these only where relevant. */
+		$svg_icons = __DIR__ . '/../assets/icons.svg';
+
+		if ( is_file( $svg_icons ) ) {
+			require $svg_icons;
 		}
 	}
 

@@ -19,13 +19,28 @@ class JSON_Feed extends Format {
 	protected static function parse_item( $item, $data, $feed ) {
 		$entry = array();
 
-		$entry['uid']       = ! empty( $item->id ) ? $item->id : null;
-		$entry['published'] = ! empty( $item->date_published ) ? $item->date_published : null;
-		$entry['updated']   = ! empty( $item->date_modified ) ? $item->date_modified : null;
+		$published = ! empty( $item->date_published ) ? $item->date_published : '';
+
+		if ( in_array( strtotime( $published ), array( false, 0 ), true ) || strtotime( $published ) > time() ) {
+			$published = current_time( 'mysql', 1 );
+		}
+
+		$entry['published'] = $published;
 
 		$entry['url'] = ! empty( $item->url ) ? $item->url : null;
 
-		$entry['name'] = ! empty( $item->title ) ? sanitize_text_field( $item->title ) : null;
+		if ( ! empty( $item->id ) ) {
+			$uid = $item->id;
+		} else {
+			$uid = ! empty( $entry['url'] )
+				? '@' . $entry['url']
+				: '#' . md5( wp_json_encode( $item ) );
+		}
+
+		$entry['uid']       = $uid;
+		$entry['published'] = ! empty( $item->date_published ) ? $item->date_published : null;
+		$entry['updated']   = ! empty( $item->date_modified ) ? $item->date_modified : null;
+		$entry['name']      = ! empty( $item->title ) ? sanitize_text_field( $item->title ) : null;
 
 		if ( ! empty( $item->content_html ) ) {
 			$content = $item->content_html;
