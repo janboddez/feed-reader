@@ -89,7 +89,7 @@ class Entry extends Model {
 
 		// Add it all together.
 		$sql = sprintf(
-			'SELECT e.*, f.name AS feed_name
+			'SELECT e.*, f.name AS feed_name, f.icon AS feed_icon
 			 FROM (%s) AS e
 			 JOIN %s AS f ON f.id = e.feed_id
 			 ORDER BY e.published DESC, e.id DESC',

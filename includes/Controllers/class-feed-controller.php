@@ -86,6 +86,11 @@ class Feed_Controller extends Controller {
 
 			if ( $feed_id ) {
 				$feed = Feed::find( $feed_id );
+
+				if ( false === get_transient( "feed-reader:feeds:{$feed->id}:avatar" ) ) {
+					Feed::fetch_favicon( $feed );
+				}
+
 				Poll_Feeds::poll_feed( $feed );
 			}
 		}
@@ -152,6 +157,10 @@ class Feed_Controller extends Controller {
 			);
 
 			if ( $result ) {
+				if ( false === get_transient( "feed-reader:feeds:{$feed->id}:avatar" ) ) {
+					Feed::fetch_favicon( $feed );
+				}
+
 				Poll_Feeds::poll_feed( $feed );
 			}
 		}

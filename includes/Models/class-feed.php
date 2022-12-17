@@ -107,4 +107,96 @@ class Feed extends Model {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
 		return (int) $wpdb->get_var( $wpdb->prepare( $sql, $url, get_current_user_id() ) );
 	}
+
+	public static function fetch_favicon( $feed ) {
+		if ( empty( $feed->url ) ) {
+			return null;
+		}
+
+		$domain = wp_parse_url( $feed->url, PHP_URL_HOST );
+
+		$upload_dir = wp_get_upload_dir();
+		$dir        = trailingslashit( trailingslashit( $upload_dir['basedir'] ) . 'reader/avatars' );
+		$file       = hash( 'sha256', $domain ) . '.png';
+		$file       = $dir . $file;
+
+		wp_mkdir_p( $dir );
+
+		$url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file );
+
+		if ( is_file( $file ) && ( time() - filectime( $file ) ) < MONTH_IN_SECONDS ) {
+			// If the file exists, store its URL.
+			if ( empty( $feed->icon ) ) {
+				static::update(
+					array( 'icon' => esc_url_raw( $url ) ),
+					array( 'id' => $feed->id )
+				);
+
+				set_transient( "feed-reader:feeds:{$feed->id}:avatar", $url, WEEK_IN_SECONDS );
+				return;
+			}
+		}
+
+		$icon     = "https://icons.duckduckgo.com/ip3/{$domain}.ico"; // Note: may in fact return ICO, PNG, GIF or SVG files.
+		$response = wp_remote_get(
+			esc_url_raw( $icon )
+		);
+
+		if ( is_wp_error( $response ) ) {
+			error_log( '[Reader] Somehow could not download the image at ' . esc_url_raw( $icon ) . '.' );
+			set_transient( "feed-reader:feeds:{$feed->id}:avatar", null, WEEK_IN_SECONDS );
+			return;
+		}
+
+		$blob = wp_remote_retrieve_body( $response );
+
+		if ( 0 === strpos( trim( $blob ), '<svg ' ) ) {
+			// SVG icon. We don't support these, yet.
+			set_transient( "feed-reader:feeds:{$feed->id}:avatar", null, WEEK_IN_SECONDS );
+			return;
+		}
+
+		global $wp_filesystem;
+
+		if ( empty( $wp_filesystem ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
+		// Write image data.
+		if ( ! $wp_filesystem->put_contents( $file, $blob, 0644 ) ) {
+			error_log( '[Reader] Could not save image file: ' . $file . '.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			return null;
+		}
+
+		if ( ! function_exists( 'wp_crop_image' ) ) {
+			// Load image functions.
+			require_once ABSPATH . 'wp-admin/includes/image.php';
+		}
+
+		if ( ! file_is_valid_image( $file ) || ! file_is_displayable_image( $file ) ) {
+			// Somehow not a valid image. Delete it.
+			unlink( $file );
+
+			error_log( '[Reader] Invalid image file: ' . esc_url_raw( $icon ) . '.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			return null;
+		}
+
+		// Try to scale down and crop it.
+		$image = wp_get_image_editor( $file );
+
+		if ( ! is_wp_error( $image ) ) {
+			$image->resize( 32, 32, true );
+			$image->save( $file );
+		} else {
+			error_log( '[Reader] Something went wrong resizing the avatar (' . $file . '): ' . $image->get_error_message() . '.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		}
+
+		static::update(
+			array( 'icon' => esc_url_raw( $url ) ), // @todo: Convert to URL.
+			array( 'id' => $feed->id )
+		);
+
+		set_transient( "feed-reader:feeds:{$feed->id}:avatar", $url, WEEK_IN_SECONDS );
+	}
 }

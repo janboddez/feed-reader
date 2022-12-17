@@ -28,7 +28,7 @@
 
 .feed-reader .hentry + .hentry {
 	border-top: 1px solid #ccc;
-	margin-top: 1.25em;
+	margin-top: 1.75em;
 }
 
 .feed-reader .page-title,
@@ -64,6 +64,13 @@
 
 .feed-reader .note .entry-meta {
 	margin: 0.5em 0;
+}
+
+.feed-reader .avatar {
+	margin-inline-end: 1px;
+	vertical-align: middle;
+	position: relative;
+	top: -1px;
 }
 
 .feed-reader .entry-summary,
@@ -152,7 +159,7 @@
 }
 
 .feed-reader .actions {
-	margin: 1.25em 0;
+	margin: 1.25em 0 -0.5em;
 }
 
 .feed-reader .actions ul {
@@ -175,7 +182,7 @@
 }
 
 .feed-reader .actions div {
-	margin: 1em 0 1.75em;
+	margin: 1em 0 2em;
 }
 
 .feed-reader .actions div textarea {

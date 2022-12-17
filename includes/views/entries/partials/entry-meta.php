@@ -5,6 +5,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="entry-meta">
+	<?php if ( ! empty( $entry->avatar ) ) : ?>
+	<?php elseif ( ! empty( $entry->feed_icon ) ) : ?>
+		<img class="avatar" src="<?php echo esc_url( $entry->feed_icon ); ?>" width="16" height="16" loading="lazy">
+	<?php endif; ?>
+
 	<?php if ( ! empty( $entry->author ) ) : ?>
 		<a href="<?php echo esc_url( \FeedReader\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( $entry->author ); ?></a>
 	<?php elseif ( ! empty( $entry->feed_name ) ) : ?>
@@ -40,9 +45,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</button>
 	<?php endif; ?>
 
-	<span aria-hidden="true">&bull;</span>
+	<?php if ( ! defined( 'FEED_READER_ACTIONS' ) || ! FEED_READER_ACTIONS ) : ?>
+		<span aria-hidden="true">&bull;</span>
 
-	<button class="button-link delete" data-entry-id="<?php echo esc_attr( $entry->id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( "feed-reader-entries:delete:{$entry->id}" ) ); ?>">
-		<?php esc_html_e( 'Delete', 'feed-reader' ); ?>
-	</button>
+		<button class="button-link delete" data-entry-id="<?php echo esc_attr( $entry->id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( "feed-reader-entries:delete:{$entry->id}" ) ); ?>">
+			<?php esc_html_e( 'Delete', 'feed-reader' ); ?>
+		</button>
+	<?php endif; ?>
 </div>

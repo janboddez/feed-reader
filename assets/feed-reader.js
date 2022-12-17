@@ -11,6 +11,7 @@ jQuery( document ).ready( function ( $ ) {
 
 		$.post( ajaxurl, data, function( response ) {
 			var feed = button.closest( '.hfeed' );
+
 			if ( feed && ! ( new URLSearchParams( window.location.search ) ).has( 'all' ) ) {
 				button.closest( '.hentry' ).remove();
 
@@ -51,8 +52,12 @@ jQuery( document ).ready( function ( $ ) {
 	$( '.feed-reader .mark-read' ).click( mark_read );
 	$( '.feed-reader .mark-unread' ).click( mark_unread );
 
-	$( '.feed-reader .delete' ).click( function( e ) {
+	$( '.feed-reader .delete, .feed-reader .button-delete' ).click( function( e ) {
 		e.preventDefault();
+
+		if ( ! confirm( feed_reader_obj.confirm ) ) {
+			return;
+		}
 
 		var button = $( this );
 		var data   = {

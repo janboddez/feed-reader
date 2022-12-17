@@ -3,6 +3,10 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+if ( ! defined( 'FEED_READER_ACTIONS' ) || ! FEED_READER_ACTIONS ) {
+	return;
+}
 ?>
 <div class="actions" data-nonce="<?php echo esc_attr( wp_create_nonce( 'feed-reader:post' ) ); ?>">
 	<ul>
@@ -30,6 +34,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<button class="button-link button-bookmark">
 				<svg class="icon icon-bookmark" aria-hidden="true" role="img" width="16" height="16"><use href="#icon-bookmark"></use></svg>
 				<span class="screen-reader-text"><?php esc_html_e( 'Bookmark', 'feed-reader' ); ?></span>
+			</button>
+		</li>
+		<li class="action-delete">
+			<button class="button-link button-delete">
+				<svg class="icon icon-trash" aria-hidden="true" role="img" width="16" height="16"><use href="#icon-trash"></use></svg>
+				<span class="screen-reader-text"><?php esc_html_e( 'Delete', 'feed-reader' ); ?></span>
 			</button>
 		</li>
 	</ul>
