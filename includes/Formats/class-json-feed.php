@@ -9,6 +9,11 @@ class JSON_Feed extends Format {
 		$items = array();
 		$data  = json_decode( $body );
 
+		if ( empty( $data->items ) ) {
+			/** @todo: Update `$feed` here rather than in the poll job? */
+			return $items;
+		}
+
 		foreach ( $data->items as $item ) {
 			$items[] = static::parse_item( $item, $data, $feed );
 		}
