@@ -20,16 +20,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<span aria-hidden="true">&bull;</span>
 
-	<?php if ( ! empty( $entry->url ) ) : ?>
-		<?php /** @todo: Have dates, inside feed views, point to the single entry. Maybe provide a separate link to the actual item. */ ?>
-		<time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>">
-			<?php /* translators: %s: Human-readable time ago */ ?>
-			<a href="<?php echo esc_url( $entry->url ); ?>"><?php echo esc_html( sprintf( __( '%s ago', 'feed-reader' ), human_time_diff( strtotime( $entry->published ), time() ) ) ); ?></a>
-		</time>
+	<?php if ( isset( $_GET['page'] ) && 'feed-reader-entries-view' === $_GET['page'] ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
+		<?php if ( ! empty( $entry->url ) ) : ?>
+			<time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>">
+				<?php /* translators: %s: Human-readable time ago */ ?>
+				<a href="<?php echo esc_url( $entry->url ); ?>"><?php echo esc_html( sprintf( __( '%s ago', 'feed-reader' ), human_time_diff( strtotime( $entry->published ), time() ) ) ); ?></a>
+			</time>
+		<?php else : ?>
+			<time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>">
+				<?php /* translators: %s: Human-readable time ago */ ?>
+				<?php echo esc_html( sprintf( __( '%s ago', 'feed-reader' ), human_time_diff( strtotime( $entry->published ), time() ) ) ); ?>
+			</time>
+		<?php endif; ?>
 	<?php else : ?>
 		<time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>">
 			<?php /* translators: %s: Human-readable time ago */ ?>
-			<?php echo esc_html( sprintf( __( '%s ago', 'feed-reader' ), human_time_diff( strtotime( $entry->published ), time() ) ) ); ?>
+			<a href="<?php echo esc_url( \FeedReader\get_url( 'entries', 'view', $entry->id, true ) ); ?>"><?php echo esc_html( sprintf( __( '%s ago', 'feed-reader' ), human_time_diff( strtotime( $entry->published ), time() ) ) ); ?></a>
 		</time>
 	<?php endif; ?>
 

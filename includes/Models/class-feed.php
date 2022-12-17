@@ -143,7 +143,7 @@ class Feed extends Model {
 		);
 
 		if ( is_wp_error( $response ) ) {
-			error_log( '[Reader] Somehow could not download the image at ' . esc_url_raw( $icon ) . '.' );
+			error_log( '[Reader] Somehow could not download the image at ' . esc_url_raw( $icon ) . '.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			set_transient( "feed-reader:feeds:{$feed->id}:avatar", null, WEEK_IN_SECONDS );
 			return;
 		}
