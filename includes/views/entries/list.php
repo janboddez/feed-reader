@@ -80,7 +80,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php
 					endif;
 
-					static::render( 'entries/partials/entry-actions', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope
+					// static::render( 'entries/partials/entry-actions', compact( 'entry' ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope
 					?>
 				</article>
 				<?php

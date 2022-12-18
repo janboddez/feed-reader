@@ -189,7 +189,7 @@ class Feed extends Model {
 			$image->resize( 32, 32, true );
 			$image->save( $file );
 		} else {
-			error_log( '[Reader] Something went wrong resizing the avatar (' . $file . '): ' . $image->get_error_message() . '.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( '[Reader] Could not resizing the image at ' . $file . ': ' . $image->get_error_message() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		}
 
 		static::update(

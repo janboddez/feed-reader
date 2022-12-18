@@ -207,3 +207,43 @@ function parse_cursor( $cursor ) {
 
 	return null;
 }
+
+function proxy_images( $html ) {
+	if ( preg_match_all( '~<(?:img) .*?src="([^"]+?)"[^>]*?>~', $html, $matches ) ) {
+		foreach ( $matches[0] as $i => $match ) {
+			$url = $matches[1][ $i ];
+
+			if ( 0 === stripos( $url, site_url() ) ) {
+				// Exclude images of our own.
+				continue;
+			}
+
+			if ( false === strpos( $matches[0][ $i ], ' loading="' ) && 0 === strpos( $matches[0][ $i ], '<img' ) ) {
+				// The original image tag does not yet contain a `loading` attribute.
+				$lazy = preg_replace( '~\s?/?>~', ' loading="lazy">', $matches[0][ $i ] );
+
+				// Add in the lazily loaded version. All occurrences, in case there's multiple.
+				$html = str_replace( $matches[0][ $i ], $lazy, $html );
+			}
+
+			// Replace the original URL with the proxy one. Again, everywhere.
+			$html = str_replace(
+				'src="' . $url,
+				'src="' . htmlspecialchars( proxy_image( str_replace( '&amp;', '&', $url ) ) ),
+				$html
+			);
+		}
+	}
+
+	return $html;
+}
+
+function proxy_image( $url ) {
+	if ( ! defined( 'FEED_READER_PROXY_KEY' ) ) {
+		return $url;
+	}
+
+	$hash = hash_hmac( 'sha1', $url, FEED_READER_PROXY_KEY );
+
+	return get_rest_url( null, '/feed-reader/v1/imageproxy' ) . '?hash=' . $hash . '&url=' . rawurlencode( $url );
+}

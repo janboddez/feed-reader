@@ -176,7 +176,15 @@ html {
 }
 
 .feed-reader .actions {
-	margin: 1.25em 0 0;
+	margin: 1.25em 0;
+}
+
+.feed-reader .actions {
+	margin: 1.25em 0;
+}
+
+.reader_page_feed-reader-entries-view {
+	margin-top: 1.75em;
 }
 
 .feed-reader .actions ul {

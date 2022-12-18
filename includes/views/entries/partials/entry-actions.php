@@ -8,9 +8,9 @@ if ( ! defined( 'FEED_READER_ACTIONS' ) || ! FEED_READER_ACTIONS ) {
 	return;
 }
 
-if ( isset( $_GET['page'] ) && 'feed-reader-entries-view' !== $_GET['page'] && ! \FeedReader\show_in_full( $entry ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	return;
-}
+// if ( isset( $_GET['page'] ) && 'feed-reader-entries-view' !== $_GET['page'] && ! \FeedReader\show_in_full( $entry ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+// 	return;
+// }
 ?>
 <div class="actions" data-nonce="<?php echo esc_attr( wp_create_nonce( 'feed-reader:post' ) ); ?>">
 	<ul>

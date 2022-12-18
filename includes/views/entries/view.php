@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<?php if ( ! empty( $entry->content ) ) : ?>
 			<div class="entry-content">
-				<?php echo $entry->content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php echo \FeedReader\proxy_images( $entry->content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
 			<?php
 		endif;

@@ -7,6 +7,7 @@ use FeedReader\Jobs\Poll_Feeds;
 use FeedReader\Models\Category;
 use FeedReader\Models\Entry;
 use FeedReader\Models\Feed;
+use FeedReader\Image_Proxy;
 use FeedReader\Router;
 
 class Reader {
@@ -44,6 +45,8 @@ class Reader {
 
 		$this->router = new Router();
 		$this->router->register();
+
+		add_action( 'rest_api_init', array( Image_Proxy::class, 'register' ) );
 	}
 
 	public function init() {

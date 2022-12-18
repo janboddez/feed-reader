@@ -18,6 +18,7 @@ return array(
     'FeedReader\\Formats\\Format' => $baseDir . '/../includes/Formats/class-format.php',
     'FeedReader\\Formats\\JSON_Feed' => $baseDir . '/../includes/Formats/class-json-feed.php',
     'FeedReader\\Formats\\XML' => $baseDir . '/../includes/Formats/class-xml.php',
+    'FeedReader\\Image_Proxy' => $baseDir . '/../includes/class-image-proxy.php',
     'FeedReader\\Jobs\\Poll_Feeds' => $baseDir . '/../includes/Jobs/class-poll-feeds.php',
     'FeedReader\\Models\\Category' => $baseDir . '/../includes/Models/class-category.php',
     'FeedReader\\Models\\Entry' => $baseDir . '/../includes/Models/class-entry.php',
