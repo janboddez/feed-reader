@@ -25,7 +25,7 @@ class Image_Proxy {
 		$url = $request->get_param( 'url' );
 		$url = is_string( $url ) ? rawurldecode( $url ) : null;
 
-		if ( empty( $url ) || ! wp_http_validate_url( $url ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( empty( $url ) || ! wp_http_validate_url( $url ) ) {
 			return new \WP_Error( 'invalid_url', esc_html__( 'Invalid URL.', 'feed-reader' ), array( 'status' => 400 ) );
 		}
 
