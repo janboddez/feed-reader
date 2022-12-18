@@ -8,7 +8,7 @@ class Image_Proxy {
 			'feed-reader/v1',
 			'/imageproxy',
 			array(
-				'methods'             => array( 'GET', 'POST' ),
+				'methods'             => array( 'GET' ),
 				'callback'            => array( __CLASS__, 'proxy' ),
 				'permission_callback' => '__return_true',
 			)
