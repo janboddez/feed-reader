@@ -1,7 +1,5 @@
 jQuery( document ).ready( function ( $ ) {
-	function mark_read( e ) {
-		e.preventDefault();
-
+	function mark_read() {
 		var button = $( this );
 		var data   = {
 			'action': 'feed_reader_entries_mark_read',
@@ -30,9 +28,7 @@ jQuery( document ).ready( function ( $ ) {
 		} );
 	}
 
-	function mark_unread( e ) {
-		e.preventDefault();
-
+	function mark_unread() {
 		var button = $( this );
 		var data   = {
 			'action': 'feed_reader_entries_mark_unread',
@@ -52,9 +48,7 @@ jQuery( document ).ready( function ( $ ) {
 	$( '.feed-reader .mark-read' ).click( mark_read );
 	$( '.feed-reader .mark-unread' ).click( mark_unread );
 
-	$( '.feed-reader .delete, .feed-reader .button-delete' ).click( function( e ) {
-		e.preventDefault();
-
+	$( '.feed-reader .delete, .feed-reader .button-delete' ).click( function() {
 		if ( ! confirm( feed_reader_obj.confirm ) ) {
 			return;
 		}
@@ -84,7 +78,7 @@ jQuery( document ).ready( function ( $ ) {
 		}
 	} );
 
-	$( '#categories-filter #search-submit' ).click( function( e ) {
+	$( '#categories-filter #search-submit' ).click( function() {
 		var search = $( '#feed-reader-category-search-input' ).val();
 
 		if ( search ) {
@@ -101,7 +95,7 @@ jQuery( document ).ready( function ( $ ) {
 		}
 	} );
 
-	$( '#feeds-filter #search-submit' ).click( function( e ) {
+	$( '#feeds-filter #search-submit' ).click( function() {
 		var search = $( '#feed-reader-feed-search-input' ).val();
 
 		if ( search ) {
@@ -114,39 +108,50 @@ jQuery( document ).ready( function ( $ ) {
 
 	// Reacting to entries.
 	$( '.feed-reader .button-reply' ).click( function() {
-		var entry  = $( this ).closest( '.hentry' );
+		var entry = $( this ).closest( '.hentry' );
+		var form  = entry.find( '.reply-form' );
 
+		if ( form.is( ':hidden' ) ) {
+			form.show();
+			form.find( 'textarea' ).focus();
+		} else {
+			form.hide();
+		}
+
+		// Hiding the "other" form afterward presents jumps when switching
+		// forms.
 		entry.find( '.bookmark-form' ).hide();
-		entry.find( '.reply-form' ).toggle();
 	} );
 
-	$( '.feed-reader .button-publish-reply' ).click( function( e ) {
-		e.preventDefault();
-
+	$( '.feed-reader .button-publish-reply' ).click( function() {
 		var button = $( this );
 		var entry  = button.closest( '.hentry' );
-		var form   = entry.find('.reply-form');
+		var form   = entry.find( '.reply-form' );
+
+		if ( '' === form.find( 'textarea' ).val() ) {
+			return;
+		}
+
 		var data   = {
 			'action': 'feed_reader_post',
-			'in-reply-to': entry.data( 'url'),
-			'content': form.find('textarea').val(),
+			'in-reply-to': entry.data( 'url' ),
+			'name': form.find( 'input[type="text"]' ).val(),
+			'content': form.find( 'textarea' ).val(),
 			'_wpnonce': button.closest( '.actions' ).data( 'nonce' )
 		};
 
 		$.post( ajaxurl, data, function( response ) {
 			form.hide();
-			form.find('textarea').val( '' )
+			form.find( 'textarea' ).val( '' )
 		} );
 	} );
 
-	$( '.feed-reader .button-like' ).click( function( e ) {
-		e.preventDefault();
-
+	$( '.feed-reader .button-like' ).click( function() {
 		var button = $( this );
 		var entry  = button.closest( '.hentry' );
 		var data   = {
 			'action': 'feed_reader_post',
-			'like-of': entry.data( 'url'),
+			'like-of': entry.data( 'url' ),
 			'_wpnonce': button.closest( '.actions' ).data( 'nonce' )
 		};
 
@@ -156,10 +161,19 @@ jQuery( document ).ready( function ( $ ) {
 	} );
 
 	$( '.feed-reader .button-bookmark' ).click( function() {
-		var entry  = $( this ).closest( '.hentry' );
+		var entry = $( this ).closest( '.hentry' );
+		var form  = entry.find( '.bookmark-form' );
 
+		if ( form.is( ':hidden' ) ) {
+			form.show();
+			form.find( 'textarea' ).focus();
+		} else {
+			form.hide();
+		}
+
+		// Hiding the "other" form afterward presents jumps when switching
+		// forms.
 		entry.find( '.reply-form' ).hide();
-		entry.find( '.bookmark-form' ).toggle();
 	} );
 
 	$( '.feed-reader .button-publish-bookmark' ).click( function( e ) {
@@ -167,18 +181,24 @@ jQuery( document ).ready( function ( $ ) {
 
 		var button = $( this );
 		var entry  = button.closest( '.hentry' );
-		var form   = entry.find('.bookmark-form');
+		var form   = entry.find( '.bookmark-form' );
+
+		if ( '' === form.find( 'textarea' ).val() ) {
+			return;
+		}
+
 		var data   = {
 			'action': 'feed_reader_post',
-			'bookmark-of': entry.data( 'url'),
-			'content': form.find('textarea').val(),
+			'bookmark-of': entry.data( 'url' ),
+			'name': form.find( 'input[type="text"]' ).val(),
+			'content': form.find( 'textarea' ).val(),
 			'_wpnonce': button.closest( '.actions' ).data( 'nonce' )
 		};
 
 		$.post( ajaxurl, data, function( response ) {
 			entry.find( '.icon-bookmark use' ).attr( 'fill', 'currentColor' );
 			form.hide();
-			form.find('textarea').val( '' );
+			form.find( 'textarea' ).val( '' );
 		} );
 	} );
 } );

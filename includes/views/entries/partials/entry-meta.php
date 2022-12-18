@@ -5,9 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="entry-meta">
-	<?php if ( ! empty( $entry->avatar ) ) : ?>
-	<?php elseif ( ! empty( $entry->feed_icon ) ) : ?>
-		<img class="avatar" src="<?php echo esc_url( $entry->feed_icon ); ?>" width="16" height="16" loading="lazy">
+	<?php if ( ! empty( $entry->feed_icon ) ) : ?>
+		<img class="avatar" src="<?php echo esc_url( $entry->feed_icon ); ?>" width="18" height="18" loading="lazy">
 	<?php endif; ?>
 
 	<?php if ( ! empty( $entry->author ) ) : ?>

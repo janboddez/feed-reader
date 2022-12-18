@@ -55,15 +55,6 @@ class Entry extends Model {
 				$before[1],
 				$limit + 1
 			);
-
-			// We'll also be counting the total number of items to the left of
-			// (and including) our "cursor." Rather than build an entirely new
-			// query, let's keep things simple and use some regex trickery.
-			$total = preg_replace( '~^SELECT \*~', 'SELECT COUNT(*)', $sql );
-			$total = preg_replace( '~LIMIT \d+$~', '', $total );
-
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
-			$total = (int) $wpdb->get_var( $total );
 		} elseif ( isset( $after ) ) {
 			// Older entries.
 			$sql .= $wpdb->prepare(
@@ -73,19 +64,19 @@ class Entry extends Model {
 				$after[1],
 				$limit + 1
 			);
-
-			// We'll also be counting the total number of items to the right of
-			// (and including) our "cursor." Rather than build an entirely new
-			// query, let's keep things simple and use some regex trickery.
-			$total = preg_replace( '~^SELECT \*~', 'SELECT COUNT(*)', $sql );
-			$total = preg_replace( '~LIMIT \d+$~', '', $total );
-
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
-			$total = (int) $wpdb->get_var( $total );
 		} else {
 			// First page.
 			$sql .= $wpdb->prepare( ' ORDER BY published DESC, id DESC LIMIT %d', $limit + 1 );
 		}
+
+		// We'll also be counting the total number of items to the left or right
+		// of (and including) the "current" item. Rather than build an entirely
+		// new query, let's keep things simple and use some regex trickery.
+		$total = preg_replace( '~^SELECT \*~', 'SELECT COUNT(*)', $sql );
+		$total = preg_replace( '~LIMIT \d+$~', '', $total );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+		$total = (int) $wpdb->get_var( $total );
 
 		// Add it all together.
 		$sql = sprintf(
@@ -103,13 +94,18 @@ class Entry extends Model {
 		// Build a new "before" cursor.
 		$before = isset( $items[0] ) ? \FeedReader\build_cursor( $items[0] ) : null;
 
-		// Build a new "after" cursor only if there is a next page.
+		// Build a new "after" cursor ~~only if there is a next page~~.
 		$after = isset( $items[ count( $items ) - 1 ] ) ? \FeedReader\build_cursor( $items[ count( $items ) - 1 ] ) : null;
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( empty( $_GET['before'] ) && empty( $_GET['after'] ) ) {
-			// If we weren't given a cursor, we're on the first page.
+			// If we weren't given a cursor, we're on the first page and moving
+			// forward.
 			$before = null;
+
+			if ( isset( $total ) && $total <= count( $items ) ) {
+				$after = null;
+			}
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
@@ -118,8 +114,10 @@ class Entry extends Model {
 			// equal to the number of items on the current page. I.e., we're on
 			// the first page.
 			$before = null;
+		}
+
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		} elseif ( ! empty( $_GET['after'] ) && \FeedReader\validate_cursor( $_GET['after'] ) && isset( $total ) && $total <= count( $items ) ) {
+		if ( ! empty( $_GET['after'] ) && \FeedReader\validate_cursor( $_GET['after'] ) && isset( $total ) && $total <= count( $items ) ) {
 			// The total number of items right of our cursor is smaller than or
 			// equal to the number of items on the current page. I.e., we're on
 			// the last page.
@@ -151,7 +149,7 @@ class Entry extends Model {
 		global $wpdb;
 
 		$sql = sprintf(
-			'SELECT e.*, f.name AS feed_name
+			'SELECT e.*, f.name AS feed_name, f.icon AS feed_icon
 			 FROM (SELECT * FROM %s WHERE id = %%d AND deleted_at IS NULL AND user_id = %%d) AS e
 			 LEFT JOIN %s AS f ON f.id = e.feed_id',
 			static::table(),

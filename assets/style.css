@@ -1,3 +1,8 @@
+html {
+	/* Prevent jumps when displaying reply forms, etc. */
+	overflow-y: scroll;
+}
+
 .toplevel_page_feed-reader,
 .reader_page_feed-reader-entries-view,
 .reader_page_feed-reader-feeds-view,
@@ -66,11 +71,23 @@
 	margin: 0.5em 0;
 }
 
-.feed-reader .avatar {
+.feed-reader .avatar,
+.reader_page_feed-reader-feeds .avatar {
+	border-radius: 50%;
 	margin-inline-end: 1px;
 	vertical-align: middle;
 	position: relative;
 	top: -1px;
+}
+
+.reader_page_feed-reader-feeds .avatar {
+	filter: grayscale(1);
+	margin-inline-end: 2px;
+	top: -2px;
+}
+
+.reader_page_feed-reader-feeds tr:hover .avatar {
+	filter: grayscale(0);
 }
 
 .feed-reader .entry-summary,
@@ -159,7 +176,7 @@
 }
 
 .feed-reader .actions {
-	margin: 1.25em 0 -0.5em;
+	margin: 1.25em 0 0;
 }
 
 .feed-reader .actions ul {
@@ -182,13 +199,14 @@
 }
 
 .feed-reader .actions div {
-	margin: 1em 0 2em;
+	margin: 1.75em 0;
 }
 
 .feed-reader .actions div textarea {
 	display: block;
 	box-sizing: border-box;
 	font-size: inherit;
+	margin: 0.75em 0;
 	padding: 0.5em;
 	width: 100%;
 }
@@ -196,7 +214,6 @@
 .feed-reader .actions div button {
 	display: block;
 	font-size: inherit;
-	margin-top: 0.75em;
 	margin-inline-start: auto;
 }
 

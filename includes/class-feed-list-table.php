@@ -57,6 +57,12 @@ class Feed_List_Table extends WP_List_Table {
 	}
 
 	public function column_name( $item ) {
+		$icon = ! empty( $item->icon ) ? $item->icon : '';
+
+		if ( ! empty( $icon ) ) {
+			$icon = '<img class="avatar" src="' . esc_url( $icon ) . '" width="16" height="16" loading="lazy"> ';
+		}
+
 		$name = ! empty( $item->name ) ? $item->name : preg_replace( '~^www\.~', '', wp_parse_url( $item->url, PHP_URL_HOST ) );
 
 		$actions = array(
@@ -65,7 +71,7 @@ class Feed_List_Table extends WP_List_Table {
 			'delete' => '<a href="' . esc_url( get_url( 'feeds', 'delete', $item->id ) ) . '">' . esc_html__( 'Delete', 'feed-reader' ) . '</a>',
 		);
 
-		return '<strong><a href="' . esc_url( get_url( 'feeds', 'view', $item->id ) ) . '">' . esc_html( $name ) . '</a></strong>' . PHP_EOL . $this->row_actions( $actions );
+		return $icon . '<strong><a href="' . esc_url( get_url( 'feeds', 'view', $item->id ) ) . '">' . esc_html( $name ) . '</a></strong>' . PHP_EOL . $this->row_actions( $actions );
 	}
 
 	public function column_site_url( $item ) {

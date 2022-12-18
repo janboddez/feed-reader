@@ -12,14 +12,19 @@ class Post_Controller {
 			wp_die( esc_html__( 'This page should not be accessed directly.', 'feed-reader' ) );
 		}
 
-		$content   = '';
-		$post_type = 'post';
-
 		if ( function_exists( '\\IndieBlocks\\get_options' ) ) {
 			$indieblocks = \IndieBlocks\get_options();
 		}
 
-		if ( isset( $_POST['content'] ) && is_string( $_POST['content'] ) ) {
+		$name      = '';
+		$content   = '';
+		$post_type = 'post';
+
+		if ( ! empty( $_POST['name'] ) ) {
+			$name = sanitize_text_field( wp_unslash( $_POST['name'] ) );
+		}
+
+		if ( ! empty( $_POST['content'] ) ) {
 			$content = sanitize_textarea_field( wp_unslash( $_POST['content'] ) );
 		}
 
@@ -80,12 +85,15 @@ class Post_Controller {
 		}
 
 		$args = array(
-			// 'post_title' => ...
 			'post_content' => $content,
-			'post_status'  => 'publish',
+			'post_status'  => apply_filters( 'feed_reader_post_status', 'draft', $content ),
 			'post_author'  => get_current_user_id(),
-			'post_type'    => apply_filters( 'feed_reader_post_post_type', $post_type, $content ),
+			'post_type'    => apply_filters( 'feed_reader_post_type', $post_type, $content ),
 		);
+
+		if ( ! empty( $name ) ) {
+			$args['post_title'] = $name;
+		}
 
 		wp_insert_post( apply_filters( 'feed_reader_post_args', $args ) );
 		wp_die();

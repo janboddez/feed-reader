@@ -7,6 +7,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! defined( 'FEED_READER_ACTIONS' ) || ! FEED_READER_ACTIONS ) {
 	return;
 }
+
+if ( isset( $_GET['page'] ) && 'feed-reader-entries-view' !== $_GET['page'] && ! \FeedReader\show_in_full( $entry ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	return;
+}
 ?>
 <div class="actions" data-nonce="<?php echo esc_attr( wp_create_nonce( 'feed-reader:post' ) ); ?>">
 	<ul>
@@ -45,12 +49,14 @@ if ( ! defined( 'FEED_READER_ACTIONS' ) || ! FEED_READER_ACTIONS ) {
 	</ul>
 
 	<div class="reply-form" style="display: none;">
-		<textarea rows="4"></textarea>
-		<button class="button button-publish-reply"><?php esc_html_e( 'Reply', 'feed-reader' ); ?></button>
+		<input type="text" class="widefat" placeholder="<?php esc_attr_e( '(Optional) Title', 'feed-reader' ); ?>">
+		<textarea rows="4" class="widefat"></textarea>
+		<button class="button buttton-primary button-publish-reply"><?php esc_html_e( 'Reply', 'feed-reader' ); ?></button>
 	</div>
 
 	<div class="bookmark-form" style="display: none;">
-		<textarea rows="4"></textarea>
-		<button class="button button-publish-bookmark"><?php esc_html_e( 'Bookmark', 'feed-reader' ); ?></button>
+		<input type="text" class="widefat" placeholder="<?php esc_attr_e( '(Optional) Title', 'feed-reader' ); ?>">
+		<textarea rows="4" class="widefat"></textarea>
+		<button class="button buttton-primary button-publish-bookmark"><?php esc_html_e( 'Bookmark', 'feed-reader' ); ?></button>
 	</div>
 </div>
