@@ -2,6 +2,7 @@
 
 namespace FeedReader\Jobs;
 
+use FeedReader\Formats\Mf2;
 use FeedReader\Formats\JSON_Feed;
 use FeedReader\Formats\XML;
 use FeedReader\Models\Entry;
@@ -46,6 +47,8 @@ class Poll_Feeds {
 		$data = get_transient( $hash );
 
 		if ( false === $data ) {
+			error_log( '[Reader] Downloading feed at ' . esc_url_raw( $feed->url ) . '.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+
 			$response = wp_safe_remote_get(
 				esc_url_raw( $feed->url )
 			);
@@ -79,6 +82,8 @@ class Poll_Feeds {
 			}
 
 			set_transient( $hash, $data, HOUR_IN_SECONDS );
+		} else {
+			error_log( '[Reader] Found ' . esc_url_raw( $feed->url ) . ' in cache.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		}
 
 		if ( ! $data ) {
@@ -87,20 +92,24 @@ class Poll_Feeds {
 
 		$entries = array();
 
-		switch ( static::get_format( $data['format'], $data['body'] ) ) {
-			case 'xml':
-				$entries = XML::parse( $data['body'], $feed );
-				break;
-
+		switch ( static::get_format( $data['format'], $data['body'], $feed ) ) {
 			case 'json_feed':
 				$entries = JSON_Feed::parse( $data['body'], $feed );
 				break;
 
+			case 'mf2':
+				$entries = Mf2::parse( $data['body'], $feed );
+				break;
+
+			case 'xml':
 			default:
+				$entries = XML::parse( $data['body'], $feed );
 				break;
 		}
 
 		if ( empty( $entries ) ) {
+			error_log( '[Reader] The feed at ' . esc_url_raw( $feed->url ) . ' came up empty.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+
 			$poll_frequency = end( static::$poll_frequencies );
 
 			// Next check includes some randomness (up to +/- 1 hour).
@@ -179,14 +188,10 @@ class Poll_Feeds {
 		}
 	}
 
-	public static function get_format( $content_type, $body ) {
+	public static function get_format( $content_type, $body, $feed ) {
 		$content_type = array_pop( $content_type );
 		$content_type = strtok( $content_type, ';' );
 		strtok( '', '' );
-
-		if ( in_array( $content_type, array( 'application/rss+xml', 'application/atom+xml', 'text/xml', 'application/xml', 'text/xml' ), true ) ) {
-			return 'xml';
-		}
 
 		if ( in_array( $content_type, array( 'application/feed+json', 'application/json' ), true ) ) {
 			$data = json_decode( $body );
@@ -194,6 +199,20 @@ class Poll_Feeds {
 			if ( ! empty( $data->version ) && false !== strpos( $data->version, 'https://jsonfeed.org/version/' ) ) {
 				return 'json_feed';
 			}
+		}
+
+		if ( in_array( $content_type, array( 'application/rss+xml', 'application/atom+xml', 'text/xml', 'application/xml', 'text/xml' ), true ) ) {
+			return 'xml';
+		}
+
+		// Look for Mf2.
+		$data = \FeedReader\Mf2\parse( $body, $feed->url );
+
+		if ( ! empty( $data['items'][0]['type'] ) && in_array( 'h-feed', $data['items'][0]['type'], true ) ) {
+			$hash = hash( 'sha256', esc_url_raw( $feed->url ) );
+			wp_cache_set( "feed-reader:mf2:$hash", $data );
+
+			return 'mf2';
 		}
 
 		return null;

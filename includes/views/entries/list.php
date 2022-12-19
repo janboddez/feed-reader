@@ -66,7 +66,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<?php if ( \FeedReader\show_in_full( $entry ) ) : ?>
 						<div class="entry-content">
 							<?php /** @todo: Check content exists. */ ?>
-							<?php echo $entry->content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<?php echo \FeedReader\proxy_images( $entry->content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						</div>
 					<?php elseif ( ! empty( $entry->summary ) ) : ?>
 						<div class="entry-summary">

@@ -31,8 +31,8 @@ class JSON_Feed extends Format {
 		}
 
 		$entry['published'] = $published;
-
-		$entry['url'] = ! empty( $item->url ) ? $item->url : null;
+		$entry['updated']   = ! empty( $item->date_modified ) ? $item->date_modified : null;
+		$entry['url']       = ! empty( $item->url ) ? $item->url : null;
 
 		if ( ! empty( $item->id ) ) {
 			$uid = $item->id;
@@ -42,9 +42,8 @@ class JSON_Feed extends Format {
 				: '#' . md5( wp_json_encode( $item ) );
 		}
 
-		$entry['uid']       = $uid;
-		$entry['updated']   = ! empty( $item->date_modified ) ? $item->date_modified : null;
-		$entry['name']      = ! empty( $item->title ) ? sanitize_text_field( $item->title ) : null;
+		$entry['uid']  = $uid;
+		$entry['name'] = ! empty( $item->title ) ? sanitize_text_field( $item->title ) : null;
 
 		if ( ! empty( $item->content_html ) ) {
 			$content = $item->content_html;

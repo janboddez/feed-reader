@@ -23,6 +23,7 @@ class ComposerStaticInit8864d1b6a4583b2f1066d0649180cd8b
         'FeedReader\\Feed_List_Table' => __DIR__ . '/../..' . '/../includes/class-feed-list-table.php',
         'FeedReader\\Formats\\Format' => __DIR__ . '/../..' . '/../includes/Formats/class-format.php',
         'FeedReader\\Formats\\JSON_Feed' => __DIR__ . '/../..' . '/../includes/Formats/class-json-feed.php',
+        'FeedReader\\Formats\\Mf2' => __DIR__ . '/../..' . '/../includes/Formats/class-mf2.php',
         'FeedReader\\Formats\\XML' => __DIR__ . '/../..' . '/../includes/Formats/class-xml.php',
         'FeedReader\\Image_Proxy' => __DIR__ . '/../..' . '/../includes/class-image-proxy.php',
         'FeedReader\\Jobs\\Poll_Feeds' => __DIR__ . '/../..' . '/../includes/Jobs/class-poll-feeds.php',

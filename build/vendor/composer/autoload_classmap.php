@@ -17,6 +17,7 @@ return array(
     'FeedReader\\Feed_List_Table' => $baseDir . '/../includes/class-feed-list-table.php',
     'FeedReader\\Formats\\Format' => $baseDir . '/../includes/Formats/class-format.php',
     'FeedReader\\Formats\\JSON_Feed' => $baseDir . '/../includes/Formats/class-json-feed.php',
+    'FeedReader\\Formats\\Mf2' => $baseDir . '/../includes/Formats/class-mf2.php',
     'FeedReader\\Formats\\XML' => $baseDir . '/../includes/Formats/class-xml.php',
     'FeedReader\\Image_Proxy' => $baseDir . '/../includes/class-image-proxy.php',
     'FeedReader\\Jobs\\Poll_Feeds' => $baseDir . '/../includes/Jobs/class-poll-feeds.php',

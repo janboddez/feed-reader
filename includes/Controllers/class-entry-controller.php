@@ -15,7 +15,6 @@ class Entry_Controller extends Controller {
 
 	public static function view() {
 		$entry = wp_cache_get( 'feed-reader:model' );
-
 		wp_cache_delete( 'feed-reader:model' );
 
 		if ( ! $entry ) {

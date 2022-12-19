@@ -18,7 +18,6 @@ class Category_Controller extends Controller {
 
 	public static function view() {
 		$category = wp_cache_get( 'feed-reader:model' );
-
 		wp_cache_delete( 'feed-reader:model' );
 
 		if ( ! $category ) {

@@ -19,7 +19,6 @@ class Feed_Controller extends Controller {
 
 	public static function view() {
 		$feed = wp_cache_get( 'feed-reader:model' );
-
 		wp_cache_delete( 'feed-reader:model' );
 
 		if ( ! $feed ) {
