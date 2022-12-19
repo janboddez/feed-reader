@@ -43,7 +43,6 @@ class JSON_Feed extends Format {
 		}
 
 		$entry['uid']       = $uid;
-		$entry['published'] = ! empty( $item->date_published ) ? $item->date_published : null;
 		$entry['updated']   = ! empty( $item->date_modified ) ? $item->date_modified : null;
 		$entry['name']      = ! empty( $item->title ) ? sanitize_text_field( $item->title ) : null;
 
