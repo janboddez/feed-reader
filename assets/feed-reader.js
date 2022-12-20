@@ -208,4 +208,46 @@ jQuery( document ).ready( function ( $ ) {
 			form.find( 'textarea' ).val( '' );
 		} );
 	} );
+
+	$( '#feed-discover button' ).click( function() {
+		var button = $( this );
+		var url    = $( '#site-or-feed-url' ).val();
+		var data   = {
+			'action': 'feed_reader_feeds_discover',
+			'url': url,
+			'_wpnonce': button.data( 'nonce' )
+		};
+
+		$.post( ajaxurl, data, function( response ) {
+			var list = $( '#feed-list' );
+			list.empty();
+
+			if ( response.feeds.length === 0 ) {
+				list.append( '<li>No feeds found.</li>' );
+			} else {
+				var formats = {
+					'atom':      'Atom',
+					'json_feed': 'JSON Feed',
+					'rss':       'RSS',
+					'xml':       'XML',
+				};
+
+				$.each( response.feeds, function( i, val ) {
+					list.append( '<li><div><h3>' + formats[ val.format ] + '</h3>' + val.url + '</div><button type="button" class="button button-primary select-feed" data-url="' + val.url + '">Select</button></li>' );
+				} );
+
+				list.show();
+
+				$( '.select-feed' ).click( function() {
+					var feed = $( this );
+					$( '#feed-url' ).val( feed.data( 'url' ) );
+
+					$( '#feed-discover' ).hide();
+					list.hide();
+
+					$( '#feed-create' ).show();
+				} );
+			}
+		} );
+	} );
 } );

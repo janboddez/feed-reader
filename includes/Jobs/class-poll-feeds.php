@@ -172,13 +172,13 @@ class Poll_Feeds {
 		}
 	}
 
-	public static function get_format( $content_type, $body, $feed ) {
+	protected static function get_format( $content_type, $body, $feed ) {
 		$content_type = array_pop( $content_type );
 		$content_type = strtok( $content_type, ';' );
 		strtok( '', '' );
 
 		if ( in_array( $content_type, array( 'application/feed+json', 'application/json' ), true ) ) {
-			$data = json_decode( $body );
+			$data = json_decode( trim( $body ) );
 
 			if ( ! empty( $data->version ) && false !== strpos( $data->version, 'https://jsonfeed.org/version/' ) ) {
 				return 'json_feed';

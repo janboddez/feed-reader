@@ -15,7 +15,7 @@ class XML extends Format {
 
 			$simplepie->set_stupidly_fast( true ); // Bypass sanitization (and a few more things), which we'll tackle in a second.
 			$simplepie->set_url_replacements( array() ); // Bypass relative URL resolution, handled below.
-			$simplepie->set_raw_data( $body );
+			$simplepie->set_raw_data( trim( $body ) );
 			$simplepie->init();
 			$simplepie->handle_content_type();
 

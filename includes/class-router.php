@@ -32,6 +32,8 @@ class Router {
 		add_action( 'wp_ajax_feed_reader_entries_mark_unread', array( Entry_Controller::class, 'mark_unread' ) );
 
 		add_action( 'wp_ajax_feed_reader_post', array( Post_Controller::class, 'process' ) );
+
+		add_action( 'wp_ajax_feed_reader_feeds_discover', array( Feed_Controller::class, 'discover' ) );
 	}
 
 	public function create_menu() {

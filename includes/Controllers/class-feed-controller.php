@@ -33,7 +33,7 @@ class Feed_Controller extends Controller {
 	}
 
 	public static function create() {
-		static::render( 'feeds/edit' );
+		static::render( 'feeds/create' );
 	}
 
 	public static function store() {
@@ -222,5 +222,110 @@ class Feed_Controller extends Controller {
 
 		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds' ) ) );
 		exit;
+	}
+
+	public static function discover() {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'feed-reader-feeds:discover' ) ) {
+			wp_die( esc_html__( 'This page should not be accessed directly.', 'feed-reader' ) );
+		}
+
+		if ( empty( $_POST['url'] ) || ! wp_http_validate_url( wp_unslash( $_POST['url'] ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			wp_die( esc_html__( 'Invalid URL.', 'feed-reader' ) );
+		}
+
+		$url = wp_unslash( $_POST['url'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+		$response = wp_remote_get(
+			esc_url_raw( $url )
+		);
+
+		if ( is_wp_error( $response ) ) {
+			wp_die();
+		}
+
+		$feeds = array();
+
+		$body         = wp_remote_retrieve_body( $response );
+		$content_type = (array) wp_remote_retrieve_header( $response, 'content-type' );
+
+		$content_type = array_pop( $content_type );
+		$content_type = strtok( $content_type, ';' );
+		strtok( '', '' );
+
+		if ( in_array( $content_type, array( 'application/feed+json', 'application/json' ), true ) ) {
+			$data = json_decode( trim( $body ) );
+
+			if ( ! empty( $data->version ) && false !== strpos( $data->version, 'https://jsonfeed.org/version/' ) ) {
+				$feeds[] = array(
+					'format' => 'json_feed',
+					'url'    => esc_url_raw( $url ),
+				);
+			}
+		} elseif ( in_array( $content_type, array( 'application/rss+xml' ), true ) ) {
+			$feeds[] = array(
+				'format' => 'rss',
+				'url'    => esc_url_raw( $url ),
+			);
+		} elseif ( in_array( $content_type, array( 'application/atom+xml' ), true ) ) {
+			$feeds[] = array(
+				'format' => 'atom',
+				'url'    => esc_url_raw( $url ),
+			);
+		} elseif ( in_array( $content_type, array( 'text/xml', 'application/xml', 'text/xml' ), true ) ) {
+			$feeds[] = array(
+				'format' => 'xml',
+				'url'    => esc_url_raw( $url ),
+			);
+		} else {
+			$mf2 = \FeedReader\Mf2\Parse( $body, $url );
+
+			if ( empty( $mf2['rel-urls'] ) ) {
+				return $feeds;
+			}
+
+			foreach ( $mf2['rel-urls'] as $rel => $info ) {
+				if ( isset( $info['rels'] ) && in_array( 'alternate', $info['rels'], true ) && isset( $info['type'] ) ) {
+					if ( false !== strpos( $info['type'], 'application/feed+json' ) || false !== strpos( $info['type'], 'application/json' ) ) {
+						$data = json_decode( $body );
+
+						if ( ! empty( $data->version ) && false !== strpos( $data->version, 'https://jsonfeed.org/version/' ) ) {
+							$feeds[] = array(
+								'format' => 'json_feed',
+								'url'    => esc_url_raw( $rel ),
+							);
+						}
+					}
+
+					if ( false !== strpos( $info['type'], 'application/atom+xml' ) ) {
+						$feeds[] = array(
+							'format' => 'atom',
+							'url'    => esc_url_raw( $rel ),
+						);
+					}
+
+					if ( false !== strpos( $info['type'], 'application/rss+xml' ) ) {
+						$feeds[] = array(
+							'format' => 'rss',
+							'url'    => esc_url_raw( $rel ),
+						);
+					}
+				}
+			}
+		}
+
+		header( 'Content-Type: application/json' );
+
+		echo wp_json_encode(
+			array(
+				'title' => '',
+				'feeds' => $feeds,
+			)
+		);
+		wp_die();
 	}
 }
