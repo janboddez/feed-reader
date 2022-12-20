@@ -8,9 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="wrap feed-reader">
 	<?php if ( ! empty( $entry->url ) ) : ?>
-		<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>" data-url="<?php echo esc_url( $entry->url ); ?>">
+		<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>" data-url="<?php echo esc_url( $entry->url ); ?>" data-id="<?php echo esc_attr( $entry->id ); ?>" data-feed-id="<?php echo esc_attr( $entry->feed_id ); ?>">
 	<?php else : ?>
-		<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>">
+		<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>" data-id="<?php echo esc_attr( $entry->id ); ?>" data-feed-id="<?php echo esc_attr( $entry->feed_id ); ?>">
 	<?php endif; ?>
 		<?php if ( ! empty( $entry->name ) ) : ?>
 			<h1 class="entry-title"><a href="<?php echo esc_url( \FeedReader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( $entry->name ); ?></a></h1>

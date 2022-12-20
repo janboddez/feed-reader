@@ -32,7 +32,7 @@ class Mf2 extends Format {
 		return $items;
 	}
 
-	protected static function parse_item( $item, $data, $feed = null ) {
+	protected static function parse_item( $item, $feed, $data = null ) {
 		// Sanitize publication date.
 		$published = ! empty( $item['properties']['published'][0] ) ? $item['properties']['published'][0] : '';
 
@@ -43,7 +43,7 @@ class Mf2 extends Format {
 		$entry['properties']['published'][0] = $published;
 
 		if ( ! empty( $item['properties']['url'] ) && filter_var( ( (array) $item['properties']['url'] )[0], FILTER_VALIDATE_URL ) ) {
-			$entry['properties']['url'] = ( (array) $item['properties']['url'] )[0];
+			$entry['properties']['url'] = (array) esc_url_raw( ( (array) $item['properties']['url'] )[0] );
 		}
 
 		// Ensure an ID is set.
@@ -85,7 +85,9 @@ class Mf2 extends Format {
 			$entry['properties']['summary'] = (array) wpautop( \FeedReader\kses( ( (array) $item['properties']['summary'] )[0] ) );
 		}
 
-		$base = ! empty( $entry['url'] ) ? esc_url_raw( $entry['url'] ) : $feed->url;
+		$base = ! empty( $entry['properties']['url'] )
+			? esc_url_raw( ( (array) $entry['properties']['url'] )[0] )
+			: $feed->url;
 
 		if ( ! empty( $item['properties']['photo'][0]['value'] ) ) {
 			$entry['photo'] = (array) esc_url_raw( (string) SimplePie_IRI::absolutize( $item['properties']['photo'][0]['value'], $base ) );

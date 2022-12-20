@@ -183,8 +183,8 @@ html {
 	margin: 1.25em 0;
 }
 
-.reader_page_feed-reader-entries-view {
-	margin-top: 1.75em;
+.reader_page_feed-reader-entries-view .note {
+	margin-top: 1em;
 }
 
 .feed-reader .actions ul {

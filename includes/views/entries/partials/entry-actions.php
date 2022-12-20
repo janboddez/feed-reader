@@ -41,7 +41,7 @@ if ( ! defined( 'FEED_READER_ACTIONS' ) || ! FEED_READER_ACTIONS ) {
 			</button>
 		</li>
 		<li class="action-delete">
-			<button class="button-link button-delete" data-entry-id="<?php echo esc_attr( $entry->id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( "feed-reader-entries:delete:{$entry->id}" ) ); ?>">
+			<button class="button-link button-delete" data-nonce="<?php echo esc_attr( wp_create_nonce( "feed-reader-entries:delete:{$entry->id}" ) ); ?>">
 				<svg class="icon icon-trash" aria-hidden="true" role="img" width="16" height="16"><use href="#icon-trash"></use></svg>
 				<span class="screen-reader-text"><?php esc_html_e( 'Delete', 'feed-reader' ); ?></span>
 			</button>

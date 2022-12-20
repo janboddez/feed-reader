@@ -1,19 +1,20 @@
 jQuery( document ).ready( function ( $ ) {
 	function mark_read() {
 		var button = $( this );
+		var entry  = button.closest( '.hentry' );
 		var data   = {
 			'action': 'feed_reader_entries_mark_read',
-			'id': button.data( 'entry-id' ),
+			'id': entry.data( 'id' ),
 			'_wpnonce': button.data( 'nonce' )
 		};
 
 		$.post( ajaxurl, data, function( response ) {
-			var feed = button.closest( '.hfeed' );
+			var feed = entry.closest( '.hfeed' );
 
 			if ( feed.length && ! ( new URLSearchParams( window.location.search ) ).has( 'all' ) ) {
-				button.closest( '.hentry' ).remove();
+				entry.remove();
 
-				if ( ! $( '.hentry' ).length ) {
+				if ( ! feed.find( '.hentry' ).length ) {
 					feed.html( feed_reader_obj.all_done );
 				}
 
@@ -30,9 +31,10 @@ jQuery( document ).ready( function ( $ ) {
 
 	function mark_unread() {
 		var button = $( this );
+		var entry  = button.closest( '.hentry' );
 		var data   = {
 			'action': 'feed_reader_entries_mark_unread',
-			'id': button.data( 'entry-id' ),
+			'id': entry.data( 'id' ),
 			'_wpnonce': button.data( 'nonce' )
 		};
 
@@ -54,9 +56,10 @@ jQuery( document ).ready( function ( $ ) {
 		}
 
 		var button = $( this );
+		var entry  = button.closest( '.hentry' );
 		var data   = {
 			'action': 'feed_reader_entries_delete',
-			'id': button.data( 'entry-id' ),
+			'id': entry.data( 'id' ),
 			'_wpnonce': button.data( 'nonce' )
 		};
 
@@ -64,16 +67,22 @@ jQuery( document ).ready( function ( $ ) {
 			var feed = button.closest( '.hfeed' );
 
 			if ( feed.length ) {
-				button.closest( '.hentry' ).remove();
+				entry.remove();
 
-				if ( ! $( '.hentry' ).length ) {
+				if ( ! feed.find( '.hentry' ).length ) {
 					feed.html( feed_reader_obj.all_done );
 				}
+			} else {
+				var url = new URL( window.location.href );
+				url.searchParams.delete( 'paged' );
+				url.searchParams.set( 'page', 'feed-reader-feeds-view' );
+				url.searchParams.set( 'id', entry.data( 'feed-id' ) );
+				location.assign( url );
 			}
 		} );
 	} );
 
-	// Category and feed search.
+
 	/** @todo: Rewrite this without the need for JS. */
 	$( '#feed-reader-category-search-input' ).keyup( function( e ) {
 		if ( 'Enter' === e.key ) {
@@ -85,7 +94,7 @@ jQuery( document ).ready( function ( $ ) {
 		var search = $( '#feed-reader-category-search-input' ).val();
 
 		if ( search ) {
-		var url = new URL( window.location.href );
+			var url = new URL( window.location.href );
 			url.searchParams.delete( 'paged' );
 			url.searchParams.set( 's', search );
 			location.assign( url );
@@ -109,7 +118,6 @@ jQuery( document ).ready( function ( $ ) {
 		}
 	} );
 
-	// Reacting to entries.
 	$( '.feed-reader .button-reply' ).click( function() {
 		var entry = $( this ).closest( '.hentry' );
 		var form  = entry.find( '.reply-form' );
@@ -121,8 +129,6 @@ jQuery( document ).ready( function ( $ ) {
 			form.hide();
 		}
 
-		// Hiding the "other" form afterward presents jumps when switching
-		// forms.
 		entry.find( '.bookmark-form' ).hide();
 	} );
 
@@ -174,8 +180,6 @@ jQuery( document ).ready( function ( $ ) {
 			form.hide();
 		}
 
-		// Hiding the "other" form afterward presents jumps when switching
-		// forms.
 		entry.find( '.reply-form' ).hide();
 	} );
 
