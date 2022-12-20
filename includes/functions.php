@@ -243,7 +243,12 @@ function proxy_image( $url ) {
 		return $url;
 	}
 
-	$hash = hash_hmac( 'sha1', $url, FEED_READER_PROXY_KEY );
+	$query_string = http_build_query(
+		array(
+			'hash' => hash_hmac( 'sha1', $url, FEED_READER_PROXY_KEY ),
+			'url'  => rawurlencode( $url ),
+		)
+	);
 
-	return get_rest_url( null, '/feed-reader/v1/imageproxy' ) . '?hash=' . $hash . '&url=' . rawurlencode( $url );
+	return get_rest_url( null, '/feed-reader/v1/imageproxy' ) . "?$query_string";
 }

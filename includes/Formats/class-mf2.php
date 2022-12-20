@@ -55,7 +55,7 @@ class Mf2 extends Format {
 				: '#' . md5( wp_json_encode( $item ) );
 		}
 
-		$entry['properties']['uid'] = $uid;
+		$entry['properties']['uid'] = (array) $uid;
 
 		if ( ! empty( $item['properties']['name'] ) ) {
 			$entry['properties']['name'] = (array) sanitize_text_field( ( (array) $item['properties']['name'] )[0] );

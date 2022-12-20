@@ -10,7 +10,7 @@ jQuery( document ).ready( function ( $ ) {
 		$.post( ajaxurl, data, function( response ) {
 			var feed = button.closest( '.hfeed' );
 
-			if ( feed && ! ( new URLSearchParams( window.location.search ) ).has( 'all' ) ) {
+			if ( feed.length && ! ( new URLSearchParams( window.location.search ) ).has( 'all' ) ) {
 				button.closest( '.hentry' ).remove();
 
 				if ( ! $( '.hentry' ).length ) {
@@ -62,10 +62,13 @@ jQuery( document ).ready( function ( $ ) {
 
 		$.post( ajaxurl, data, function( response ) {
 			var feed = button.closest( '.hfeed' );
-			button.closest( '.hentry' ).remove();
 
-			if ( ! $( '.hentry' ).length ) {
-				feed.html( feed_reader_obj.all_done );
+			if ( feed.length ) {
+				button.closest( '.hentry' ).remove();
+
+				if ( ! $( '.hentry' ).length ) {
+					feed.html( feed_reader_obj.all_done );
+				}
 			}
 		} );
 	} );

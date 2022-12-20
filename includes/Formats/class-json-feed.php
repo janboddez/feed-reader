@@ -48,7 +48,7 @@ class JSON_Feed extends Format {
 				: '#' . md5( wp_json_encode( $item ) );
 		}
 
-		$entry['properties']['uid'] = $uid;
+		$entry['properties']['uid'] = (array) $uid;
 
 		if ( ! empty( $item->title ) ) {
 			$entry['properties']['name'] = (array) sanitize_text_field( $item->title );
