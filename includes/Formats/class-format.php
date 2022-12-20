@@ -5,6 +5,30 @@ namespace FeedReader\Formats;
 use SimplePie_IRI;
 
 class Format {
+	/**
+	 * Turns an mf2 array into an entry we can save to our database.
+	 *
+	 * @param  mixed  $item   Item being parsed.
+	 * @param  StdObj $feed   Feed Feed the item belongs to.
+	 * @param  mixed  $source Item source.
+	 * @return array          Entry, ready to be inserted into the database.
+	 */
+	protected static function parse_item( $item, $feed, $source = null ) {
+		return array(
+			'uid'       => $item['properties']['uid'][0],
+			'published' => $item['properties']['published'][0],
+			'url'       => ! empty( $item['properties']['url'][0] ) ? $item['properties']['url'][0] : null,
+			'name'      => ! empty( $item['properties']['name'][0] ) ? $item['properties']['name'][0] : null,
+			'author'    => ! empty( $item['properties']['author'][0]['name'][0] ) ? $item['properties']['author'][0]['name'][0] : null,
+			'content'   => ! empty( $item['properties']['content'][0]['html'] ) ? $item['properties']['content'][0]['html'] : null,
+			'summary'   => ! empty( $item['properties']['summary'][0] ) ? $item['properties']['summary'][0] : null,
+			'is_read'   => is_null( $feed->last_polled ) ? 1 : 0, // Mark newly added feeds as read.
+			'feed_id'   => $feed->id,
+			'user_id'   => $feed->user_id,
+			'data'      => wp_json_encode( $item ), // Store `$item` as Mf2 JSON, for (eventual) use with Microsub readers.
+		);
+	}
+
 	protected static function absolutize_urls( $html, $base ) {
 		// There must (!) be a root-level element at all times. This'll get
 		// stripped out during sanitization.

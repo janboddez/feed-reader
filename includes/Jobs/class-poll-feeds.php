@@ -134,23 +134,7 @@ class Poll_Feeds {
 			if ( ! $exists ) {
 				$new_items = true;
 
-				Entry::insert(
-					array_filter(
-						array(
-							'uid'       => $entry['uid'],
-							'published' => $entry['published'],
-							'url'       => ! empty( $entry['url'] ) ? $entry['url'] : null,
-							'name'      => ! empty( $entry['name'] ) ? $entry['name'] : null,
-							'author'    => ! empty( $entry['author']['name'] ) ? $entry['author']['name'] : null,
-							'content'   => ! empty( $entry['content']['html'] ) ? $entry['content']['html'] : null,
-							'summary'   => ! empty( $entry['summary'] ) ? $entry['summary'] : null,
-							'is_read'   => is_null( $feed->last_polled ) ? 1 : 0, // Mark newly added feeds as read.
-							'feed_id'   => $feed->id,
-							'user_id'   => $feed->user_id,
-							'data'      => wp_json_encode( $entry ), // Store `$entry` as JSON, for (eventual) use with Microsub readers.
-						)
-					)
-				);
+				Entry::insert( $entry );
 			}
 
 			$poll_frequency = end( static::$poll_frequencies );

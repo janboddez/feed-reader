@@ -20,7 +20,11 @@ class XML extends Format {
 			$simplepie->handle_content_type();
 
 			foreach ( $simplepie->get_items() as $item ) {
-				$items[] = static::parse_item( $item, $simplepie, $feed );
+				$entry = static::parse_item( $item, $feed, $simplepie );
+
+				if ( ! empty( $entry ) ) {
+					$items[] = $entry;
+				}
 			}
 		} catch ( \Exception $e ) {
 			error_log( '[Reader] An error occurred parsing the feed at ' . esc_url_raw( $feed->url ) . '.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
@@ -46,7 +50,15 @@ class XML extends Format {
 		return $items;
 	}
 
-	protected static function parse_item( $item, $simplepie, $feed ) {
+	/**
+	 * Turns a SimplePie item into an Mf2 JSON array.
+	 *
+	 * @param  mixed  $item      Item being parsed.
+	 * @param  StdObj $feed      Feed Feed the item belongs to.
+	 * @param  mixed  $simplepie SimplePie object.
+	 * @return array             Mf2 JSON representation of the item.
+	 */
+	protected static function parse_item( $item, $feed, $simplepie = null ) {
 		$entry = array();
 
 		$published = $item->get_gmdate( 'c' );
@@ -55,7 +67,7 @@ class XML extends Format {
 			$published = current_time( 'mysql', 1 );
 		}
 
-		$entry['published'] = $published;
+		$entry['properties']['published'] = (array) $published;
 
 		$base = $simplepie->get_link() ?: $feed->url;
 
@@ -70,17 +82,20 @@ class XML extends Format {
 		if ( ! empty( $item->data['child']['http://rssnamespace.org/feedburner/ext/1.0']['origLink'][0]['data'] ) ) {
 			$orig = $item->data['child']['http://rssnamespace.org/feedburner/ext/1.0']['origLink'][0]['data'];
 		}
-		$url          = ! empty( $orig ) ? $orig : $item->get_link();
-		$url          = ! empty( $url ) ? (string) SimplePie_IRI::absolutize( $base, $url ) : '';
-		$entry['url'] = esc_url_raw( $url );
+		$url = ! empty( $orig ) ? $orig : $item->get_link();
+		$url = ! empty( $url ) ? (string) SimplePie_IRI::absolutize( $base, $url ) : '';
+
+		$entry['properties']['url'] = (array) esc_url_raw( $url );
 
 		$uid = $item->get_id();
+
 		if ( empty( $uid ) ) {
 			$uid = ! empty( $entry['url'] )
 				? '@' . $entry['url']
 				: '#' . md5( wp_json_encode( $item ) );
 		}
-		$entry['uid'] = $uid;
+
+		$entry['id'] = $uid;
 
 		$content = $item->get_content();
 
@@ -96,32 +111,39 @@ class XML extends Format {
 			// @todo: Remove comments, script tags, and images without `src` attribute.
 			$content = wpautop( \FeedReader\kses( $content ) );
 
-			$entry['content'] = array(
-				'html' => $content,
-				'text' => wp_strip_all_tags( $content ),
+			$entry['properties']['content'] = array(
+				array(
+					'html' => $content,
+					'text' => wp_strip_all_tags( $content ),
+				),
 			);
 
 			/* @todo: Look for an actual summary first. */
-			$entry['summary'] = wp_trim_words( $entry['content']['html'], 25, ' [&hellip;]' ); // 55 seemed too long.
+			$entry['properties']['summary'] = (array) wp_trim_words( $entry['properties']['content'][0]['html'], 20, ' [&hellip;]' );
 		}
 
 		$title = $item->get_title();
-		if ( $title !== $entry['url'] ) {
-			$entry['name'] = sanitize_text_field( $title );
+		if ( $title !== $entry['properties']['url'][0] ) {
+			$entry['properties']['name'] = (array) sanitize_text_field( $title );
 		}
 
 		$author = $item->get_author();
+
 		if ( ! empty( $author ) ) {
-			$entry['author']['name'] = sanitize_text_field( $author->get_name() );
-			$entry['author']['url']  = esc_url_raw( $author->get_link() ?: $simplepie->get_link() );
+			$entry['author']['name'] = (array) sanitize_text_field( $author->get_name() );
+			$entry['author']['url']  = (array) esc_url_raw( $author->get_link() ?: $simplepie->get_link() );
 		} else {
-			$entry['author']['name'] = sanitize_text_field( $simplepie->get_title() );
-			$entry['author']['url']  = esc_url_raw( $simplepie->get_link() );
+			$entry['author']['name'] = (array) sanitize_text_field( $simplepie->get_title() );
+			$entry['author']['url']  = (array) esc_url_raw( $simplepie->get_link() );
 		}
-		$entry['author'] = array_filter( $entry['author'] );
+
+		$entry['author'] = array(
+			array_filter( $entry['author'] ), // Remove empty values.
+		);
 
 		$entry = array_filter( $entry ); // Remove empty values.
 
-		return $entry;
+		// Convert to array that can be inserted directly into the database.
+		return parent::parse_item( $entry, $feed );
 	}
 }

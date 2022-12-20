@@ -22,35 +22,44 @@ class Mf2 extends Format {
 		}
 
 		foreach ( $data['items'][0]['children'] as $item ) {
-			$items[] = static::parse_item( $item, $data, $feed );
+			$entry = static::parse_item( $item, $feed, $data );
+
+			if ( ! empty( $entry ) ) {
+				$items[] = $entry;
+			}
 		}
 
 		return $items;
 	}
 
-	protected static function parse_item( $item, $data, $feed ) {
-		// Really only parses `h-entry`. Also, we should really just store the
-		// mf2 array, and map the other formats to the mf2 array format.
-		$entry = array();
-
+	protected static function parse_item( $item, $data, $feed = null ) {
+		// Sanitize publication date.
 		$published = ! empty( $item['properties']['published'][0] ) ? $item['properties']['published'][0] : '';
 
 		if ( in_array( strtotime( $published ), array( false, 0 ), true ) || strtotime( $published ) > time() ) {
 			$published = current_time( 'mysql', 1 );
 		}
 
-		$entry['published'] = $published;
+		$entry['properties']['published'][0] = $published;
 
-		$entry['url'] = ! empty( $item['properties']['url'] ) ? ( (array) $item['properties']['url'] )[0] : null;
+		if ( ! empty( $item['properties']['url'] ) && filter_var( ( (array) $item['properties']['url'] )[0], FILTER_VALIDATE_URL ) ) {
+			$entry['properties']['url'] = ( (array) $item['properties']['url'] )[0];
+		}
 
-		/** @todo: Look for an explicit UID first. */
-		$entry['uid'] = ! empty( $entry['url'] )
-			? '@' . $entry['url']
-			: '#' . md5( wp_json_encode( $item ) );
+		// Ensure an ID is set.
+		if ( ! empty( $item['properties']['uid'] ) ) {
+			$uid = sanitize_text_field( $item['properties']['uid'] );
+		} else {
+			$uid = ! empty( $entry['properties']['url'] )
+				? '@' . ( (array) $entry['properties']['url'] )[0]
+				: '#' . md5( wp_json_encode( $item ) );
+		}
 
-		$entry['name'] = ! empty( $item['properties']['name'] )
-			? sanitize_text_field( ( (array) $item['properties']['name'] )[0] )
-			: null;
+		$entry['properties']['uid'] = $uid;
+
+		if ( ! empty( $item['properties']['name'] ) ) {
+			$entry['properties']['name'] = (array) sanitize_text_field( ( (array) $item['properties']['name'] )[0] );
+		}
 
 		if ( ! empty( $item['properties']['content'][0]['html'] ) ) {
 			$content = $item['properties']['content'][0]['html'];
@@ -58,80 +67,79 @@ class Mf2 extends Format {
 			// @todo: Remove comments, script tags, and images without `src` attribute.
 			$content = wpautop( \FeedReader\kses( $content ) );
 
-			$entry['content']['html'] = $content;
-			$entry['content']['text'] = ! empty( $item['properties']['content'][0]['value'] )
-				? wp_strip_all_tags( $item['properties']['content'][0]['value'] )
-				: wp_strip_all_tags( $content );
+			$entry['properties']['content'] = array(
+				array(
+					'html' => $content,
+					'text' => ! empty( $item['properties']['content'][0]['value'] )
+						? wp_strip_all_tags( $item['properties']['content'][0]['value'] )
+						: wp_strip_all_tags( $content ),
+				),
+			);
 		} elseif ( ! empty( $item['properties']['content'][0]['value'] ) ) {
-			$entry['content']['text'] = wp_strip_all_tags( $item['properties']['content'][0]['value'] );
+			$entry['properties']['content'] = array(
+				array( 'text' => wp_strip_all_tags( $item['properties']['content'][0]['value'] ) ),
+			);
 		}
 
-		$entry['summary'] = ! empty( $item['properties']['summary'] )
-			? \FeedReader\kses( ( (array) $item['properties']['summary'] )[0] )
-			: null;
+		if ( ! empty( $item['properties']['summary'] ) ) {
+			$entry['properties']['summary'] = (array) wpautop( \FeedReader\kses( ( (array) $item['properties']['summary'] )[0] ) );
+		}
 
 		$base = ! empty( $entry['url'] ) ? esc_url_raw( $entry['url'] ) : $feed->url;
 
-		$entry['photo'] = ! empty( $item['properties']['photo'] )
-			? esc_url_raw( (string) SimplePie_IRI::absolutize( ( (array) $item['properties']['photo'] )[0], $base ) )
-			: null;
+		if ( ! empty( $item['properties']['photo'][0]['value'] ) ) {
+			$entry['photo'] = (array) esc_url_raw( (string) SimplePie_IRI::absolutize( $item['properties']['photo'][0]['value'], $base ) );
+		}
 
-		$entry['category'] = ! empty( $item['properties']['category'] )
-			? array_map( 'wp_strip_all_tags', (array) $item['properties']['category'] )
-			: null;
+		if ( ! empty( $item['properties']['category'] ) ) {
+			$entry['category'] = array_map( 'wp_strip_all_tags', (array) $item['properties']['category'] );
+		}
 
-		$entry['author'] = static::get_author( $item, $data );
-		$entry           = array_filter( $entry );
+		$entry['properties']['author'] = array( static::get_author( $item, $data ) );
 
-		return $entry;
+		return parent::parse_item( $entry, $feed );
 	}
 
 	public static function get_author( $item, $data ) {
 		$author = array();
 
 		if ( ! empty( $item['author'][0] ) ) {
-			// if ( filter_var( $item['author'][0], FILTER_VALIDATE_URL ) ) {
-			// 	$author['name'] = sanitize_text_field( $item['author'][0] );
-			// 	return $author;
-			// }
-
 			if ( is_string( $item['author'][0] ) ) {
-				$author['name'] = sanitize_text_field( $item['author'][0] );
+				$author['name'] = (array) sanitize_text_field( $item['author'][0] );
+
 				return $author;
 			}
 
-			$author['url'] = ! empty( $item['author'][0]['properties']['url'] ) && filter_var( ( (array) $item['author'][0]['properties']['url'] )[0], FILTER_VALIDATE_URL )
-				? esc_url_raw( ( (array) $item['author'][0]['properties']['url'] )[0] )
-				: null;
+			if ( ! empty( $item['author'][0]['properties']['url'] ) && filter_var( ( (array) $item['author'][0]['properties']['url'] )[0], FILTER_VALIDATE_URL ) ) {
+				$author['url'] = (array) esc_url_raw( ( (array) $item['author'][0]['properties']['url'] )[0] );
+			}
 
-			$author['name'] = ! empty( $item['author'][0]['properties']['name'] )
-				? sanitize_text_field( ( (array) $item['author'][0]['properties']['name'] )[0] )
-				: null;
+			if ( ! empty( $item['author'][0]['properties']['name'] ) ) {
+				$author['name'] = (array) sanitize_text_field( ( (array) $item['author'][0]['properties']['name'] )[0] );
+			}
 
-			$author['photo'] = ! empty( $item['author'][0]['properties']['photo'][0]['value'] ) && filter_var( $item['author'][0]['properties']['photo'][0]['value'], FILTER_VALIDATE_URL )
-				? esc_url_raw( $item['author'][0]['properties']['photo'][0]['value'] )
-				: null;
-
-			return array_filter( $author );
+			if ( ! empty( $item['author'][0]['properties']['photo'][0]['value'] ) && filter_var( $item['author'][0]['properties']['photo'][0]['value'], FILTER_VALIDATE_URL ) ) {
+				$author['photo'] = (array) esc_url_raw( $item['author'][0]['properties']['photo'][0]['value'] );
+			}
 		}
 
 		if ( ! empty( $data['items'][0]['properties']['author'][0] ) ) {
 			// Feed h-card.
 			$card = $data['items'][0]['properties']['author'][0];
 
-			$author['url'] = ! empty( $card['properties']['url'] ) && filter_var( ( (array) $card['properties']['url'] )[0], FILTER_VALIDATE_URL )
-				? esc_url_raw( ( (array) $card['properties']['url'] )[0] )
-				: null;
+			if ( ! empty( $card['properties']['url'] ) && filter_var( ( (array) $card['properties']['url'] )[0], FILTER_VALIDATE_URL ) ) {
+				$author['url'] = (array) esc_url_raw( ( (array) $card['properties']['url'] )[0] );
+			}
 
-			$author['name'] = ! empty( $card['properties']['name'] )
-				? sanitize_text_field( ( (array) $card['properties']['name'] )[0] )
-				: null;
+			if ( ! empty( $card['properties']['name'] ) ) {
+				$author['name'] = (array) sanitize_text_field( ( (array) $card['properties']['name'] )[0] );
+			}
 
-			$author['photo'] = ! empty( $card['properties']['photo'][0]['value'] ) && filter_var( $card['properties']['photo'][0]['value'], FILTER_VALIDATE_URL )
-				? esc_url_raw( $card['photo'][0]['value'] )
-				: null;
+			if ( ! empty( $card['properties']['photo'][0]['value'] ) && filter_var( $card['properties']['photo'][0]['value'], FILTER_VALIDATE_URL ) ) {
+				$author['photo'] = (array) esc_url_raw( $card['properties']['photo'][0]['value'] );
+			}
 
-			return array_filter( $author );
+			return $author;
 		}
 
 		return null;
