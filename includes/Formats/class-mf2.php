@@ -33,6 +33,18 @@ class Mf2 extends Format {
 	}
 
 	protected static function parse_item( $item, $feed, $data = null ) {
+		if ( ! empty( $item['type'] ) && in_array( 'h-entry', (array) $item['type'], true ) ) {
+			// We currently only offer support for `h-entry` (and do not store
+			// `in-reply-to` and similar properties).
+			$entry = static::parse_as_hentry( $item, $feed, $data );
+		} else {
+			return null;
+		}
+
+		return parent::parse_item( $entry, $feed );
+	}
+
+	protected static function parse_as_hentry( $item, $feed = null, $data = null ) {
 		// Sanitize publication date.
 		$published = ! empty( $item['properties']['published'][0] ) ? $item['properties']['published'][0] : '';
 
@@ -100,10 +112,10 @@ class Mf2 extends Format {
 
 		$entry['properties']['author'] = array( static::get_author( $item, $data ) );
 
-		return parent::parse_item( $entry, $feed );
+		return $entry;
 	}
 
-	public static function get_author( $item, $data ) {
+	protected static function get_author( $item, $data ) {
 		$author = array();
 
 		if ( ! empty( $item['author'][0] ) ) {
