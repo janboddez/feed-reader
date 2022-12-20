@@ -57,6 +57,9 @@ class JSON_Feed extends Format {
 		if ( ! empty( $item->content_html ) ) {
 			$content = $item->content_html;
 
+			$content = preg_replace( '~<!--.*?-->~s', '', $content );
+			$content = preg_replace( '~<style.*?>.*?</style>~s', '', $content );
+
 			// @todo: Remove comments, script tags, and images without `src` attribute.
 			$content = wpautop( \FeedReader\kses( $content ) );
 

@@ -64,7 +64,8 @@ class Mf2 extends Format {
 		if ( ! empty( $item['properties']['content'][0]['html'] ) ) {
 			$content = $item['properties']['content'][0]['html'];
 
-			// @todo: Remove comments, script tags, and images without `src` attribute.
+			$content = preg_replace( '~<!--.*?-->~s', '', $content );
+			$content = preg_replace( '~<style.*?>.*?</style>~s', '', $content );
 			$content = wpautop( \FeedReader\kses( $content ) );
 
 			$entry['properties']['content'] = array(

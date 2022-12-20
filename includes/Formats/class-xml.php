@@ -100,7 +100,6 @@ class XML extends Format {
 		$content = $item->get_content();
 
 		if ( ! empty( $content ) ) {
-			// @todo: Move to HTMLPurifier?
 			$content = preg_replace( '~<!--.*?-->~s', '', $content );
 			$content = preg_replace( '~<style.*?>.*?</style>~s', '', $content );
 
@@ -130,18 +129,27 @@ class XML extends Format {
 		$author = $item->get_author();
 
 		if ( ! empty( $author ) ) {
-			$entry['author']['name'] = (array) sanitize_text_field( $author->get_name() );
-			$entry['author']['url']  = (array) esc_url_raw( $author->get_link() ?: $simplepie->get_link() );
+			$author_name = $author->get_name() ?: $feed->name;
+			$author_url  = $author->get_link() ?: ( $simplepie->get_link() ?: $feed->url );
 		} else {
-			$entry['author']['name'] = (array) sanitize_text_field( $simplepie->get_title() );
-			$entry['author']['url']  = (array) esc_url_raw( $simplepie->get_link() );
+			$author_name = $simplepie->get_title() ?: $feed->name;
+			$author_url  = $simplepie->get_link() ?: $feed->url;
 		}
 
-		$entry['author'] = array(
-			array_filter( $entry['author'] ), // Remove empty values.
-		);
+		// Pfff.
+		$author = array();
 
-		$entry = array_filter( $entry ); // Remove empty values.
+		if ( ! empty( $author_name ) ) {
+			$author['name'] = (array) sanitize_text_field( $author_name );
+		}
+
+		if ( ! empty( $author_url ) ) {
+			$author['url'] = (array) esc_url_raw( $author_url );
+		}
+
+		if ( ! empty( $author ) ) {
+			$entry['properties']['author'] = array( $author );
+		}
 
 		// Convert to array that can be inserted directly into the database.
 		return parent::parse_item( $entry, $feed );
