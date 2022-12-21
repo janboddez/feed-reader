@@ -2,6 +2,7 @@
 
 namespace FeedReader\Models;
 
+use FeedReader\Elphin\IcoFileLoader\IcoFileService;
 use FeedReader\Models\Category;
 
 class Feed extends Model {
@@ -113,29 +114,15 @@ class Feed extends Model {
 			return null;
 		}
 
-		$domain = wp_parse_url( $feed->url, PHP_URL_HOST );
-
 		$upload_dir = wp_get_upload_dir();
 		$dir        = trailingslashit( trailingslashit( $upload_dir['basedir'] ) . 'reader/avatars' );
-		$file       = hash( 'sha256', $domain ) . '.png';
-		$file       = $dir . $file;
 
 		wp_mkdir_p( $dir );
 
-		$url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file );
-
-		if ( is_file( $file ) && ( time() - filectime( $file ) ) < MONTH_IN_SECONDS ) {
-			// If the file exists, store its URL.
-			if ( empty( $feed->icon ) ) {
-				static::update(
-					array( 'icon' => esc_url_raw( $url ) ),
-					array( 'id' => $feed->id )
-				);
-
-				set_transient( "feed-reader:feeds:{$feed->id}:avatar", $url, WEEK_IN_SECONDS );
-				return;
-			}
-		}
+		$domain = wp_parse_url( $feed->url, PHP_URL_HOST );
+		$file   = hash( 'sha256', $domain ) . '.png';
+		$file   = $dir . $file;
+		$url    = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file );
 
 		$icon     = "https://icons.duckduckgo.com/ip3/{$domain}.ico"; // Note: may in fact return ICO, PNG, GIF or SVG files.
 		$response = wp_remote_get(
@@ -144,6 +131,29 @@ class Feed extends Model {
 
 		if ( is_wp_error( $response ) ) {
 			error_log( '[Reader] Somehow could not download the image at ' . esc_url_raw( $icon ) . '.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+
+			if ( ! empty( $feed->icon ) ) {
+				static::update(
+					array( 'icon' => null ),
+					array( 'id' => $feed->id )
+				);
+
+				set_transient( "feed-reader:feeds:{$feed->id}:avatar", null, WEEK_IN_SECONDS );
+			}
+
+			return;
+		}
+
+		if ( 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
+			error_log( '[Reader] The page at ' . esc_url_raw( $icon ) . ' returned an error.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+
+			if ( ! empty( $feed->icon ) ) {
+				static::update(
+					array( 'icon' => null ),
+					array( 'id' => $feed->id )
+				);
+			}
+
 			set_transient( "feed-reader:feeds:{$feed->id}:avatar", null, WEEK_IN_SECONDS );
 			return;
 		}
@@ -152,22 +162,37 @@ class Feed extends Model {
 
 		if ( 0 === strpos( trim( $blob ), '<svg ' ) ) {
 			// SVG icon. We don't support these, yet.
+			if ( ! empty( $feed->icon ) ) {
+				static::update(
+					array( 'icon' => null ),
+					array( 'id' => $feed->id )
+				);
+			}
+
 			set_transient( "feed-reader:feeds:{$feed->id}:avatar", null, WEEK_IN_SECONDS );
 			return;
 		}
 
-		global $wp_filesystem;
+		try {
+			// So, I think this "loader" in fact also supports PNG.
+			$loader = new IcoFileService();
+			$im     = $loader->extractIcon( $blob, 32, 32 );
+		} catch ( \Exception $e ) {
+			error_log( '[Reader] Unsupported icon format.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 
-		if ( empty( $wp_filesystem ) ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-			WP_Filesystem();
+			if ( ! empty( $feed->icon ) ) {
+				static::update(
+					array( 'icon' => null ),
+					array( 'id' => $feed->id )
+				);
+			}
+
+			set_transient( "feed-reader:feeds:{$feed->id}:avatar", null, WEEK_IN_SECONDS );
+			return;
 		}
 
 		// Write image data.
-		if ( ! $wp_filesystem->put_contents( $file, $blob, 0644 ) ) {
-			error_log( '[Reader] Could not save image file: ' . $file . '.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			return null;
-		}
+		imagepng( $im, $file );
 
 		if ( ! function_exists( 'wp_crop_image' ) ) {
 			// Load image functions.
@@ -179,21 +204,20 @@ class Feed extends Model {
 			unlink( $file );
 
 			error_log( '[Reader] Invalid image file: ' . esc_url_raw( $icon ) . '.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			return null;
-		}
 
-		// Try to scale down and crop it.
-		$image = wp_get_image_editor( $file );
+			if ( ! empty( $feed->icon ) ) {
+				static::update(
+					array( 'icon' => null ),
+					array( 'id' => $feed->id )
+				);
+			}
 
-		if ( ! is_wp_error( $image ) ) {
-			$image->resize( 32, 32, true );
-			$image->save( $file );
-		} else {
-			error_log( '[Reader] Could not resizing the image at ' . $file . ': ' . $image->get_error_message() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			set_transient( "feed-reader:feeds:{$feed->id}:avatar", null, WEEK_IN_SECONDS );
+			return;
 		}
 
 		static::update(
-			array( 'icon' => esc_url_raw( $url ) ), // @todo: Convert to URL.
+			array( 'icon' => esc_url_raw( $url ) ),
 			array( 'id' => $feed->id )
 		);
 

@@ -252,3 +252,17 @@ function proxy_image( $url ) {
 
 	return get_rest_url( null, '/feed-reader/v1/imageproxy' ) . "?$query_string";
 }
+
+function exif_imagetype( $file ) {
+	// if ( function_exists( '\exif_imagetype' ) ) {
+	// 	return \exif_imagetype( $file );
+	// }
+
+	$img = getimagesize( $file );
+
+	if ( ! empty( $img[2] ) ) {
+		return image_type_to_mime_type( $img[2] );
+	}
+
+	return null;
+}

@@ -11,6 +11,20 @@ class ComposerStaticInit8864d1b6a4583b2f1066d0649180cd8b
         'a01125dfebcda7ec3333dcd2d57ad8f2' => __DIR__ . '/../..' . '/../includes/functions.php',
     );
 
+    public static $prefixLengthsPsr4 = array (
+        'F' => 
+        array (
+            'FeedReader\\Elphin\\IcoFileLoader\\' => 32,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'FeedReader\\Elphin\\IcoFileLoader\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lordelph/icofileloader/src',
+        ),
+    );
+
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'FeedReader\\Category_List_Table' => __DIR__ . '/../..' . '/../includes/class-category-list-table.php',
@@ -20,6 +34,13 @@ class ComposerStaticInit8864d1b6a4583b2f1066d0649180cd8b
         'FeedReader\\Controllers\\Feed_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-feed-controller.php',
         'FeedReader\\Controllers\\OPML_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-opml-controller.php',
         'FeedReader\\Controllers\\Post_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-post-controller.php',
+        'FeedReader\\Elphin\\IcoFileLoader\\GdRenderer' => __DIR__ . '/..' . '/lordelph/icofileloader/src/GdRenderer.php',
+        'FeedReader\\Elphin\\IcoFileLoader\\IcoFileService' => __DIR__ . '/..' . '/lordelph/icofileloader/src/IcoFileService.php',
+        'FeedReader\\Elphin\\IcoFileLoader\\IcoParser' => __DIR__ . '/..' . '/lordelph/icofileloader/src/IcoParser.php',
+        'FeedReader\\Elphin\\IcoFileLoader\\Icon' => __DIR__ . '/..' . '/lordelph/icofileloader/src/Icon.php',
+        'FeedReader\\Elphin\\IcoFileLoader\\IconImage' => __DIR__ . '/..' . '/lordelph/icofileloader/src/IconImage.php',
+        'FeedReader\\Elphin\\IcoFileLoader\\ParserInterface' => __DIR__ . '/..' . '/lordelph/icofileloader/src/ParserInterface.php',
+        'FeedReader\\Elphin\\IcoFileLoader\\RendererInterface' => __DIR__ . '/..' . '/lordelph/icofileloader/src/RendererInterface.php',
         'FeedReader\\Feed_List_Table' => __DIR__ . '/../..' . '/../includes/class-feed-list-table.php',
         'FeedReader\\Formats\\Format' => __DIR__ . '/../..' . '/../includes/Formats/class-format.php',
         'FeedReader\\Formats\\JSON_Feed' => __DIR__ . '/../..' . '/../includes/Formats/class-json-feed.php',
@@ -39,6 +60,8 @@ class ComposerStaticInit8864d1b6a4583b2f1066d0649180cd8b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit8864d1b6a4583b2f1066d0649180cd8b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit8864d1b6a4583b2f1066d0649180cd8b::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInit8864d1b6a4583b2f1066d0649180cd8b::$classMap;
 
         }, null, ClassLoader::class);
