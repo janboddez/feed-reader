@@ -124,6 +124,19 @@ class Feed extends Model {
 		$file   = $dir . $file;
 		$url    = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file );
 
+		if ( is_file( $file ) && ( time() - filectime( $file ) ) < MONTH_IN_SECONDS ) {
+			// If the file exists, store its URL.
+			if ( empty( $feed->icon ) ) {
+				static::update(
+					array( 'icon' => esc_url_raw( $url ) ),
+					array( 'id' => $feed->id )
+				);
+
+				set_transient( "feed-reader:feeds:{$feed->id}:avatar", $url, WEEK_IN_SECONDS );
+				return;
+			}
+		}
+
 		$icon     = "https://icons.duckduckgo.com/ip3/{$domain}.ico"; // Note: may in fact return ICO, PNG, GIF or SVG files.
 		$response = wp_remote_get(
 			esc_url_raw( $icon )
@@ -174,11 +187,14 @@ class Feed extends Model {
 		}
 
 		try {
-			// So, I think this "loader" in fact also supports PNG.
 			$loader = new IcoFileService();
 			$im     = $loader->extractIcon( $blob, 32, 32 );
 		} catch ( \Exception $e ) {
-			error_log( '[Reader] Unsupported icon format.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			$im = imagecreatefromstring( $blob );
+		}
+
+		if ( empty( $im ) ) {
+			error_log( '[Reader] Invalid image format.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 
 			if ( ! empty( $feed->icon ) ) {
 				static::update(
@@ -214,6 +230,16 @@ class Feed extends Model {
 
 			set_transient( "feed-reader:feeds:{$feed->id}:avatar", null, WEEK_IN_SECONDS );
 			return;
+		}
+
+		// Try to scale down and crop it.
+		$image = wp_get_image_editor( $file );
+
+		if ( ! is_wp_error( $image ) ) {
+			$image->resize( 32, 32, true );
+			$image->save( $file );
+		} else {
+			error_log( '[Reader] Could not resizing the image at ' . $file . ': ' . $image->get_error_message() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		}
 
 		static::update(
