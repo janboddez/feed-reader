@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><label for="site-or-feed-url"><?php esc_html_e( 'Site or Feed URL', 'feed-reader' ); ?></th>
-				<td><input type="url" id="site-or-feed-url" name="site_or_feed_url" style="min-width: 33%;" /></td>
+				<td><input type="url" class="widefat" id="site-or-feed-url" name="site_or_feed_url" /></td>
 			</tr>
 		</table>
 
@@ -22,26 +22,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</p>
 	</div>
 
-	<ul id="feed-list" style="display: none;"></ul>
+	<ul id="feed-list"></ul>
 
-	<form action="admin-post.php" method="post" id="feed-create" style="display: none;">
+	<form id="feed-create" action="admin-post.php" method="post">
 		<?php wp_nonce_field( 'feed-reader-feeds:add' ); ?>
 		<input type="hidden" name="action" value="feed_reader_feeds_store" />
 
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><label for="feed-name"><?php esc_html_e( 'Feed Name', 'feed-reader' ); ?></th>
-				<td><input type="text" id="feed-name" name="feed_name" style="min-width: 33%;" /></td>
+				<td><input type="text" class="widefat" id="feed-name" name="feed_name" /></td>
 			</tr>
 
 			<tr valign="top">
 				<th scope="row"><label for="feed-url"><?php esc_html_e( 'Feed URL', 'feed-reader' ); ?></th>
-				<td><input type="url" id="feed-url" name="feed_url" style="min-width: 33%;" /></td>
+				<td><input type="url" class="widefat" id="feed-url" name="feed_url" /></td>
 			</tr>
 
 			<tr valign="top">
 				<th scope="row"><label for="category"><?php esc_html_e( 'Category', 'feed-reader' ); ?></th>
-				<td><select id="category" name="category" style="min-width: 10%;">
+				<td><select id="category" name="category" style="min-width: 33%;">
 					<option><?php esc_html_e( '&mdash;', 'feed-reader' ); ?></option>
 					<?php foreach ( \FeedReader\Models\Category::all() as $category ) : ?>
 						<option value="<?php echo esc_attr( $category->id ); ?>"><?php echo esc_html( $category->name ); ?></option>

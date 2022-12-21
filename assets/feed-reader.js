@@ -222,7 +222,7 @@ jQuery( document ).ready( function ( $ ) {
 			var list = $( '#feed-list' );
 			list.empty();
 
-			if ( response.feeds.length === 0 ) {
+			if ( ! response.feeds || ! response.feeds.length ) {
 				list.append( '<li>No feeds found.</li>' );
 			} else {
 				var formats = {
@@ -232,6 +232,8 @@ jQuery( document ).ready( function ( $ ) {
 					'xml':       'XML',
 				};
 
+				button.removeClass( 'button-primary' );
+
 				$.each( response.feeds, function( i, val ) {
 					list.append( '<li><div><h3>' + formats[ val.format ] + '</h3>' + val.url + '</div><button type="button" class="button button-primary select-feed" data-url="' + val.url + '">Select</button></li>' );
 				} );
@@ -240,12 +242,18 @@ jQuery( document ).ready( function ( $ ) {
 
 				$( '.select-feed' ).click( function() {
 					var feed = $( this );
+
+					if ( response.title ) {
+						$( '#feed-name' ).val( response.title );
+					}
+
 					$( '#feed-url' ).val( feed.data( 'url' ) );
 
 					$( '#feed-discover' ).hide();
 					list.hide();
 
 					$( '#feed-create' ).show();
+					$( '#feed-name' ).focus();
 				} );
 			}
 		} );

@@ -248,6 +248,8 @@ class Feed_Controller extends Controller {
 			wp_die();
 		}
 
+		// Some defaults.
+		$title = '';
 		$feeds = array();
 
 		$body         = wp_remote_retrieve_body( $response );
@@ -282,10 +284,26 @@ class Feed_Controller extends Controller {
 				'url'    => esc_url_raw( $url ),
 			);
 		} else {
+			// Try and parse as HTML.
 			$mf2 = \FeedReader\Mf2\Parse( $body, $url );
 
+			// Get page title, if any.
+			$body = mb_convert_encoding( $body, 'HTML-ENTITIES', mb_detect_encoding( $body ) );
+			$dom  = new \DOMDocument();
+			$dom->loadHTML( $body );
+
+			$el = $dom->getElementsByTagName( 'title' );
+
+			if ( isset( $el->length ) && $el->length > 0 ) {
+				$title = trim( $el->item( 0 )->textContent );
+			}
+
+			// Now parse `rel="alternate"` URLs.
 			if ( empty( $mf2['rel-urls'] ) ) {
-				return $feeds;
+				return array(
+					'title' => $title,
+					'feeds' => $feeds,
+				);
 			}
 
 			foreach ( $mf2['rel-urls'] as $rel => $info ) {
@@ -322,7 +340,7 @@ class Feed_Controller extends Controller {
 
 		echo wp_json_encode(
 			array(
-				'title' => '',
+				'title' => $title,
 				'feeds' => $feeds,
 			)
 		);

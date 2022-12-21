@@ -1,7 +1,8 @@
+/*
 html {
-	/* Prevent jumps when displaying reply forms, etc. */
 	overflow-y: scroll;
 }
+*/
 
 .toplevel_page_feed-reader,
 .reader_page_feed-reader-entries-view,
@@ -228,4 +229,42 @@ html {
 .icon {
 	fill: none;
 	stroke: currentColor;
+}
+
+.reader_page_feed-reader-feeds-create .form-table {
+	max-width: 50em;
+}
+
+.reader_page_feed-reader-feeds-create td {
+	padding-inline-end: 0;
+}
+
+.reader_page_feed-reader-feeds-create input[type="url"] {
+	box-sizing: border-box;
+}
+
+.reader_page_feed-reader-feeds-create #feed-list,
+.reader_page_feed-reader-feeds-create #feed-create {
+	display: none;
+}
+
+#feed-list {
+	font-size: 14px;
+	max-width: 50em;
+}
+
+#feed-list li {
+	align-items: end;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	display: flex;
+	gap: 1.5em;
+	justify-content: space-between;
+	margin-bottom: 12px;
+	padding: 0.75em;
+}
+
+#feed-list h3 {
+	font-size: inherit;
+	margin: 0.0625em 0 0.25em;
 }
