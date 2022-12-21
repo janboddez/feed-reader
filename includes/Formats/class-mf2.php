@@ -78,7 +78,10 @@ class Mf2 extends Format {
 
 			$content = preg_replace( '~<!--.*?-->~s', '', $content );
 			$content = preg_replace( '~<style.*?>.*?</style>~s', '', $content );
-			$content = wpautop( \FeedReader\kses( $content ) );
+
+			if ( ! empty( $entry['properties']['url'] ) ) {
+				$content = static::absolutize_urls( $content, ( (array) $entry['properties']['url'] )[0] );
+			}
 
 			$entry['properties']['content'] = array(
 				array(

@@ -90,6 +90,11 @@ class Poll_Feeds {
 			return;
 		}
 
+		if ( false === get_transient( "feed-reader:feeds:{$feed->id}:avatar" ) && empty( $feed->icon ) ) {
+			// Fetch icons for feeds that were, e.g., mass-imported.
+			Feed::fetch_favicon( $feed );
+		}
+
 		$entries = array();
 
 		switch ( static::get_format( $data['format'], $data['body'], $feed ) ) {

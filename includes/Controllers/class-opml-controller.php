@@ -96,7 +96,7 @@ class OPML_Controller extends Controller {
 					);
 				}
 
-				Feed::insert(
+				$feed_id = Feed::insert(
 					array_filter(
 						array(
 							'url'         => esc_url_raw( $feed['url'] ),

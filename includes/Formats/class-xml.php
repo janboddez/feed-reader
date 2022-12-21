@@ -103,8 +103,8 @@ class XML extends Format {
 			$content = preg_replace( '~<!--.*?-->~s', '', $content );
 			$content = preg_replace( '~<style.*?>.*?</style>~s', '', $content );
 
-			if ( ! empty( $entry['url'] ) ) {
-				$content = static::absolutize_urls( $content, $entry['url'] );
+			if ( ! empty( $entry['properties']['url'] ) ) {
+				$content = static::absolutize_urls( $content, ( (array) $entry['properties']['url'] )[0] );
 			}
 
 			// @todo: Remove comments, script tags, and images without `src` attribute.

@@ -287,6 +287,9 @@ class Feed_Controller extends Controller {
 			// Get page title, if any.
 			$body = mb_convert_encoding( $body, 'HTML-ENTITIES', mb_detect_encoding( $body ) );
 			$dom  = new \DOMDocument();
+
+			libxml_use_internal_errors( true );
+
 			$dom->loadHTML( $body );
 
 			$el = $dom->getElementsByTagName( 'title' );
