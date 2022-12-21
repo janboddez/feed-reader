@@ -97,9 +97,9 @@ class Poll_Feeds {
 				$entries = JSON_Feed::parse( $data['body'], $feed );
 				break;
 
-			case 'mf2':
-				$entries = Mf2::parse( $data['body'], $feed );
-				break;
+			// case 'mf2':
+			// 	$entries = Mf2::parse( $data['body'], $feed );
+			// 	break;
 
 			case 'xml':
 			default:
@@ -185,19 +185,19 @@ class Poll_Feeds {
 			}
 		}
 
-		if ( in_array( $content_type, array( 'application/rss+xml', 'application/atom+xml', 'text/xml', 'application/xml', 'text/xml' ), true ) ) {
+		if ( in_array( $content_type, array( 'application/rss+xml', 'application/atom+xml', 'text/xml', 'application/xml' ), true ) ) {
 			return 'xml';
 		}
 
 		// Look for Mf2.
-		$data = \FeedReader\Mf2\parse( $body, $feed->url );
+		// $data = \FeedReader\Mf2\parse( $body, $feed->url );
 
-		if ( ! empty( $data['items'][0]['type'] ) && in_array( 'h-feed', $data['items'][0]['type'], true ) ) {
-			$hash = hash( 'sha256', esc_url_raw( $feed->url ) );
-			wp_cache_set( "feed-reader:mf2:$hash", $data );
+		// if ( ! empty( $data['items'][0]['type'] ) && in_array( 'h-feed', $data['items'][0]['type'], true ) ) {
+		// 	$hash = hash( 'sha256', esc_url_raw( $feed->url ) );
+		// 	wp_cache_set( "feed-reader:mf2:$hash", $data );
 
-			return 'mf2';
-		}
+		// 	return 'mf2';
+		// }
 
 		return null;
 	}

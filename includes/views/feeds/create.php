@@ -10,8 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div id="feed-discover">
 		<table class="form-table">
 			<tr valign="top">
-				<th scope="row"><label for="site-or-feed-url"><?php esc_html_e( 'Site or Feed URL', 'feed-reader' ); ?></th>
-				<td><input type="url" class="widefat" id="site-or-feed-url" name="site_or_feed_url" /></td>
+				<th scope="row"><label for="site_or_feed_url"><?php esc_html_e( 'Site or Feed URL', 'feed-reader' ); ?></th>
+				<td><input type="url" class="widefat" id="site_or_feed_url" name="site_url" /></td>
 			</tr>
 		</table>
 
@@ -37,6 +37,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<tr valign="top">
 				<th scope="row"><label for="feed-url"><?php esc_html_e( 'Feed URL', 'feed-reader' ); ?></th>
 				<td><input type="url" class="widefat" id="feed-url" name="feed_url" /></td>
+			</tr>
+
+			<tr valign="top">
+				<th scope="row"><label for="site-url"><?php esc_html_e( 'Site URL', 'feed-reader' ); ?></th>
+				<td><input type="url" class="widefat" id="site-url" name="site_url" /></td>
 			</tr>
 
 			<tr valign="top">

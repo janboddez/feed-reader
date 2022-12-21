@@ -278,15 +278,12 @@ class Feed_Controller extends Controller {
 				'format' => 'atom',
 				'url'    => esc_url_raw( $url ),
 			);
-		} elseif ( in_array( $content_type, array( 'text/xml', 'application/xml', 'text/xml' ), true ) ) {
+		} elseif ( in_array( $content_type, array( 'text/xml', 'application/xml' ), true ) ) {
 			$feeds[] = array(
 				'format' => 'xml',
 				'url'    => esc_url_raw( $url ),
 			);
 		} else {
-			// Try and parse as HTML.
-			$mf2 = \FeedReader\Mf2\Parse( $body, $url );
-
 			// Get page title, if any.
 			$body = mb_convert_encoding( $body, 'HTML-ENTITIES', mb_detect_encoding( $body ) );
 			$dom  = new \DOMDocument();
@@ -299,6 +296,8 @@ class Feed_Controller extends Controller {
 			}
 
 			// Now parse `rel="alternate"` URLs.
+			$mf2 = \FeedReader\Mf2\Parse( $body, $url );
+
 			if ( empty( $mf2['rel-urls'] ) ) {
 				return array(
 					'title' => $title,
@@ -334,6 +333,8 @@ class Feed_Controller extends Controller {
 					}
 				}
 			}
+
+			// @todo: Look for h-feed items.
 		}
 
 		header( 'Content-Type: application/json' );

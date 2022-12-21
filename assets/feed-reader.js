@@ -211,7 +211,7 @@ jQuery( document ).ready( function ( $ ) {
 
 	$( '#feed-discover button' ).click( function() {
 		var button = $( this );
-		var url    = $( '#site-or-feed-url' ).val();
+		var url    = $( '#site_or_feed_url' ).val();
 		var data   = {
 			'action': 'feed_reader_feeds_discover',
 			'url': url,
@@ -220,10 +220,16 @@ jQuery( document ).ready( function ( $ ) {
 
 		$.post( ajaxurl, data, function( response ) {
 			var list = $( '#feed-list' );
+
 			list.empty();
 
 			if ( ! response.feeds || ! response.feeds.length ) {
+				if ( ! button.hasClass( 'button-primary' ) ) {
+					button.addClass( 'button-primary' );
+				}
+
 				list.append( '<li>No feeds found.</li>' );
+				list.show();
 			} else {
 				var formats = {
 					'atom':      'Atom',
@@ -241,13 +247,20 @@ jQuery( document ).ready( function ( $ ) {
 				list.show();
 
 				$( '.select-feed' ).click( function() {
-					var feed = $( this );
-
 					if ( response.title ) {
 						$( '#feed-name' ).val( response.title );
+					} else {
+						$( '#feed-name' ).val( '' );
 					}
 
-					$( '#feed-url' ).val( feed.data( 'url' ) );
+					$( '#feed-url' ).val( $( this ).data( 'url' ) );
+
+					$( '#site-url' ).val( '' );
+					if ( -1 === $.inArray( url, response.feeds.map( el => el.url ) ) ) {
+						$( '#site-url' ).val( url );
+					} else {
+						$( '#site-url' ).val( '' );
+					}
 
 					$( '#feed-discover' ).hide();
 					list.hide();
@@ -257,5 +270,11 @@ jQuery( document ).ready( function ( $ ) {
 				} );
 			}
 		} );
+	} );
+
+	$( '#site_or_feed_url' ).keyup( function( e ) {
+		if ( 'Enter' === e.key ) {
+			$( '#feed-discover button' ).click();
+		}
 	} );
 } );
