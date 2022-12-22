@@ -35,6 +35,7 @@ Thumbs.db
 *.zip
 
 svn/*
+tools/*
 vendor/*
 *.bak.*
 *.cache

@@ -2,7 +2,7 @@
 
 namespace FeedReader\Models;
 
-use FeedReader\Elphin\IcoFileLoader\IcoFileService;
+use FeedReader\IcoParser\IcoParser;
 use FeedReader\Models\Category;
 
 class Feed extends Model {
@@ -119,10 +119,15 @@ class Feed extends Model {
 
 		wp_mkdir_p( $dir );
 
-		$domain = wp_parse_url( $feed->url, PHP_URL_HOST );
-		$file   = hash( 'sha256', $domain ) . '.png';
-		$file   = $dir . $file;
-		$url    = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file );
+		if ( ! empty( $feed->site_url ) ) {
+			$domain = preg_replace( '~^www.~', '', wp_parse_url( $feed->site_url, PHP_URL_HOST ) );
+		} else {
+			$domain = preg_replace( '~^www.~', '', wp_parse_url( $feed->url, PHP_URL_HOST ) );
+		}
+
+		$file = hash( 'sha256', $domain ) . '.png';
+		$file = $dir . $file;
+		$url  = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file );
 
 		if ( is_file( $file ) && ( time() - filectime( $file ) ) < MONTH_IN_SECONDS ) {
 			// If the file exists, store its URL.
@@ -137,9 +142,12 @@ class Feed extends Model {
 			}
 		}
 
-		$icon     = "https://icons.duckduckgo.com/ip3/{$domain}.ico"; // Note: may in fact return ICO, PNG, GIF or SVG files.
+		$icon     = "https://icons.duckduckgo.com/ip3/{$domain}.ico"; // Note: Despite the extension, may in fact return ICO, PNG, SVG, JPEG or GIF files.
 		$response = wp_remote_get(
-			esc_url_raw( $icon )
+			esc_url_raw( $icon ),
+			array(
+				'timeout' => 11,
+			)
 		);
 
 		if ( is_wp_error( $response ) ) {
@@ -187,10 +195,9 @@ class Feed extends Model {
 		}
 
 		try {
-			$loader = new IcoFileService();
-			$im     = $loader->extractIcon( $blob, 32, 32 );
-		} catch ( \Exception $e ) {
-			$im = imagecreatefromstring( $blob );
+			$im = ( new IcoParser() )->parse( $blob );
+		} catch ( \Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+			// `$im` will remain empty.
 		}
 
 		if ( empty( $im ) ) {

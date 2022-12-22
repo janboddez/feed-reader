@@ -241,7 +241,10 @@ class Feed_Controller extends Controller {
 		$url = wp_unslash( $_POST['url'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		$response = wp_remote_get(
-			esc_url_raw( $url )
+			esc_url_raw( $url ),
+			array(
+				'timeout' => 11,
+			)
 		);
 
 		if ( is_wp_error( $response ) ) {
