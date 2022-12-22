@@ -44,7 +44,7 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 	 */
 	public function offsetSet( $offset, $value ) {
 		if ( ! $value instanceof IconImage ) {
-			throw new \InvalidArgumentException( 'Can only add `IconImage` instances to an Icon' );
+			throw new \InvalidArgumentException( 'Can only add `IconImage` instances' );
 		}
 
 		if ( is_null( $offset ) ) {
@@ -57,7 +57,8 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 	/**
 	 * Implementation of `\ArrayAccess`, allowing you to do `isset( $icon[ $x ] )`.
 	 *
-	 * @param integer $offset
+	 * @param  integer $offset
+	 * @return bool
 	 */
 	public function offsetExists( $offset ) {
 		return isset( $this->images[ $offset ] );
@@ -66,7 +67,8 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 	/**
 	 * Implementation of `\ArrayAccess`, allowing you to do `unset( $icon[$x] )`.
 	 *
-	 * @param integer $offset
+	 * @param  integer $offset
+	 * @return void
 	 */
 	public function offsetUnset( $offset ) {
 		unset( $this->images[ $offset ] );
@@ -102,6 +104,8 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 
 	/**
 	 * Implementation of `\Iterator`, allowing `foreach( $icon as $image ){}`.
+	 *
+	 * @return int
 	 */
 	public function key() {
 		return $this->position;
@@ -109,6 +113,8 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 
 	/**
 	 * Implementation of `\Iterator`, allowing `foreach( $icon as $image ){}`.
+	 *
+	 * @return void
 	 */
 	public function next() {
 		$this->position++;
