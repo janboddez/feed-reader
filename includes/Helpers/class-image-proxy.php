@@ -1,6 +1,6 @@
 <?php
 
-namespace FeedReader;
+namespace FeedReader\Helpers;
 
 class Image_Proxy {
 	public static function register() {

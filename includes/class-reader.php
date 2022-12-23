@@ -2,12 +2,11 @@
 
 namespace FeedReader;
 
-use FeedReader\Doctrine\Inflector\InflectorFactory;
+use FeedReader\Helpers\Image_Proxy;
 use FeedReader\Jobs\Poll_Feeds;
 use FeedReader\Models\Category;
 use FeedReader\Models\Entry;
 use FeedReader\Models\Feed;
-use FeedReader\Image_Proxy;
 use FeedReader\Router;
 
 class Reader {
@@ -20,23 +19,12 @@ class Reader {
 	/** @var Feed_Reader $instance */
 	private static $instance;
 
-	/** @var InflectorFactory $inflector */
-	private static $inflector;
-
 	public static function get_instance() {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
 
 		return self::$instance;
-	}
-
-	public static function inflector() {
-		if ( null === self::$inflector ) {
-			self::$inflector = InflectorFactory::create()->build();
-		}
-
-		return self::$inflector;
 	}
 
 	public function register() {

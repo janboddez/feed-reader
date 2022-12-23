@@ -1,6 +1,6 @@
 <?php
 
-namespace FeedReader\IcoParser;
+namespace FeedReader\Helpers\IcoParser;
 
 class Icon implements \ArrayAccess, \Countable, \Iterator {
 	protected $images   = array();

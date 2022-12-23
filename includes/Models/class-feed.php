@@ -2,7 +2,7 @@
 
 namespace FeedReader\Models;
 
-use FeedReader\IcoParser\IcoParser;
+use FeedReader\Helpers\IcoParser\IcoParser;
 use FeedReader\Models\Category;
 
 class Feed extends Model {

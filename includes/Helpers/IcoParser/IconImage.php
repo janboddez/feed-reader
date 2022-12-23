@@ -1,6 +1,6 @@
 <?php
 
-namespace FeedReader\IcoParser;
+namespace FeedReader\Helpers\IcoParser;
 
 class IconImage {
 	public $width;

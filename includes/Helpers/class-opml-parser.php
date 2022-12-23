@@ -1,6 +1,6 @@
 <?php
 
-namespace FeedReader;
+namespace FeedReader\Helpers;
 
 /**
  * Dead-simple OPML parser.

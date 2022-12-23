@@ -2,8 +2,8 @@
 
 namespace FeedReader\Controllers;
 
-use FeedReader\Category_List_Table;
 use FeedReader\Controllers\Controller;
+use FeedReader\Helpers\Category_List_Table;
 use FeedReader\Models\Category;
 use FeedReader\Models\Entry;
 use FeedReader\Models\Feed;
@@ -74,7 +74,7 @@ class Category_Controller extends Controller {
 			);
 		}
 
-		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'categories' ) ) );
+		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'categories' ) ) );
 		exit;
 	}
 
@@ -118,7 +118,7 @@ class Category_Controller extends Controller {
 			);
 		}
 
-		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'categories' ) ) );
+		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'categories' ) ) );
 		exit;
 	}
 
@@ -151,7 +151,7 @@ class Category_Controller extends Controller {
 			Category::delete( $category->id );
 		}
 
-		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'categories' ) ) );
+		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'categories' ) ) );
 		exit;
 	}
 }

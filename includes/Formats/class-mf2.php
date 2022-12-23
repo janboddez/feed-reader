@@ -98,7 +98,7 @@ class Mf2 extends Format {
 		}
 
 		if ( ! empty( $item['properties']['summary'] ) ) {
-			$entry['properties']['summary'] = (array) wpautop( \FeedReader\kses( ( (array) $item['properties']['summary'] )[0] ) );
+			$entry['properties']['summary'] = (array) wpautop( \FeedReader\Helpers\kses( ( (array) $item['properties']['summary'] )[0] ) );
 		}
 
 		$base = ! empty( $entry['properties']['url'] )

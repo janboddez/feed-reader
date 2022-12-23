@@ -4,7 +4,7 @@
             "..\/includes\/"
         ],
         "files": [
-            "..\/includes\/functions.php"
+            "..\/includes\/Helpers\/functions.php"
         ]
     },
     "require": {

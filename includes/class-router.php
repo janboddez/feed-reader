@@ -224,7 +224,7 @@ class Router {
 			}
 
 			// Singular for view and edit screens.
-			$title = ucwords( \FeedReader\singularize( $controller ) );
+			$title = ucwords( \FeedReader\Helpers\singularize( $controller ) );
 		}
 
 		return $title;
@@ -241,7 +241,7 @@ class Router {
 			return null;
 		}
 
-		$model  = '\\FeedReader\\Models\\' . ucwords( \FeedReader\singularize( $controller ) );
+		$model  = '\\FeedReader\\Models\\' . ucwords( \FeedReader\Helpers\singularize( $controller ) );
 		$result = $model::find( $_GET['id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		if ( ! $result ) {

@@ -65,7 +65,7 @@ class JSON_Feed extends Format {
 			}
 
 			// @todo: Remove comments, script tags, and images without `src` attribute.
-			$content = wpautop( \FeedReader\kses( $content ) );
+			$content = wpautop( \FeedReader\Helpers\kses( $content ) );
 
 			$entry['properties']['content'] = array(
 				array(
@@ -82,7 +82,7 @@ class JSON_Feed extends Format {
 		}
 
 		if ( ! empty( $item->summary ) ) {
-			$entry['properties']['summary'] = (array) \FeedReader\kses( $item->summary );
+			$entry['properties']['summary'] = (array) \FeedReader\Helpers\kses( $item->summary );
 		}
 
 		/** @todo: Autogenerate (shorter) summaries? */

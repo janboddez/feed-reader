@@ -40,10 +40,10 @@ class Entry extends Model {
 		// And now the cursor-based pagination bit.
 		if ( isset( $_GET['before'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$before = \FeedReader\parse_cursor( $_GET['before'] ); // Returns a cursor, or `null`.
+			$before = \FeedReader\Helpers\parse_cursor( $_GET['before'] ); // Returns a cursor, or `null`.
 		} elseif ( isset( $_GET['after'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$after = \FeedReader\parse_cursor( $_GET['after'] ); // Returns a cursor, or `null`.
+			$after = \FeedReader\Helpers\parse_cursor( $_GET['after'] ); // Returns a cursor, or `null`.
 		}
 
 		if ( isset( $before ) ) {
@@ -92,10 +92,10 @@ class Entry extends Model {
 		$items = $wpdb->get_results( $sql );
 
 		// Build a new "before" cursor.
-		$before = isset( $items[0] ) ? \FeedReader\build_cursor( $items[0] ) : null;
+		$before = isset( $items[0] ) ? \FeedReader\Helpers\build_cursor( $items[0] ) : null;
 
 		// Build a new "after" cursor ~~only if there is a next page~~.
-		$after = isset( $items[ count( $items ) - 1 ] ) ? \FeedReader\build_cursor( $items[ count( $items ) - 1 ] ) : null;
+		$after = isset( $items[ count( $items ) - 1 ] ) ? \FeedReader\Helpers\build_cursor( $items[ count( $items ) - 1 ] ) : null;
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( empty( $_GET['before'] ) && empty( $_GET['after'] ) ) {
@@ -109,7 +109,7 @@ class Entry extends Model {
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( ! empty( $_GET['before'] ) && \FeedReader\validate_cursor( $_GET['before'] ) && isset( $total ) && $total <= count( $items ) ) {
+		if ( ! empty( $_GET['before'] ) && \FeedReader\Helpers\validate_cursor( $_GET['before'] ) && isset( $total ) && $total <= count( $items ) ) {
 			// The total number of items left of our cursor is smaller than or
 			// equal to the number of items on the current page. I.e., we're on
 			// the first page.
@@ -117,7 +117,7 @@ class Entry extends Model {
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( ! empty( $_GET['after'] ) && \FeedReader\validate_cursor( $_GET['after'] ) && isset( $total ) && $total <= count( $items ) ) {
+		if ( ! empty( $_GET['after'] ) && \FeedReader\Helpers\validate_cursor( $_GET['after'] ) && isset( $total ) && $total <= count( $items ) ) {
 			// The total number of items right of our cursor is smaller than or
 			// equal to the number of items on the current page. I.e., we're on
 			// the last page.

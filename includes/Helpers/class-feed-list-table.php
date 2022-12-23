@@ -1,6 +1,6 @@
 <?php
 
-namespace FeedReader;
+namespace FeedReader\Helpers;
 
 use FeedReader\Models\Category;
 use FeedReader\Models\Feed;
@@ -86,7 +86,7 @@ class Feed_List_Table extends WP_List_Table {
 
 	public function column_category( $item ) {
 		if ( ! empty( $item->category_name ) ) {
-			return '<a href="' . esc_url( \FeedReader\get_url( 'categories', 'view', $item->category_id ) ) . '">' . esc_html( $item->category_name ) . '</a>';
+			return '<a href="' . esc_url( \FeedReader\Helpers\get_url( 'categories', 'view', $item->category_id ) ) . '">' . esc_html( $item->category_name ) . '</a>';
 		};
 
 		return '&mdash;';

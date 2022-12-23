@@ -2,7 +2,6 @@
 
 namespace FeedReader\Jobs;
 
-use FeedReader\Formats\Mf2;
 use FeedReader\Formats\JSON_Feed;
 use FeedReader\Formats\XML;
 use FeedReader\Models\Entry;
@@ -102,10 +101,6 @@ class Poll_Feeds {
 				$entries = JSON_Feed::parse( $data['body'], $feed );
 				break;
 
-			// case 'mf2':
-			// 	$entries = Mf2::parse( $data['body'], $feed );
-			// 	break;
-
 			case 'xml':
 			default:
 				$entries = XML::parse( $data['body'], $feed );
@@ -115,6 +110,7 @@ class Poll_Feeds {
 		if ( empty( $entries ) ) {
 			error_log( '[Reader] The feed at ' . esc_url_raw( $feed->url ) . ' came up empty.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 
+			// Bump to lowest tier.
 			$poll_frequency = end( static::$poll_frequencies );
 
 			// Next check includes some randomness (up to +/- 1 hour).
@@ -193,16 +189,6 @@ class Poll_Feeds {
 		if ( in_array( $content_type, array( 'application/rss+xml', 'application/atom+xml', 'text/xml', 'application/xml' ), true ) ) {
 			return 'xml';
 		}
-
-		// Look for Mf2.
-		// $data = \FeedReader\Mf2\parse( $body, $feed->url );
-
-		// if ( ! empty( $data['items'][0]['type'] ) && in_array( 'h-feed', $data['items'][0]['type'], true ) ) {
-		// 	$hash = hash( 'sha256', esc_url_raw( $feed->url ) );
-		// 	wp_cache_set( "feed-reader:mf2:$hash", $data );
-
-		// 	return 'mf2';
-		// }
 
 		return null;
 	}

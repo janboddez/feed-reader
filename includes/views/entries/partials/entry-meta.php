@@ -10,11 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php endif; ?>
 
 	<?php if ( ! empty( $entry->author ) ) : ?>
-		<a href="<?php echo esc_url( \FeedReader\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( $entry->author ); ?></a>
+		<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( $entry->author ); ?></a>
 	<?php elseif ( ! empty( $entry->feed_name ) ) : ?>
-		<a href="<?php echo esc_url( \FeedReader\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( $entry->feed_name ); ?></a>
+		<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( $entry->feed_name ); ?></a>
 	<?php else : ?>
-		<a href="<?php echo esc_url( \FeedReader\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( preg_replace( '~^www.~', '', wp_parse_url( esc_html( $entry->url ), PHP_URL_HOST ) ) ); ?></a>
+		<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'feeds', 'view', $entry->feed_id, true ) ); ?>"><?php echo esc_html( preg_replace( '~^www.~', '', wp_parse_url( esc_html( $entry->url ), PHP_URL_HOST ) ) ); ?></a>
 	<?php endif; ?>
 
 	<span aria-hidden="true">&bull;</span>
@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php else : ?>
 		<time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>">
 			<?php /* translators: %s: Human-readable time ago */ ?>
-			<a href="<?php echo esc_url( \FeedReader\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( sprintf( __( '%s ago', 'feed-reader' ), human_time_diff( strtotime( $entry->published ), time() ) ) ); ?></a>
+			<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( sprintf( __( '%s ago', 'feed-reader' ), human_time_diff( strtotime( $entry->published ), time() ) ) ); ?></a>
 		</time>
 	<?php endif; ?>
 

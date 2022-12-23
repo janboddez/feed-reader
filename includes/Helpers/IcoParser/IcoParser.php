@@ -7,11 +7,9 @@
  * @copyright 2005-2022 Diogo Resende, Paul Dixon
  * @license MIT
  * @link https://github.com/lordelph/icofileloader
- *
- * @package IcoParser
  */
 
-namespace FeedReader\IcoParser;
+namespace FeedReader\Helpers\IcoParser;
 
 class IcoParser {
 	/**

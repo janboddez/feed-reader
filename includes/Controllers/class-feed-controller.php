@@ -3,7 +3,7 @@
 namespace FeedReader\Controllers;
 
 use FeedReader\Controllers\Controller;
-use FeedReader\Feed_List_Table;
+use FeedReader\Helpers\Feed_List_Table;
 use FeedReader\Jobs\Poll_Feeds;
 use FeedReader\Models\Category;
 use FeedReader\Models\Entry;
@@ -94,7 +94,7 @@ class Feed_Controller extends Controller {
 			}
 		}
 
-		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds' ) ) );
+		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'feeds' ) ) );
 		exit;
 	}
 
@@ -164,7 +164,7 @@ class Feed_Controller extends Controller {
 			}
 		}
 
-		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds' ) ) );
+		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'feeds' ) ) );
 		exit;
 	}
 
@@ -193,7 +193,7 @@ class Feed_Controller extends Controller {
 			Feed::delete( $feed->id );
 		}
 
-		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds' ) ) );
+		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'feeds' ) ) );
 		exit;
 	}
 
@@ -216,11 +216,11 @@ class Feed_Controller extends Controller {
 				array( 'feed_id' => $feed->id )
 			);
 
-			wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds', 'view', $feed->id ) ) );
+			wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'feeds', 'view', $feed->id ) ) );
 			exit;
 		}
 
-		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds' ) ) );
+		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'feeds' ) ) );
 		exit;
 	}
 

@@ -4,38 +4,38 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8864d1b6a4583b2f1066d0649180cd8b
+class ComposerStaticInitdfb0f003a1e25bf271717e4930899561
 {
     public static $files = array (
         '757772e28a0943a9afe83def8db95bdf' => __DIR__ . '/..' . '/mf2/mf2/Mf2/Parser.php',
-        'a01125dfebcda7ec3333dcd2d57ad8f2' => __DIR__ . '/../..' . '/../includes/functions.php',
+        '5d5e9acf267403f6978e5ef62f5f38d2' => __DIR__ . '/../..' . '/../includes/Helpers/functions.php',
     );
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'FeedReader\\Category_List_Table' => __DIR__ . '/../..' . '/../includes/class-category-list-table.php',
         'FeedReader\\Controllers\\Category_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-category-controller.php',
         'FeedReader\\Controllers\\Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-controller.php',
         'FeedReader\\Controllers\\Entry_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-entry-controller.php',
         'FeedReader\\Controllers\\Feed_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-feed-controller.php',
         'FeedReader\\Controllers\\OPML_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-opml-controller.php',
         'FeedReader\\Controllers\\Post_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-post-controller.php',
-        'FeedReader\\Feed_List_Table' => __DIR__ . '/../..' . '/../includes/class-feed-list-table.php',
         'FeedReader\\Formats\\Format' => __DIR__ . '/../..' . '/../includes/Formats/class-format.php',
         'FeedReader\\Formats\\JSON_Feed' => __DIR__ . '/../..' . '/../includes/Formats/class-json-feed.php',
         'FeedReader\\Formats\\Mf2' => __DIR__ . '/../..' . '/../includes/Formats/class-mf2.php',
         'FeedReader\\Formats\\XML' => __DIR__ . '/../..' . '/../includes/Formats/class-xml.php',
-        'FeedReader\\IcoParser\\GdRenderer' => __DIR__ . '/../..' . '/../includes/IcoParser/GdRenderer.php',
-        'FeedReader\\IcoParser\\IcoParser' => __DIR__ . '/../..' . '/../includes/IcoParser/IcoParser.php',
-        'FeedReader\\IcoParser\\Icon' => __DIR__ . '/../..' . '/../includes/IcoParser/Icon.php',
-        'FeedReader\\IcoParser\\IconImage' => __DIR__ . '/../..' . '/../includes/IcoParser/IconImage.php',
-        'FeedReader\\Image_Proxy' => __DIR__ . '/../..' . '/../includes/class-image-proxy.php',
+        'FeedReader\\Helpers\\Category_List_Table' => __DIR__ . '/../..' . '/../includes/Helpers/class-category-list-table.php',
+        'FeedReader\\Helpers\\Feed_List_Table' => __DIR__ . '/../..' . '/../includes/Helpers/class-feed-list-table.php',
+        'FeedReader\\Helpers\\IcoParser\\GdRenderer' => __DIR__ . '/../..' . '/../includes/Helpers/IcoParser/GdRenderer.php',
+        'FeedReader\\Helpers\\IcoParser\\IcoParser' => __DIR__ . '/../..' . '/../includes/Helpers/IcoParser/IcoParser.php',
+        'FeedReader\\Helpers\\IcoParser\\Icon' => __DIR__ . '/../..' . '/../includes/Helpers/IcoParser/Icon.php',
+        'FeedReader\\Helpers\\IcoParser\\IconImage' => __DIR__ . '/../..' . '/../includes/Helpers/IcoParser/IconImage.php',
+        'FeedReader\\Helpers\\Image_Proxy' => __DIR__ . '/../..' . '/../includes/Helpers/class-image-proxy.php',
+        'FeedReader\\Helpers\\OPML_Parser' => __DIR__ . '/../..' . '/../includes/Helpers/class-opml-parser.php',
         'FeedReader\\Jobs\\Poll_Feeds' => __DIR__ . '/../..' . '/../includes/Jobs/class-poll-feeds.php',
         'FeedReader\\Models\\Category' => __DIR__ . '/../..' . '/../includes/Models/class-category.php',
         'FeedReader\\Models\\Entry' => __DIR__ . '/../..' . '/../includes/Models/class-entry.php',
         'FeedReader\\Models\\Feed' => __DIR__ . '/../..' . '/../includes/Models/class-feed.php',
         'FeedReader\\Models\\Model' => __DIR__ . '/../..' . '/../includes/Models/class-model.php',
-        'FeedReader\\OPML_Parser' => __DIR__ . '/../..' . '/../includes/class-opml-parser.php',
         'FeedReader\\Reader' => __DIR__ . '/../..' . '/../includes/class-reader.php',
         'FeedReader\\Router' => __DIR__ . '/../..' . '/../includes/class-router.php',
     );
@@ -43,7 +43,7 @@ class ComposerStaticInit8864d1b6a4583b2f1066d0649180cd8b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit8864d1b6a4583b2f1066d0649180cd8b::$classMap;
+            $loader->classMap = ComposerStaticInitdfb0f003a1e25bf271717e4930899561::$classMap;
 
         }, null, ClassLoader::class);
     }

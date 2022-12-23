@@ -2,7 +2,6 @@
 
 namespace FeedReader\Formats;
 
-use FeedReader\Jobs\Poll_Feeds;
 use SimplePie;
 use SimplePie_IRI;
 
@@ -28,23 +27,6 @@ class XML extends Format {
 			}
 		} catch ( \Exception $e ) {
 			error_log( '[Reader] An error occurred parsing the feed at ' . esc_url_raw( $feed->url ) . '.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-
-			// Bump to lowest tier.
-			$poll_frequency = end( Poll_Feeds::$poll_frequencies );
-
-			// Next check includes some randomness (up to +/- 1 hour).
-			$now        = current_time( 'mysql', 1 );
-			$next_check = strtotime( $now ) + ( $poll_frequency + 1 ) * HOUR_IN_SECONDS - wp_rand( 0, 2 * HOUR_IN_SECONDS );
-
-			Feed::update(
-				array(
-					'last_error'     => $e->getMessage(),
-					'last_polled'    => $now,
-					'poll_frequency' => $poll_frequency,
-					'next_check'     => date( 'Y-m-d H:i:s', $next_check ),
-				),
-				array( 'id' => $feed->id )
-			);
 		}
 
 		return $items;
@@ -108,7 +90,7 @@ class XML extends Format {
 			}
 
 			// @todo: Remove comments, script tags, and images without `src` attribute.
-			$content = wpautop( \FeedReader\kses( $content ) );
+			$content = wpautop( \FeedReader\Helpers\kses( $content ) );
 
 			$entry['properties']['content'] = array(
 				array(

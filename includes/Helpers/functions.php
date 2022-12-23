@@ -1,6 +1,6 @@
 <?php
 
-namespace FeedReader;
+namespace FeedReader\Helpers;
 
 function get_url( $controller, $method = null, $id = null, $all = false ) {
 	if ( in_array( $method, array( 'delete', 'mark-read' ), true ) ) {
@@ -24,16 +24,6 @@ function get_url( $controller, $method = null, $id = null, $all = false ) {
 		),
 		admin_url( 'admin.php' )
 	);
-}
-
-function pluralize( $value ) {
-	$args = array(
-		'category' => 'categories',
-		'entry'    => 'entries',
-		'feed'     => 'feeds',
-	);
-
-	return array_key_exists( $value, $args ) ? $args[ $value ] : $value;
 }
 
 function singularize( $value ) {
@@ -251,18 +241,4 @@ function proxy_image( $url ) {
 	);
 
 	return get_rest_url( null, '/feed-reader/v1/imageproxy' ) . "?$query_string";
-}
-
-function exif_imagetype( $file ) {
-	// if ( function_exists( '\exif_imagetype' ) ) {
-	// 	return \exif_imagetype( $file );
-	// }
-
-	$img = getimagesize( $file );
-
-	if ( ! empty( $img[2] ) ) {
-		return image_type_to_mime_type( $img[2] );
-	}
-
-	return null;
 }

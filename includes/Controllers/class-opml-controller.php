@@ -3,9 +3,9 @@
 namespace FeedReader\Controllers;
 
 use FeedReader\Controllers\Controller;
+use FeedReader\Helpers\OPML_Parser;
 use FeedReader\Models\Category;
 use FeedReader\Models\Feed;
-use FeedReader\OPML_Parser;
 
 class OPML_Controller extends Controller {
 	public static function upload() {
@@ -110,7 +110,7 @@ class OPML_Controller extends Controller {
 			}
 		}
 
-		wp_safe_redirect( esc_url_raw( \FeedReader\get_url( 'feeds' ) ) );
+		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'feeds' ) ) );
 		exit;
 	}
 

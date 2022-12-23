@@ -1,6 +1,6 @@
 <?php
 
-namespace FeedReader;
+namespace FeedReader\Helpers;
 
 use FeedReader\Models\Category;
 
