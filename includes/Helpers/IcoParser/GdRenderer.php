@@ -7,7 +7,7 @@ class GdRenderer {
 	 * @param  IconImage $image
 	 * @return resource|\GdImage|false
 	 */
-	public function render( IconImage $image ) {
+	public function render( $image ) {
 		if ( $image->isPng() ) {
 			$im = $this->renderPngImage( $image );
 		} else {
@@ -21,7 +21,7 @@ class GdRenderer {
 	 * @param  IconImage $image
 	 * @return resource|\GdImage|false
 	 */
-	protected function renderPngImage( IconImage $image ) {
+	protected function renderPngImage( $image ) {
 		$im = imagecreatefromstring( $image->pngData );
 		imagesavealpha( $im, true );
 
@@ -32,7 +32,7 @@ class GdRenderer {
 	 * @param  IconImage $image
 	 * @return resource|\GdImage|false
 	 */
-	protected function renderBmpImage( IconImage $image ) {
+	protected function renderBmpImage( $image ) {
 		// Create image filled with desired background color.
 		$w  = $image->width;
 		$h  = $image->height;
@@ -74,7 +74,7 @@ class GdRenderer {
 	 * @param  resource|\GdImage $im
 	 * @return void
 	 */
-	protected function render32bit( IconImage $image, $im ) {
+	protected function render32bit( $image, $im ) {
 		$offset = 0;
 		$binary = $image->bmpData;
 
@@ -103,7 +103,7 @@ class GdRenderer {
 	 * @param  resource|\GdImage $im
 	 * @return void
 	 */
-	protected function render24bit( IconImage $image, $im ) {
+	protected function render24bit( $image, $im ) {
 		$offset   = 0;
 		$binary   = $image->bmpData;
 		$maskBits = $this->buildMaskBits( $image );
@@ -131,7 +131,7 @@ class GdRenderer {
 	 * @param  resource|\GdImage $im
 	 * @return void
 	 */
-	protected function render8bit( IconImage $image, $im ) {
+	protected function render8bit( $image, $im ) {
 		$palette  = $this->buildPalette( $image, $im );
 		$maskBits = $this->buildMaskBits( $image );
 		$offset   = 0;
@@ -153,7 +153,7 @@ class GdRenderer {
 	 * @param  resource|\GdImage $im
 	 * @return void
 	 */
-	protected function render4bit( IconImage $image, $im ) {
+	protected function render4bit( $image, $im ) {
 		$palette    = $this->buildPalette( $image, $im );
 		$maskBits   = $this->buildMaskBits( $image );
 		$offset     = 0;
@@ -183,7 +183,7 @@ class GdRenderer {
 	 * @param  resource|\GdImage $im
 	 * @return void
 	 */
-	protected function render1bit( IconImage $image, $im ) {
+	protected function render1bit( $image, $im ) {
 		$palette   = $this->buildPalette( $image, $im );
 		$maskBits  = $this->buildMaskBits( $image );
 		$colorbits = '';
@@ -210,7 +210,7 @@ class GdRenderer {
 	 * @param  IconImage $image
 	 * @return string
 	 */
-	protected function buildMaskBits( IconImage $image ) {
+	protected function buildMaskBits( $image ) {
 		$width = $image->width;
 
 		if ( ( $width % 32 ) > 0 ) {
@@ -242,7 +242,7 @@ class GdRenderer {
 	 * @param  resource|\GdImage $im
 	 * @return array
 	 */
-	protected function buildPalette( IconImage $image, $im ) {
+	protected function buildPalette( $image, $im ) {
 		$palette = array();
 
 		if ( 24 !== $image->bitCount ) {

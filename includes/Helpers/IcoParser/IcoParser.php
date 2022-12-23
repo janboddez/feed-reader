@@ -84,7 +84,7 @@ class IcoParser {
 	 * @param  int    $count
 	 * @return string
 	 */
-	protected function parseIconDirEntries( Icon $icon, $data, $count ) {
+	protected function parseIconDirEntries( $icon, $data, $count ) {
 		for ( $i = 0; $i < $count; $i++ ) {
 			$iconDirEntry = unpack(
 				'Cwidth/Cheight/CcolorCount/Creserved/Splanes/SbitCount/LsizeInBytes/LfileOffset',
@@ -111,7 +111,7 @@ class IcoParser {
 	 * @param  string    $data
 	 * @return void
 	 */
-	protected function parsePng( IconImage $image, $data ) {
+	protected function parsePng( $image, $data ) {
 		$png = substr( $data, $image->fileOffset, $image->sizeInBytes );
 
 		$image->setPngData( $png );
@@ -122,7 +122,7 @@ class IcoParser {
 	 * @param  string    $data
 	 * @return void
 	 */
-	protected function parseBmp( IconImage $image, $data ) {
+	protected function parseBmp( $image, $data ) {
 		$bitmapInfoHeader = unpack(
 			'LSize/LWidth/LHeight/SPlanes/SBitCount/LCompression/LImageSize/LXpixelsPerM/LYpixelsPerM/LColorsUsed/LColorsImportant',
 			substr( $data, $image->fileOffset, 40 )
@@ -149,14 +149,19 @@ class IcoParser {
 	 * @param  string    $data
 	 * @return void
 	 */
-	protected function parseTrueColorImageData( IconImage $image, $data ) {
+	protected function parseTrueColorImageData( $image, $data ) {
 		$length  = $image->bmpHeaderWidth * $image->bmpHeaderHeight * ( $image->bitCount / 8 );
 		$bmpData = substr( $data, $image->fileOffset + $image->bmpHeaderSize, $length );
 
 		$image->setBitmapData( $bmpData );
 	}
 
-	protected function parsePaletteImageData( IconImage $image, $data ) {
+	/**
+	 * @param  IconImage $image
+	 * @param  string    $data
+	 * @return void
+	 */
+	protected function parsePaletteImageData( $image, $data ) {
 		$pal = substr( $data, $image->fileOffset + $image->bmpHeaderSize, $image->colorCount * 4 );
 		$idx = 0;
 

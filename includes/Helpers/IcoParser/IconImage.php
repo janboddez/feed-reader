@@ -19,34 +19,35 @@ class IconImage {
 	public $bmpData = null;
 	public $palette = array();
 
+	/**
+	 * @param  array $data
+	 * @return void
+	 */
 	public function __construct( $data ) {
 		foreach ( $data as $name => $value ) {
 			$this->$name = $value;
 		}
 	}
 
-	public function getDescription() {
-		return sprintf(
-			'%dx%d pixel %s @ %d bits/pixel',
-			$this->width,
-			$this->height,
-			$this->isPng() ? 'PNG' : 'BMP',
-			$this->bitCount
-		);
-	}
-
+	/**
+	 * @param  string $pngData
+	 * @return void
+	 */
 	public function setPngData( $pngData ) {
 		$this->pngData = $pngData;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isPng() {
 		return ! empty( $this->pngData );
 	}
 
-	public function isBmp() {
-		return empty( $this->pngData );
-	}
-
+	/**
+	 * @param  array $bmpInfo
+	 * @return void
+	 */
 	public function setBitmapInfoHeader( $bmpInfo ) {
 		// `ICONDIRENTRY` bit depth can be zero; we trust the bitmap header more.
 		$this->bitCount = $bmpInfo['BitCount'];
@@ -57,10 +58,21 @@ class IconImage {
 		$this->bmpHeaderSize   = $bmpInfo['Size'];
 	}
 
+	/**
+	 * @param  string $bmpData
+	 * @return void
+	 */
 	public function setBitmapData( $bmpData ) {
 		$this->bmpData = $bmpData;
 	}
 
+	/**
+	 * @param  int $r
+	 * @param  int $g
+	 * @param  int $b
+	 * @param  int $reserved
+	 * @return void
+	 */
 	public function addToBmpPalette( $r, $g, $b, $reserved ) {
 		$this->palette[] = array(
 			'red'      => $r,
