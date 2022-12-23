@@ -248,9 +248,6 @@ function proxy_image( $url ) {
 		return $url;
 	}
 
-	// $url = rawurldecode( $url );
-	error_log( $url );
-
 	$query_string = http_build_query(
 		array(
 			'hash' => hash_hmac( 'sha1', $url, FEED_READER_PROXY_KEY ),
