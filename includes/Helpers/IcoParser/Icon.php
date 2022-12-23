@@ -37,8 +37,9 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 	/**
 	 * Implementation of `\ArrayAccess`, allowing you to do `$icon[ $x ] = $image`.
 	 *
-	 * @param int       $offset
-	 * @param IconImage $value
+	 * @param  mixed     $offset
+	 * @param  IconImage $value
+	 * @return void
 	 *
 	 * @throws \InvalidArgumentException
 	 */
@@ -57,7 +58,7 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 	/**
 	 * Implementation of `\ArrayAccess`, allowing you to do `isset( $icon[ $x ] )`.
 	 *
-	 * @param  int $offset
+	 * @param  mixed $offset
 	 * @return bool
 	 */
 	public function offsetExists( $offset ) {
@@ -67,7 +68,7 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 	/**
 	 * Implementation of `\ArrayAccess`, allowing you to do `unset( $icon[$x] )`.
 	 *
-	 * @param  int $offset
+	 * @param  mixed $offset
 	 * @return void
 	 */
 	public function offsetUnset( $offset ) {
@@ -88,6 +89,8 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 
 	/**
 	 * Implementation of `\Iterator`, allowing `foreach( $icon as $image ){}`.
+	 *
+	 * @return void
 	 */
 	public function rewind() {
 		$this->position = 0;
@@ -105,7 +108,7 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 	/**
 	 * Implementation of `\Iterator`, allowing `foreach( $icon as $image ){}`.
 	 *
-	 * @return int
+	 * @return mixed
 	 */
 	public function key() {
 		return $this->position;

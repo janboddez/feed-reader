@@ -67,17 +67,17 @@ class IconImage {
 	}
 
 	/**
-	 * @param  int $r
-	 * @param  int $g
-	 * @param  int $b
+	 * @param  int $red
+	 * @param  int $green
+	 * @param  int $blue
 	 * @param  int $reserved
 	 * @return void
 	 */
-	public function addToBmpPalette( $r, $g, $b, $reserved ) {
+	public function addToBmpPalette( $red, $green, $blue, $reserved ) {
 		$this->palette[] = array(
-			'red'      => $r,
-			'green'    => $g,
-			'blue'     => $b,
+			'red'      => $red,
+			'green'    => $green,
+			'blue'     => $blue,
 			'reserved' => $reserved,
 		);
 	}

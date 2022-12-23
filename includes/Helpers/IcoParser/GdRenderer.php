@@ -260,6 +260,14 @@ class GdRenderer {
 		return $palette;
 	}
 
+	/**
+	 * @param  resource|\GdImage $im
+	 * @param  int               $red
+	 * @param  int               $green
+	 * @param  int               $blue
+	 * @param  int               $alpha
+	 * @return int|false
+	 */
 	protected function allocateColor( $im, $red, $green, $blue, $alpha = 0 ) {
 		$c = imagecolorexactalpha( $im, $red, $green, $blue, $alpha );
 
