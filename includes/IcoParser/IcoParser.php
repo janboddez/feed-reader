@@ -40,7 +40,7 @@ class IcoParser {
 		$iconDir = $this->parseIconDir( $data );
 
 		if ( ! $iconDir ) {
-			throw new \Exception( 'Invalid file format' );
+			throw new \DomainException( 'Invalid file format' );
 		}
 
 		$data = substr( $data, 6 );
