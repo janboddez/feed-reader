@@ -41,14 +41,29 @@ class Format {
 
 		$xpath = new \DOMXPath( $doc );
 
-		// @todo: Currently leaves `srcset` untouched; we should fix that.
-		foreach ( $xpath->query( '//*[@src or @href]' ) as $node ) {
+		foreach ( $xpath->query( '//*[@href or @src or @srcset]' ) as $node ) {
 			if ( $node->hasAttribute( 'href' ) && 0 !== strpos( $node->getAttribute( 'href' ), 'http' ) ) { // Ran into an issue here where `href="http://"`, so not a valid, nor a relative URL. Need to fix this properly.
 				$node->setAttribute( 'href', (string) SimplePie_IRI::absolutize( $base, $node->getAttribute( 'href' ) ) );
 			}
 
 			if ( $node->hasAttribute( 'src' ) && 0 !== strpos( $node->getAttribute( 'src' ), 'http' ) ) {
 				$node->setAttribute( 'src', (string) SimplePie_IRI::absolutize( $base, $node->getAttribute( 'src' ) ) );
+			}
+
+			if ( $node->hasAttribute( 'srcset' ) && 0 !== strpos( $node->getAttribute( 'srcset' ), 'http' ) ) {
+				$srcset = array();
+
+				foreach ( explode( ',', $node->getAttribute( 'srcset' ) ) as $item ) {
+					if ( preg_match( '/^(.+?)(\s+.+)?$/', $item, $matches ) ) {
+						$size = isset( $matches[2] ) ? trim( $matches[2] ) : '';
+
+						$srcset[] = (string) SimplePie_IRI::absolutize( $base, $matches[1] ) . ' ' . $size;
+					}
+				}
+
+				if ( ! empty( $srcset ) ) {
+					$node->setAttribute( 'srcset', $srcset = implode( ', ', $srcset ) );
+				}
 			}
 		}
 

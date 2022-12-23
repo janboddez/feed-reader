@@ -143,6 +143,19 @@ html {
 	height: auto;
 }
 
+.feed-reader img[src*="images/core/emoji"],
+.feed-reader img[src*="images%2Fcore%2Femoji"],
+.feed-reader img[src*="images%252Fcore%252Femoji"],
+.feed-reader img[src*="wpcom-smileys/twemoji"],
+.feed-reader img[src*="wpcom-smileys%2Ftwemoji"],
+.feed-reader img[src*="wpcom-smileys%252Ftwemoji"] {
+	/* WordPress emoji. */
+	max-height: 1em;
+	vertical-align: baseline;
+	position: relative;
+	top: 0.125em;
+}
+
 .feed-reader figure {
 	margin-inline-start: 0;
 	margin-inline-end: 0;

@@ -199,31 +199,46 @@ function parse_cursor( $cursor ) {
 }
 
 function proxy_images( $html ) {
-	if ( preg_match_all( '~<(?:img) .*?src="([^"]+?)"[^>]*?>~', $html, $matches ) ) {
-		foreach ( $matches[0] as $i => $match ) {
-			$url = $matches[1][ $i ];
+	if ( ! defined( 'FEED_READER_PROXY_KEY' ) ) {
+		return $html;
+	}
 
-			if ( 0 === stripos( $url, site_url() ) ) {
-				// Exclude images of our own.
-				continue;
+	$html = '<div>' . mb_convert_encoding( $html, 'HTML-ENTITIES', mb_detect_encoding( $html ) ) . '</div>';
+
+	libxml_use_internal_errors( true );
+
+	$doc = new \DOMDocument();
+	$doc->loadHTML( $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+
+	$xpath = new \DOMXPath( $doc );
+
+	// @todo: Currently leaves `srcset` untouched; we should fix that.
+	foreach ( $xpath->query( '//*[@src or @srcset]' ) as $node ) {
+		if ( $node->hasAttribute( 'src' ) ) {
+			$node->setAttribute( 'src', proxy_image( $node->getAttribute( 'src' ) ) );
+		}
+
+		if ( $node->hasAttribute( 'srcset' ) ) {
+			$srcset = array();
+
+			foreach ( explode( ',', $node->getAttribute( 'srcset' ) ) as $item ) {
+				if ( preg_match( '/^(.+?)(\s+.+)?$/', $item, $matches ) ) {
+					$size = isset( $matches[2] ) ? trim( $matches[2] ) : '';
+
+					$srcset[] = proxy_image( trim( $matches[1] ) ) . ' ' . $size;
+				}
 			}
 
-			if ( false === strpos( $matches[0][ $i ], ' loading="' ) && 0 === strpos( $matches[0][ $i ], '<img' ) ) {
-				// The original image tag does not yet contain a `loading` attribute.
-				$lazy = preg_replace( '~\s?/?>~', ' loading="lazy">', $matches[0][ $i ] );
-
-				// Add in the lazily loaded version. All occurrences, in case there's multiple.
-				$html = str_replace( $matches[0][ $i ], $lazy, $html );
+			if ( ! empty( $srcset ) ) {
+				$node->setAttribute( 'srcset', implode( ', ', $srcset ) );
 			}
-
-			// Replace the original URL with the proxy one. Again, everywhere.
-			$html = str_replace(
-				'src="' . $url,
-				'src="' . htmlspecialchars( proxy_image( str_replace( '&amp;', '&', $url ) ) ),
-				$html
-			);
 		}
 	}
+
+	$html = trim( $doc->saveHTML() );
+
+	$html = substr( $html, 5 );
+	$html = substr( $html, 0, -6 );
 
 	return $html;
 }
