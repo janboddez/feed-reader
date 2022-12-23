@@ -221,7 +221,7 @@ function proxy_images( $html ) {
 		if ( $node->hasAttribute( 'srcset' ) ) {
 			$srcset = array();
 
-			foreach ( explode( ',', $node->getAttribute( 'srcset' ) ) as $item ) {
+			foreach ( explode( ', ', $node->getAttribute( 'srcset' ) ) as $item ) {
 				if ( preg_match( '/^(.+?)(\s+.+)?$/', $item, $matches ) ) {
 					$size = isset( $matches[2] ) ? trim( $matches[2] ) : '';
 
@@ -247,6 +247,9 @@ function proxy_image( $url ) {
 	if ( ! defined( 'FEED_READER_PROXY_KEY' ) ) {
 		return $url;
 	}
+
+	// $url = rawurldecode( $url );
+	error_log( $url );
 
 	$query_string = http_build_query(
 		array(

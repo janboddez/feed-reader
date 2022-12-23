@@ -70,7 +70,7 @@ class Image_Proxy {
 
 		if ( ! in_array( $code, array( 200, 201, 202, 206, 301, 302, 307 ), true ) ) {
 			// Return an empty response.
-			fclose( $stream ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
+			fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
 
 			return new \WP_Error( 'unkown_error', esc_html__( 'Something went wrong.', 'feed-reader' ), array( 'status' => $code ) );
 		}
