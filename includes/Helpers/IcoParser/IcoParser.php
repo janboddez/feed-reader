@@ -21,8 +21,10 @@ class IcoParser {
 			// Attempt to load as `.ico`.
 			$icon = $this->parseIco( $data );
 			$im   = ( new GdRenderer() )->render( $icon->findBest() );
-		} catch ( \Exception $e ) {
+		} catch ( \Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+			// Let `imagecreatefromstring` handle things.
 			$im = imagecreatefromstring( $data );
+			imagesavealpha( $im, true );
 		}
 
 		return $im;
@@ -32,7 +34,7 @@ class IcoParser {
 	 * @param  string $data
 	 * @return Icon
 	 *
-	 * @throws \Exception
+	 * @throws \DomainException
 	 */
 	protected function parseIco( $data ) {
 		$iconDir = $this->parseIconDir( $data );
