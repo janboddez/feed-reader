@@ -37,14 +37,14 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 	/**
 	 * Implementation of `\ArrayAccess`, allowing you to do `$icon[ $x ] = $image`.
 	 *
-	 * @param integer   $offset
+	 * @param int       $offset
 	 * @param IconImage $value
 	 *
 	 * @throws \InvalidArgumentException
 	 */
 	public function offsetSet( $offset, $value ) {
 		if ( ! $value instanceof IconImage ) {
-			throw new \InvalidArgumentException( 'Can only add `IconImage` instances' );
+			throw new \InvalidArgumentException( '`$value` must be an instance of `IconImage`' );
 		}
 
 		if ( is_null( $offset ) ) {
@@ -57,7 +57,7 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 	/**
 	 * Implementation of `\ArrayAccess`, allowing you to do `isset( $icon[ $x ] )`.
 	 *
-	 * @param  integer $offset
+	 * @param  int $offset
 	 * @return bool
 	 */
 	public function offsetExists( $offset ) {
@@ -67,7 +67,7 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 	/**
 	 * Implementation of `\ArrayAccess`, allowing you to do `unset( $icon[$x] )`.
 	 *
-	 * @param  integer $offset
+	 * @param  int $offset
 	 * @return void
 	 */
 	public function offsetUnset( $offset ) {
@@ -77,7 +77,7 @@ class Icon implements \ArrayAccess, \Countable, \Iterator {
 	/**
 	 * Implementation of `\ArrayAccess`, allowing you to do `$image = $icon[ $x ]`.
 	 *
-	 * @param  integer $offset
+	 * @param  int $offset
 	 * @return IconImage|null
 	 */
 	public function offsetGet( $offset ) {
