@@ -44,10 +44,14 @@ class Category extends Model {
 		return $wpdb->get_results( $wpdb->prepare( $sql, get_current_user_id() ) );
 	}
 
-	public static function feeds( $id ) {
+	public static function feeds( $id, $fields = 'id' ) {
 		global $wpdb;
 
-		$sql = sprintf( 'SELECT id FROM %s WHERE category_id = %%d AND user_id = %%d', Feed::table() );
+		if ( 'id' === $fields ) {
+			$sql = sprintf( 'SELECT id FROM %s WHERE category_id = %%d AND user_id = %%d ORDER BY url ASC, id ASC', Feed::table() );
+		} else {
+			$sql = sprintf( 'SELECT * FROM %s WHERE category_id = %%d AND user_id = %%d ORDER BY url ASC, id ASC', Feed::table() );
+		}
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
 		return $wpdb->get_results( $wpdb->prepare( $sql, $id, get_current_user_id() ) );

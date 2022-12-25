@@ -13,9 +13,6 @@ class Reader {
 	const PLUGIN_VERSION = '0.1.0';
 	const DB_VERSION     = '2';
 
-	/** @var Router $router */
-	private $router;
-
 	/** @var Feed_Reader $instance */
 	private static $instance;
 
@@ -31,8 +28,7 @@ class Reader {
 		add_action( 'init', array( $this, 'init' ) );
 		add_action( 'feed_reader_poll_feeds', array( Poll_Feeds::class, 'poll_feeds' ) );
 
-		$this->router = new Router();
-		$this->router->register();
+		Router::register();
 
 		add_action( 'rest_api_init', array( Image_Proxy::class, 'register' ) );
 	}

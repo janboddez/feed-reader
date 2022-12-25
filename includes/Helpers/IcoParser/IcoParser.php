@@ -24,7 +24,7 @@ class IcoParser {
 		} catch ( \Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
 			// Let `imagecreatefromstring` handle things.
 			$im = imagecreatefromstring( $data );
-			imagesavealpha( $im, true );
+			imagesavealpha( $im, true ); // For (PNG) transparency to work.
 		}
 
 		return $im;

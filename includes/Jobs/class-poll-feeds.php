@@ -137,40 +137,40 @@ class Poll_Feeds {
 
 				Entry::insert( $entry );
 			}
+		}
 
-			$poll_frequency = end( static::$poll_frequencies );
+		$poll_frequency = end( static::$poll_frequencies );
 
-			if ( $new_items ) {
-				$empty_poll_count = 0;
-				$poll_frequency   = reset( static::$poll_frequencies );
-			} else {
-				$empty_poll_count = $feed->empty_poll_count + 1;
+		if ( $new_items ) {
+			$empty_poll_count = 0;
+			$poll_frequency   = reset( static::$poll_frequencies );
+		} else {
+			$empty_poll_count = $feed->empty_poll_count + 1;
 
-				if ( $empty_poll_count > 3 ) {
-					$empty_poll_count = 3; // Limit to 3.
+			if ( $empty_poll_count > 3 ) {
+				$empty_poll_count = 3; // Limit to 3.
 
-					$key = array_search( $feed->poll_frequency, static::$poll_frequencies, true );
+				$key = array_search( $feed->poll_frequency, static::$poll_frequencies, true );
 
-					if ( array_key_exists( $key + 1, static::$poll_frequencies ) ) {
-						$poll_frequency = static::$poll_frequencies[ $key + 1 ];
-					}
+				if ( array_key_exists( $key + 1, static::$poll_frequencies ) ) {
+					$poll_frequency = static::$poll_frequencies[ $key + 1 ];
 				}
 			}
-
-			// Next check includes some randomness (up to +/- 1 hour).
-			$next_check = strtotime( $now ) + ( $poll_frequency + 1 ) * HOUR_IN_SECONDS - wp_rand( 0, 2 * HOUR_IN_SECONDS );
-
-			Feed::update(
-				array(
-					'last_error'       => null,
-					'last_polled'      => $now,
-					'poll_frequency'   => $poll_frequency,
-					'empty_poll_count' => $empty_poll_count,
-					'next_check'       => date( 'Y-m-d H:i:s', $next_check ),
-				),
-				array( 'id' => $feed->id )
-			);
 		}
+
+		// Next check includes some randomness (up to +/- 1 hour).
+		$next_check = strtotime( $now ) + ( $poll_frequency + 1 ) * HOUR_IN_SECONDS - wp_rand( 0, 2 * HOUR_IN_SECONDS );
+
+		Feed::update(
+			array(
+				'last_error'       => null,
+				'last_polled'      => $now,
+				'poll_frequency'   => $poll_frequency,
+				'empty_poll_count' => $empty_poll_count,
+				'next_check'       => date( 'Y-m-d H:i:s', $next_check ),
+			),
+			array( 'id' => $feed->id )
+		);
 	}
 
 	protected static function get_format( $content_type, $body, $feed ) {
