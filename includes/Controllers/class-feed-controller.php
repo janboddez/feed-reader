@@ -314,14 +314,10 @@ class Feed_Controller extends Controller {
 			foreach ( $mf2['rel-urls'] as $rel => $info ) {
 				if ( isset( $info['rels'] ) && in_array( 'alternate', $info['rels'], true ) && isset( $info['type'] ) ) {
 					if ( false !== strpos( $info['type'], 'application/feed+json' ) || false !== strpos( $info['type'], 'application/json' ) ) {
-						$data = json_decode( $body );
-
-						if ( ! empty( $data->version ) && false !== strpos( $data->version, 'https://jsonfeed.org/version/' ) ) {
-							$feeds[] = array(
-								'format' => 'json_feed',
-								'url'    => esc_url_raw( $rel ),
-							);
-						}
+						$feeds[] = array(
+							'format' => 'json_feed',
+							'url'    => esc_url_raw( $rel ),
+						);
 					}
 
 					if ( false !== strpos( $info['type'], 'application/atom+xml' ) ) {

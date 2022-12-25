@@ -50,10 +50,6 @@ class JSON_Feed extends Format {
 
 		$entry['properties']['uid'] = (array) $uid;
 
-		if ( ! empty( $item->title ) ) {
-			$entry['properties']['name'] = (array) sanitize_text_field( $item->title );
-		}
-
 		if ( ! empty( $item->content_html ) ) {
 			$content = $item->content_html;
 
@@ -84,8 +80,25 @@ class JSON_Feed extends Format {
 		if ( ! empty( $item->summary ) ) {
 			$entry['properties']['summary'] = (array) \FeedReader\Helpers\kses( $item->summary );
 		}
-
 		/** @todo: Autogenerate (shorter) summaries? */
+
+		if ( ! empty( $item->title ) ) {
+			$title = wp_strip_all_tags( $item->title );
+			$title = html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, mb_detect_encoding( $title ) ); // To be escaped on output!
+			$check = preg_replace( array( '~\s~', '~...$~', '~…$~' ), '', $title );
+
+			if (
+				! empty( $content ) &&
+				0 === stripos( preg_replace( '~\s~', '', html_entity_decode( wp_strip_all_tags( $content ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, mb_detect_encoding( $content ) ), $check )
+			) {
+				// If the content starts with the title, treat the entry as a note.
+				$title = '';
+			}
+
+			if ( $title !== $entry['properties']['url'][0] ) {
+				$entry['properties']['name'] = (array) sanitize_text_field( $title );
+			}
+		}
 
 		$base = ! empty( $entry['properties']['url'] )
 			? esc_url_raw( ( (array) $entry['properties']['url'] )[0] )

@@ -104,8 +104,23 @@ class XML extends Format {
 		}
 
 		$title = $item->get_title();
-		if ( $title !== $entry['properties']['url'][0] ) {
-			$entry['properties']['name'] = (array) sanitize_text_field( $title );
+
+		if ( ! empty( $title ) ) {
+			$title = wp_strip_all_tags( $title );
+			$title = html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, mb_detect_encoding( $title ) ); // To be escaped on output!
+			$check = preg_replace( array( '~\s~', '~...$~', '~…$~' ), '', $title );
+
+			if (
+				! empty( $content ) &&
+				0 === stripos( preg_replace( '~\s~', '', html_entity_decode( wp_strip_all_tags( $content ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, mb_detect_encoding( $content ) ), $check )
+			) {
+				// If the content starts with the title, treat the entry as a note.
+				$title = '';
+			}
+
+			if ( $title !== $entry['properties']['url'][0] ) {
+				$entry['properties']['name'] = (array) sanitize_text_field( $title );
+			}
 		}
 
 		$author = $item->get_author();

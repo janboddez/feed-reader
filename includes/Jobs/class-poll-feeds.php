@@ -9,7 +9,7 @@ use FeedReader\Models\Feed;
 
 class Poll_Feeds {
 	/** @var array $poll_frequencies */
-	public static $poll_frequencies = array( 2, 6, 18, 48 );
+	public static $poll_frequencies = array( 2, 6, 12, 24, 48 );
 
 	public static function poll_feeds() {
 		global $wpdb;
@@ -125,6 +125,9 @@ class Poll_Feeds {
 				),
 				array( 'id' => $feed->id )
 			);
+
+			// Stop here.
+			return;
 		}
 
 		$new_items = false;
@@ -142,6 +145,7 @@ class Poll_Feeds {
 		$poll_frequency = end( static::$poll_frequencies );
 
 		if ( $new_items ) {
+			// Reset empty poll count, poll frequency.
 			$empty_poll_count = 0;
 			$poll_frequency   = reset( static::$poll_frequencies );
 		} else {
@@ -154,6 +158,9 @@ class Poll_Feeds {
 
 				if ( array_key_exists( $key + 1, static::$poll_frequencies ) ) {
 					$poll_frequency = static::$poll_frequencies[ $key + 1 ];
+				} else {
+					// Start over if we've somehow updated polling tiers.
+					$poll_frequency = reset( static::$poll_frequencies );
 				}
 			}
 		}

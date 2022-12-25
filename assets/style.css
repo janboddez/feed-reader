@@ -27,9 +27,9 @@
 }
 
 .feed-reader {
-	display: flex;
-	gap: 40px;
-	justify-content: space-between;
+	align-items: start;
+	display: grid;
+	grid-template-columns: 280px 1fr minmax(30em, 45em) 2fr;
 	margin: 0;
 	font-family: 'Inter', sans-serif;
 	font-size: 16px;
@@ -40,14 +40,19 @@
 	background: #f0f0f1;
 	box-sizing: border-box;
 	box-shadow: inset -0.25em 0 0.25em -0.25em rgba(0, 0, 0, 0.25);
+	grid-column: 1 / span 1;
 	height: calc(100vh - 32px);
 	overflow-x: hidden;
 	overflow-y: auto;
 	position: sticky;
 	top: 32px;
-	min-width: 300px;
-	width: 300px;
 	padding: 1em 1.25em;
+}
+
+@media only screen and (max-width: 960px) {
+	.feed-reader-sidebar {
+		display: none;
+	}
 }
 
 .feed-reader-sidebar details ul {
@@ -78,12 +83,18 @@
 }
 
 .feed-reader-main {
-	margin-left: 10%;
+	grid-column: 3 / span 1;
+	margin-left: auto;
 	margin-right: auto;
-	padding-block-start: 0.25em;
-	padding-block-end: 0.25em;
-	padding-inline-end: 10px;
+	padding: 0.25em 1em;
 	max-width: 45rem;
+}
+
+@media only screen and (max-width: 960px) {
+	.feed-reader {
+		display: block;
+		font-size: 13px;
+	}
 }
 
 .feed-reader .note {
@@ -165,6 +176,13 @@
 .feed-reader .entry-content {
 	font-size: 18px;
 	line-height: inherit;
+}
+
+@media only screen and (max-width: 960px) {
+	.feed-reader .entry-summary,
+	.feed-reader .entry-content {
+		font-size: 14px;
+	}
 }
 
 .feed-reader p,
