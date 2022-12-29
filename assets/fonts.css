@@ -1,20 +1,37 @@
 @font-face {
-	font-family: 'Inter var';
-	font-weight: 100 900;
+	font-family: 'Inter';
+	font-style:  normal;
+	font-weight: 400;
 	font-display: swap;
-	font-style: normal;
-	font-named-instance: 'Regular';
 	src: local(''),
-		 url(fonts/Inter-roman.var.woff2) format('woff2');
+		 url(fonts/Inter-Regular.woff2) format('woff2');
 }
 
 @font-face {
-	font-family: 'Inter var';
-	font-weight: 100 900;
+	font-family: 'Inter';
+	font-style:  italic;
+	font-weight: 400;
 	font-display: swap;
-	font-style: italic;
-	font-named-instance: 'Italic';
-	src: url(fonts/Inter-italic.var.woff2) format('woff2');
+	src: local(''),
+		 url(fonts/Inter-Italic.woff2) format('woff2');
+}
+
+@font-face {
+	font-family: 'Inter';
+	font-style:  normal;
+	font-weight: 700;
+	font-display: swap;
+	src: local(''),
+		 url(fonts/Inter-Bold.woff2) format('woff2');
+}
+
+@font-face {
+	font-family: 'Inter';
+	font-style:  italic;
+	font-weight: 700;
+	font-display: swap;
+	src: local(''),
+		 url(fonts/Inter-BoldItalic.woff2) format('woff2');
 }
 
 @font-face {

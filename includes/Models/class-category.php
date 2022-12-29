@@ -79,7 +79,7 @@ class Category extends Model {
 			return $wpdb->get_results( $wpdb->prepare( $sql, $id, get_current_user_id() ) );
 		} else {
 			$sql = sprintf(
-				'SELECT *, (SELECT COUNT(*) FROM %s WHERE feed_id = f.id AND is_read = 0 AND user_id = %%d) AS unread_count
+				'SELECT *, (SELECT COUNT(*) FROM %s WHERE feed_id = f.id AND deleted_at IS NULL AND user_id = %%d AND is_read = 0) AS unread_count
 				 FROM %s AS f
 				 WHERE category_id = %%d AND user_id = %%d
 				 ORDER BY url ASC, id ASC',
