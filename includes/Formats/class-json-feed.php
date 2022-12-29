@@ -61,7 +61,7 @@ class JSON_Feed extends Format {
 			}
 
 			// @todo: Remove comments, script tags, and images without `src` attribute.
-			$content = wpautop( \FeedReader\Helpers\kses( $content ) );
+			$content = wpautop( \FeedReader\Helpers\kses( $content ), false );
 
 			$entry['properties']['content'] = array(
 				array(

@@ -38,14 +38,13 @@ if ( 'categories' === \FeedReader\Router::get_controller() ) {
 		$cur_feed = (int) $_GET['id']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 } elseif ( 'entries' === \FeedReader\Router::get_controller() && ! empty( $entries[0]->feed_id ) ) {
-	// $cur_feed = (int) $entries[0]->feed_id;
 	$cur_cat = (int) ( \FeedReader\Models\Feed::find( $entries[0]->feed_id ) )->category_id; // Another useless query, but hey.
 }
 
-$categories = \FeedReader\Models\Category::all();
+$categories = array_values( \FeedReader\Models\Category::all() );
 
 if ( ! empty( $categories ) ) :
-	foreach ( $categories as $category ) :
+	foreach ( $categories as $i => $category ) :
 		// @codingStandardsIgnoreStart
 		// Filter out just this category's feeds.
 		// $cat_feeds = array_filter(
@@ -71,7 +70,7 @@ if ( ! empty( $categories ) ) :
 				}
 			);
 			?>
-			<details <?php echo ( $cur_cat === (int) $category->id || in_array( $cur_feed, array_map( 'intval', array_column( $feeds, 'id' ) ), true ) ? 'open="open"' : '' ); ?>>
+			<details <?php echo ( $cur_cat === (int) $category->id || in_array( $cur_feed, array_map( 'intval', array_column( $feeds, 'id' ) ), true ) || ( empty( $cur_feed ) && empty( $cur_cat ) && 0 === $i ) ? 'open="open"' : '' ); ?>>
 				<summary>
 					<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'categories', 'view', $category->id, empty( $unread ) ) ); ?>"><?php echo esc_html( $category->name ); ?> <?php echo esc_html( ! empty( $unread ) ? "($unread)" : '' ); ?></a>
 				</summary>
