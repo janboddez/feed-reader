@@ -41,6 +41,21 @@ class Format {
 
 		$xpath = new \DOMXPath( $doc );
 
+		// Since we're going to always run this function, we might as well use
+		// it to filter out "invalid" `img` elements.
+		foreach ( $xpath->query( '//img' ) as $node ) {
+			if ( ! $node->hasAttribute( 'src' ) || empty( $node->getAttribute( 'src' ) ) ) {
+				$node->parentNode->removeChild( $node ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			}
+		}
+
+		// And "invalid" hyperlinks.
+		foreach ( $xpath->query( '//a' ) as $node ) {
+			if ( empty( $node->textContent ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$node->parentNode->removeChild( $node ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			}
+		}
+
 		foreach ( $xpath->query( '//*[@href or @src or @srcset]' ) as $node ) {
 			if ( $node->hasAttribute( 'href' ) && 0 !== strpos( $node->getAttribute( 'href' ), 'http' ) ) { // Ran into an issue here where `href="http://"`, so not a valid, nor a relative URL. Need to fix this properly.
 				$node->setAttribute( 'href', (string) SimplePie_IRI::absolutize( $base, $node->getAttribute( 'href' ) ) );

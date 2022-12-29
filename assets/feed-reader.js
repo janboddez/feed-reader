@@ -1,4 +1,23 @@
 jQuery( document ).ready( function ( $ ) {
+	$( '.feed-reader img').each( function() {
+		if ( this.width > 250 ) {
+			// Don't display "wider" images inline.
+			$( this ).css( 'display', 'block' );
+		}
+	} );
+
+	$( '.feed-reader a:has(img)' ).each( function() {
+		var link = $( this );
+
+		if ( link.width() > 250 ) {
+			link.addClass( 'image-wide' ); // We use this class to address "image captions" that follow the image (link).
+
+			// "Fix" WordPress's focus outlines.
+			link.css( 'display', 'inline-block' );
+			link.find( 'img' ).css( 'vertical-align', 'middle' );
+		}
+	} );
+
 	function mark_read() {
 		var button = $( this );
 		var entry  = button.closest( '.hentry' );
@@ -82,6 +101,9 @@ jQuery( document ).ready( function ( $ ) {
 		} );
 	} );
 
+	$( '.reader_page_feed-reader-feeds-edit .delete, .reader_page_feed-reader-categories-edit .delete' ).click( function() {
+		return confirm( feed_reader_obj.confirm );
+	} );
 
 	/** @todo: Rewrite this without the need for JS. */
 	$( '#feed-reader-category-search-input' ).keyup( function( e ) {
@@ -209,6 +231,7 @@ jQuery( document ).ready( function ( $ ) {
 		} );
 	} );
 
+	$( '#site_or_feed_url' ).focus();
 	$( '#feed-discover button' ).click( function() {
 		var button = $( this );
 		var url    = $( '#site_or_feed_url' ).val();

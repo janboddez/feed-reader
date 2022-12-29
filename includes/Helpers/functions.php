@@ -96,7 +96,9 @@ function kses( $string ) {
 			'dd' => array(),
 			'dt' => array(),
 		),
-		'ol'         => array(),
+		'ol'         => array(
+			'start' => true,
+		),
 		'ul'         => array(),
 		'li'         => array(),
 		'h2'         => array(),

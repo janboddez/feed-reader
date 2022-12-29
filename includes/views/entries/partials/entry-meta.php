@@ -38,15 +38,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</time>
 	<?php endif; ?>
 
+	<?php if ( ! empty( $entry->url ) ) : ?>
+		<span aria-hidden="true">&bull;</span>
+
+		<a href="<?php echo esc_url( $entry->url ); ?>"><svg class="icon icon-external-link" aria-hidden="true" role="img" width="16" height="16"><use href="#icon-external-link"></use></svg><span class="screen-reader-text"> <?php esc_html_e( 'Visit page', 'feed-reader' ); ?></span></a>
+	<?php endif; ?>
+
 	<span aria-hidden="true">&bull;</span>
 
 	<?php if ( ! $entry->is_read ) : ?>
 		<button class="button-link mark-read" data-nonce="<?php echo esc_attr( wp_create_nonce( "feed-reader-entries:mark-read:{$entry->id}" ) ); ?>">
-			<?php esc_html_e( 'Mark as read', 'feed-reader' ); ?>
+			<?php esc_html_e( 'Mark read', 'feed-reader' ); ?>
 		</button>
 	<?php else : ?>
 		<button class="button-link mark-unread" data-nonce="<?php echo esc_attr( wp_create_nonce( "feed-reader-entries:mark-unread:{$entry->id}" ) ); ?>">
-			<?php esc_html_e( 'Mark as unread', 'feed-reader' ); ?>
+			<?php esc_html_e( 'Mark unread', 'feed-reader' ); ?>
 		</button>
 	<?php endif; ?>
 
@@ -54,7 +60,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<span aria-hidden="true">&bull;</span>
 
 		<button class="button-link delete" data-nonce="<?php echo esc_attr( wp_create_nonce( "feed-reader-entries:delete:{$entry->id}" ) ); ?>">
-			<?php esc_html_e( 'Delete', 'feed-reader' ); ?>
+			<svg class="icon icon-trash" aria-hidden="true" role="img" width="16" height="16"><use href="#icon-trash"></use></svg>
+			<span class="screen-reader-text"><?php esc_html_e( 'Delete', 'feed-reader' ); ?></span>
 		</button>
 	<?php endif; ?>
 </div>

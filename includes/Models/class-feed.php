@@ -9,6 +9,26 @@ class Feed extends Model {
 	/** @var string $table */
 	protected static $table = 'feed_reader_feeds';
 
+	public static function all() {
+		global $wpdb;
+
+		$sql = sprintf(
+			'SELECT
+				f.*,
+				c.name AS category_name,
+				(SELECT COUNT(*) FROM %s WHERE feed_id = f.id AND is_read = 0 AND user_id = %%d) AS unread_count
+			 FROM (SELECT * FROM %s WHERE user_id = %%d) AS f
+			 LEFT JOIN %s AS c ON c.id = f.category_id AND c.user_id = %%d
+			 ORDER BY category_name ASC, f.url ASC, f.id ASC',
+			Entry::table(),
+			static::table(),
+			Category::table()
+		);
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+		return $wpdb->get_results( $wpdb->prepare( $sql, get_current_user_id(), get_current_user_id(), get_current_user_id() ) );
+	}
+
 	public static function paginate( $limit = 15, $search = null ) {
 		$paged  = isset( $_GET['paged'] ) ? (int) $_GET['paged'] : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$offset = max( 0, $paged - 1 ) * $limit;

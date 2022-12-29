@@ -180,8 +180,8 @@ class Router {
 				'feed_reader_obj',
 				array(
 					'confirm'     => esc_attr__( 'Are you sure?', 'feed-reader' ),
-					'mark_read'   => esc_attr__( 'Mark as read', 'feed-reader' ),
-					'mark_unread' => esc_attr__( 'Mark as unread', 'feed-reader' ),
+					'mark_read'   => esc_attr__( 'Mark read', 'feed-reader' ),
+					'mark_unread' => esc_attr__( 'Mark unread', 'feed-reader' ),
 					'all_done'    => sprintf(
 						'<section class="hentry note"><div class="entry-summary"><p>%s</p></div></section>',
 						__( 'Seems you&rsquo;re all caught up!', 'feed-reader' )
@@ -189,6 +189,17 @@ class Router {
 				)
 			);
 		}
+
+		if ( in_array( $hook_suffix, array( 'toplevel_page_feed-reader', 'reader_page_feed-reader-entries-view', 'reader_page_feed-reader-feeds-view', 'reader_page_feed-reader-categories-view' ), true ) ) {
+			add_filter( 'admin_body_class', array( __CLASS__, 'body_class' ) );
+		}
+	}
+
+	public static function body_class( $classes ) {
+		$classes   = explode( ' ', $classes );
+		$classes[] = 'folded';
+
+		return implode( ' ', array_unique( $classes ) );
 	}
 
 	public static function include_icon_sprites() {

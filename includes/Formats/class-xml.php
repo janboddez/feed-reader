@@ -100,7 +100,7 @@ class XML extends Format {
 			);
 
 			/* @todo: Look for an actual summary first. */
-			$entry['properties']['summary'] = (array) wp_trim_words( $entry['properties']['content'][0]['html'], 20, ' [&hellip;]' );
+			$entry['properties']['summary'] = (array) wp_trim_words( $entry['properties']['content'][0]['html'], 30, ' [&hellip;]' );
 		}
 
 		$title = $item->get_title();

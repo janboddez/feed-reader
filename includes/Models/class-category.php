@@ -38,6 +38,31 @@ class Category extends Model {
 	public static function all() {
 		global $wpdb;
 
+		// Using MySQL 8 and up, we could use `JSON_ARRAYAGG` to return a
+		// category's feeds as a JSON array, and, after decoding, loop over,
+		// e.g., `$categories[0]->feeds`.
+
+		// @codingStandardsIgnoreStart
+		// $sql = sprintf(
+		// 	"SELECT c.*,
+		// 		JSON_ARRAYAGG( JSON_OBJECT(
+		// 			'id', f.id,
+		// 			'name', f.name,
+		// 			'icon', f.icon,
+		// 			'unread_count', (SELECT COUNT(*) FROM %s WHERE feed_id = f.id AND is_read = 0 AND user_id = %%d)
+		// 		) ) AS feeds
+		// 		FROM (SELECT * FROM %s WHERE user_id = %%d) AS c
+		// 		LEFT JOIN %s AS f ON f.category_id = c.id AND f.user_id = %%d
+		// 		GROUP BY c.id",
+		// 	Entry::table(),
+		// 	static::table(),
+		// 	Feed::table()
+		// );
+
+		// // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+		// return $wpdb->get_results( $wpdb->prepare( $sql, get_current_user_id(), get_current_user_id(), get_current_user_id() ) );
+		// @codingStandardsIgnoreEnd
+
 		$sql = sprintf( 'SELECT * FROM %s WHERE user_id = %%d ORDER BY name ASC', static::table() );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
@@ -49,12 +74,22 @@ class Category extends Model {
 
 		if ( 'id' === $fields ) {
 			$sql = sprintf( 'SELECT id FROM %s WHERE category_id = %%d AND user_id = %%d ORDER BY url ASC, id ASC', Feed::table() );
-		} else {
-			$sql = sprintf( 'SELECT * FROM %s WHERE category_id = %%d AND user_id = %%d ORDER BY url ASC, id ASC', Feed::table() );
-		}
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
-		return $wpdb->get_results( $wpdb->prepare( $sql, $id, get_current_user_id() ) );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+			return $wpdb->get_results( $wpdb->prepare( $sql, $id, get_current_user_id() ) );
+		} else {
+			$sql = sprintf(
+				'SELECT *, (SELECT COUNT(*) FROM %s WHERE feed_id = f.id AND is_read = 0 AND user_id = %%d) AS unread_count
+				 FROM %s AS f
+				 WHERE category_id = %%d AND user_id = %%d
+				 ORDER BY url ASC, id ASC',
+				Entry::table(),
+				Feed::table()
+			);
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+			return $wpdb->get_results( $wpdb->prepare( $sql, get_current_user_id(), $id, get_current_user_id() ) );
+		}
 	}
 
 	public static function entries( $id, $limit = 15, $all = false ) {

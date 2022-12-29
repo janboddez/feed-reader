@@ -43,8 +43,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</select></td>
 			</tr>
 		</table>
+
 		<p class="submit">
 			<button type="submit" class="button button-primary"><?php isset( $feed ) ? esc_html_e( 'Save Changes', 'feed-reader' ) : esc_html_e( 'Add Feed', 'feed-reader' ); ?></button>
 		</p>
+
+		<fieldset style="max-width: 50em;">
+			<legend><?php esc_html_e( 'Danger Zone', 'feed-reader' ); ?></legend>
+			<div class="form-group">
+				<span class="description"><?php esc_html_e( 'Permanently delete this feed and all of its entries.', 'feed-reader' ); ?></span>
+				<a class="button delete" href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'feeds', 'delete', $feed->id ) ); ?>"><?php esc_html_e( 'Delete', 'feed-reader' ); ?></a>
+			</div>
+		</fieldset>
 	</form>
 </div>
