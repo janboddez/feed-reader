@@ -3,6 +3,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$options = get_option( 'feed_reader_settings' );
 ?>
 <div class="entry-meta">
 	<?php if ( ! empty( $entry->feed_icon ) ) : ?>
@@ -56,7 +58,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</button>
 	<?php endif; ?>
 
-	<?php if ( ! defined( 'FEED_READER_ACTIONS' ) || ! FEED_READER_ACTIONS ) : ?>
+	<?php if ( empty( $options['show_actions'] ) ) : ?>
 		<span aria-hidden="true">&bull;</span>
 
 		<button class="button-link delete" data-nonce="<?php echo esc_attr( wp_create_nonce( "feed-reader-entries:delete:{$entry->id}" ) ); ?>">
