@@ -35,13 +35,16 @@
 .feed-reader {
 	align-items: start;
 	display: grid;
-	grid-template-columns: 290px 1fr 40em 1fr 1fr;
-	/*grid-template-columns: 1fr 45em 1fr;*/
+	grid-template-columns: 1fr 1fr 40em 1fr 1fr;
 	gap: 0.5em;
 	margin: 0;
 	font-family: 'Inter', sans-serif;
 	font-size: 16px;
 	line-height: 1.6;
+}
+
+.feed-reader.with-sidebar {
+	grid-template-columns: 290px 1fr 40em 1fr 1fr;
 }
 
 @media only screen and (max-width: 960px) {
@@ -53,7 +56,11 @@
 
 @media only screen and (max-width: 1300px) {
 	.feed-reader {
-		grid-template-columns: 290px 1fr auto 1fr 1fr;
+		grid-template-columns: 1fr 1fr auto 1fr 1fr;
+	}
+
+	.feed-reader.with-sidebar {
+		grid-template-columns: 290px 1fr 40em 1fr 1fr;
 	}
 }
 

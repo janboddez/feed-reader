@@ -7,9 +7,20 @@ use FeedReader\Controllers\Entry_Controller;
 use FeedReader\Controllers\Feed_Controller;
 use FeedReader\Controllers\OPML_Controller;
 use FeedReader\Controllers\Post_Controller;
+use FeedReader\Controllers\Settings_Controller;
 
 class Router {
 	public static function register() {
+		add_option(
+			'feed_reader_settings',
+			array(
+				'collapse_menu' => false,
+				'hide_sidebar'  => false,
+				'show_actions'  => false,
+				'image_proxy'   => false,
+			)
+		);
+
 		add_action( 'admin_menu', array( __CLASS__, 'create_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 		add_action( 'admin_footer', array( __CLASS__, 'include_icon_sprites' ) );
@@ -52,7 +63,7 @@ class Router {
 			esc_html( static::get_title() ),
 			__( 'View Entry', 'feed-reader' ),
 			'activate_plugins',
-			'feed-reader-entries-view',
+			'feed-reader/entries/view',
 			array( Entry_Controller::class, 'view' )
 		);
 
@@ -61,7 +72,7 @@ class Router {
 			__( 'Feeds', 'feed-reader' ),
 			__( 'Feeds', 'feed-reader' ),
 			'activate_plugins',
-			'feed-reader-feeds',
+			'feed-reader/feeds',
 			array( Feed_Controller::class, 'index' )
 		);
 
@@ -70,7 +81,7 @@ class Router {
 			esc_html( static::get_title() ),
 			__( 'View Feed', 'feed-reader' ),
 			'activate_plugins',
-			'feed-reader-feeds-view',
+			'feed-reader/feeds/view',
 			array( Feed_Controller::class, 'view' )
 		);
 
@@ -79,7 +90,7 @@ class Router {
 			__( 'Add Feed', 'feed-reader' ),
 			__( 'Add Feed', 'feed-reader' ),
 			'activate_plugins',
-			'feed-reader-feeds-create',
+			'feed-reader/feeds/create',
 			array( Feed_Controller::class, 'create' )
 		);
 
@@ -88,7 +99,7 @@ class Router {
 			__( 'Edit Feed', 'feed-reader' ),
 			__( 'Edit Feed', 'feed-reader' ),
 			'activate_plugins',
-			'feed-reader-feeds-edit',
+			'feed-reader/feeds/edit',
 			array( Feed_Controller::class, 'edit' )
 		);
 
@@ -97,7 +108,7 @@ class Router {
 			__( 'Categories', 'feed-reader' ),
 			__( 'Categories', 'feed-reader' ),
 			'activate_plugins',
-			'feed-reader-categories',
+			'feed-reader/categories',
 			array( Category_Controller::class, 'index' )
 		);
 
@@ -106,7 +117,7 @@ class Router {
 			esc_html( static::get_title() ),
 			__( 'View Category', 'feed-reader' ),
 			'activate_plugins',
-			'feed-reader-categories-view',
+			'feed-reader/categories/view',
 			array( Category_Controller::class, 'view' )
 		);
 
@@ -115,7 +126,7 @@ class Router {
 			__( 'Add Category', 'feed-reader' ),
 			__( 'Add Category', 'feed-reader' ),
 			'activate_plugins',
-			'feed-reader-categories-create',
+			'feed-reader/categories/create',
 			array( Category_Controller::class, 'create' )
 		);
 
@@ -124,7 +135,7 @@ class Router {
 			__( 'Edit Category', 'feed-reader' ),
 			__( 'Edit Category', 'feed-reader' ),
 			'activate_plugins',
-			'feed-reader-categories-edit',
+			'feed-reader/categories/edit',
 			array( Category_Controller::class, 'edit' )
 		);
 
@@ -133,21 +144,49 @@ class Router {
 			__( 'Import OPML', 'feed-reader' ),
 			__( 'Import OPML', 'feed-reader' ),
 			'activate_plugins',
-			'feed-reader-opml-import',
+			'feed-reader/opml/import',
 			array( OPML_Controller::class, 'upload' )
 		);
 
+		add_submenu_page(
+			'feed-reader',
+			__( 'Settings', 'feed-reader' ),
+			__( 'Settings', 'feed-reader' ),
+			'activate_plugins',
+			'feed-reader/settings',
+			array( Settings_Controller::class, 'edit' )
+		);
+		add_action( 'admin_init', array( __CLASS__, 'add_settings' ) );
+
 		add_action( 'admin_head', array( __CLASS__, 'remove_submenu_pages' ) );
+
+	}
+
+	public static function add_settings() {
+		register_setting(
+			'feed-reader-settings-group',
+			'feed_reader_settings',
+			array( 'sanitize_callback' => array( __CLASS__, 'sanitize_settings' ) )
+		);
+	}
+
+	public static function sanitize_settings( $settings ) {
+		return array(
+			'collapse_menu' => isset( $settings['collapse_menu'] ) ? true : false,
+			'hide_sidebar'  => isset( $settings['hide_sidebar'] ) ? true : false,
+			'show_actions'  => isset( $settings['show_actions'] ) ? true : false,
+			'image_proxy'   => isset( $settings['image_proxy'] ) ? true : false,
+		);
 	}
 
 	public static function remove_submenu_pages() {
-		remove_submenu_page( 'feed-reader', 'feed-reader-entries-view' );
-		remove_submenu_page( 'feed-reader', 'feed-reader-feeds-view' );
-		remove_submenu_page( 'feed-reader', 'feed-reader-feeds-create' );
-		remove_submenu_page( 'feed-reader', 'feed-reader-feeds-edit' );
-		remove_submenu_page( 'feed-reader', 'feed-reader-categories-view' );
-		remove_submenu_page( 'feed-reader', 'feed-reader-categories-create' );
-		remove_submenu_page( 'feed-reader', 'feed-reader-categories-edit' );
+		remove_submenu_page( 'feed-reader', 'feed-reader/entries/view' );
+		remove_submenu_page( 'feed-reader', 'feed-reader/feeds/view' );
+		remove_submenu_page( 'feed-reader', 'feed-reader/feeds/create' );
+		remove_submenu_page( 'feed-reader', 'feed-reader/feeds/edit' );
+		remove_submenu_page( 'feed-reader', 'feed-reader/categories/view' );
+		remove_submenu_page( 'feed-reader', 'feed-reader/categories/create' );
+		remove_submenu_page( 'feed-reader', 'feed-reader/categories/edit' );
 	}
 
 	public static function highlight_menu_page( $parent_file ) {
@@ -162,7 +201,7 @@ class Router {
 		if ( 'entries' === $controller ) {
 			$submenu_file = 'feed-reader'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		} else {
-			$submenu_file = "feed-reader-{$controller}"; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$submenu_file = "feed-reader/{$controller}"; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		}
 
 		return $parent_file;
@@ -190,7 +229,9 @@ class Router {
 			);
 		}
 
-		if ( in_array( $hook_suffix, array( 'toplevel_page_feed-reader', 'reader_page_feed-reader-entries-view', 'reader_page_feed-reader-feeds-view', 'reader_page_feed-reader-categories-view' ), true ) ) {
+		$options = get_option( 'feed_reader_settings' );
+
+		if ( ! empty( $options['collapse_menu'] ) && in_array( $hook_suffix, array( 'toplevel_page_feed-reader', 'reader_page_feed-reader/entries/view', 'reader_page_feed-reader/feeds/view', 'reader_page_feed-reader/categories/view' ), true ) ) {
 			add_filter( 'admin_body_class', array( __CLASS__, 'body_class' ) );
 		}
 	}
@@ -267,7 +308,7 @@ class Router {
 
 	public static function get_controller() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( isset( $_GET['page'] ) && preg_match( '~^feed-reader-(categories|feeds)~', $_GET['page'], $matches ) ) {
+		if ( isset( $_GET['page'] ) && preg_match( '~^feed-reader/(categories|feeds)~', $_GET['page'], $matches ) ) {
 			return $matches[1];
 		}
 
@@ -276,7 +317,7 @@ class Router {
 
 	public static function get_method() {
 		if ( isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$method = preg_replace( '~^feed-reader-(?:entries|feeds|categories)-~', '', $_GET['page'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$method = preg_replace( '~^feed-reader/(?:entries|feeds|categories)/~', '', $_GET['page'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			if ( in_array( $method, array( 'view', 'edit' ), true ) ) {
 				return $method;

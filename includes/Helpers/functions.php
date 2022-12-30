@@ -17,7 +17,7 @@ function get_url( $controller, $method = null, $id = null, $all = false ) {
 	return add_query_arg(
 		array_filter(
 			array(
-				'page' => 'feed-reader' . ( ! empty( $controller ) ? "-$controller" : '' ) . ( ! empty( $method ) ? "-$method" : '' ),
+				'page' => 'feed-reader' . ( ! empty( $controller ) ? "/$controller" : '' ) . ( ! empty( $method ) ? "/$method" : '' ),
 				'id'   => $id,
 				'all'  => $all,
 			)

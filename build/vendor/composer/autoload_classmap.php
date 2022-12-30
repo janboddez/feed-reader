@@ -13,6 +13,7 @@ return array(
     'FeedReader\\Controllers\\Feed_Controller' => $baseDir . '/../includes/Controllers/class-feed-controller.php',
     'FeedReader\\Controllers\\OPML_Controller' => $baseDir . '/../includes/Controllers/class-opml-controller.php',
     'FeedReader\\Controllers\\Post_Controller' => $baseDir . '/../includes/Controllers/class-post-controller.php',
+    'FeedReader\\Controllers\\Settings_Controller' => $baseDir . '/../includes/Controllers/class-settings-controller.php',
     'FeedReader\\Formats\\Format' => $baseDir . '/../includes/Formats/class-format.php',
     'FeedReader\\Formats\\JSON_Feed' => $baseDir . '/../includes/Formats/class-json-feed.php',
     'FeedReader\\Formats\\Mf2' => $baseDir . '/../includes/Formats/class-mf2.php',

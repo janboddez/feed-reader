@@ -3,11 +3,15 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$options = get_option( 'feed_reader_settings' );
 ?>
-<div class="wrap feed-reader">
-	<aside class="feed-reader-sidebar">
-		<?php static::render( 'sidebar', array( 'entries' => array( $entry ) ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope ?>
-	</aside>
+<div class="wrap feed-reader <?php echo esc_attr( empty( $options['hide_sidebar'] ) ? 'with-sidebar' : '' ); ?>">
+	<?php if ( empty( $options['hide_sidebar'] ) ) : ?>
+		<aside class="feed-reader-sidebar">
+			<?php static::render( 'sidebar', array( 'entries' => array( $entry ) ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope ?>
+		</aside>
+	<?php endif; ?>
 
 	<div class="feed-reader-main">
 		<?php if ( ! empty( $entry->url ) ) : ?>

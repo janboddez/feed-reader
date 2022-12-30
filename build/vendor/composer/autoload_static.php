@@ -19,6 +19,7 @@ class ComposerStaticInitdfb0f003a1e25bf271717e4930899561
         'FeedReader\\Controllers\\Feed_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-feed-controller.php',
         'FeedReader\\Controllers\\OPML_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-opml-controller.php',
         'FeedReader\\Controllers\\Post_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-post-controller.php',
+        'FeedReader\\Controllers\\Settings_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-settings-controller.php',
         'FeedReader\\Formats\\Format' => __DIR__ . '/../..' . '/../includes/Formats/class-format.php',
         'FeedReader\\Formats\\JSON_Feed' => __DIR__ . '/../..' . '/../includes/Formats/class-json-feed.php',
         'FeedReader\\Formats\\Mf2' => __DIR__ . '/../..' . '/../includes/Formats/class-mf2.php',

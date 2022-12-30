@@ -55,9 +55,19 @@ class Reader {
 		dbDelta( $sql );
 
 		if ( (int) get_option( 'feed_reader_db_version' ) < 2 ) {
+			global $wpdb;
+
+			// Generate a unique UID.
+			do {
+				$uid    = bin2hex( openssl_random_pseudo_bytes( 16 ) );
+				$sql    = sprintf( 'SELECT id FROM %s WHERE uid = %%s LIMIT 1', Category::table() );
+				$exists = $wpdb->get_var( $wpdb->prepare( $sql, $uid ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+			} while ( $exists );
+
 			Category::insert(
 				array(
 					'name'    => 'General',
+					'uid'     => $uid,
 					'user_id' => get_current_user_id(),
 				)
 			);

@@ -4,13 +4,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! defined( 'FEED_READER_ACTIONS' ) || ! FEED_READER_ACTIONS ) {
+$options = get_option( 'feed_reader_settings' );
+
+if ( empty( $options['show_actions'] ) ) {
 	return;
 }
-
-// if ( isset( $_GET['page'] ) && 'feed-reader-entries-view' !== $_GET['page'] && ! \FeedReader\Helpers\show_in_full( $entry ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-// 	return;
-// }
 ?>
 <div class="actions" data-nonce="<?php echo esc_attr( wp_create_nonce( 'feed-reader:post' ) ); ?>">
 	<ul>
