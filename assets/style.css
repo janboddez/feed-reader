@@ -197,25 +197,18 @@
 .feed-reader .note .entry-meta {
 	margin: 0.5em 0;
 }
-/*
-.feed-reader .entry-summary p {
-	margin-block-start: 0.5em;
-}
-*/
-.feed-reader .avatar,
+
+.feed-reader-sidebar .avatar,
+.feed-reader .entry-meta .avatar,
 .reader_page_feed-reader-feeds .avatar {
 	border-radius: 50%;
 	margin-inline-end: 1px;
-	vertical-align: middle;
-	position: relative;
-	top: -1px;
+	vertical-align: -0.125em;
 }
 
 .feed-reader-sidebar .avatar,
 .reader_page_feed-reader-feeds .avatar {
 	filter: grayscale(1);
-	margin-inline-end: 2px;
-	top: -2px;
 }
 
 .feed-reader-sidebar li:hover .avatar,
@@ -292,9 +285,7 @@
 .feed-reader img[src*="wpcom-smileys%252Ftwemoji"] {
 	/* WordPress emoji. */
 	max-height: 1em;
-	vertical-align: baseline;
-	position: relative;
-	top: 0.125em;
+	vertical-align: -0.125em;
 }
 
 .feed-reader figure {
@@ -381,8 +372,7 @@
 }
 
 .feed-reader .entry-meta .icon {
-	position: relative;
-	top: 2px;
+	vertical-align: -0.125em;
 }
 
 .reader_page_feed-reader-feeds-create .form-table,
@@ -493,4 +483,12 @@
 .feed-reader .button-delete:focus {
 	border-color: #8f2424;
 	color: #8f2424;
+}
+
+.feed-reader .entry-summary .avatar,
+.feed-reader .entry-content .avatar {
+	height: 1em;
+	width: 1em;
+	margin-inline-end: 0.25em;
+	vertical-align: -0.125em;
 }

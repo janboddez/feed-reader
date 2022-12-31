@@ -31,13 +31,13 @@ class Post_Controller {
 		if ( ! empty( $_POST['in-reply-to'] ) && filter_var( wp_unslash( $_POST['in-reply-to'] ), FILTER_VALIDATE_URL ) ) {
 			$url = wp_unslash( $_POST['in-reply-to'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-			if ( ! class_exists( '\\IndieBlocks\\Micropub_Compat' ) ) {
+			if ( ! empty( $indieblocks['enable_blocks'] ) ) {
+				$input   = array( 'properties' => array( 'content' => (array) $content ) );
+				$content = \IndieBlocks\Micropub_Compat::render( 'reply', $url, $input );
+			} else {
 				/* translators: %s: URL of the page being replied to */
 				$context = sprintf( __( 'In reply to %s.', 'feed-reader' ), '<a class="in-reply-to" href="' . esc_url( $url ) . '">' . esc_url( $url ) . '</a>' );
 				$content = trim( '<i>' . $context . '</i>' . PHP_EOL . PHP_EOL . $content );
-			} else {
-				$input   = array( 'properties' => array( 'content' => (array) $content ) );
-				$content = \IndieBlocks\Micropub_Compat::render( 'reply', $url, $input );
 			}
 
 			if ( ! empty( $indieblocks['enable_notes'] ) ) {
@@ -48,13 +48,13 @@ class Post_Controller {
 		if ( ! empty( $_POST['bookmark-of'] ) && filter_var( wp_unslash( $_POST['bookmark-of'] ), FILTER_VALIDATE_URL ) ) {
 			$url = wp_unslash( $_POST['bookmark-of'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-			if ( ! class_exists( '\\IndieBlocks\\Micropub_Compat' ) ) {
+			if ( ! empty( $indieblocks['enable_blocks'] ) ) {
+				$input   = array( 'properties' => array( 'content' => (array) $content ) );
+				$content = \IndieBlocks\Micropub_Compat::render( 'bookmark', $url, $input );
+			} else {
 				/* translators: %s: Bookmark URL */
 				$context = sprintf( __( 'Bookmarked %s.', 'feed-reader' ), '<a class="u-bookmark-of" href="' . esc_url( $url ) . '">' . esc_url( $url ) . '</a>' );
 				$content = '<i>' . $context . '</i>' . PHP_EOL . PHP_EOL . $content;
-			} else {
-				$input   = array( 'properties' => array( 'content' => (array) $content ) );
-				$content = \IndieBlocks\Micropub_Compat::render( 'bookmark', $url, $input );
 			}
 
 			if ( ! empty( $indieblocks['enable_notes'] ) ) {
@@ -65,11 +65,11 @@ class Post_Controller {
 		if ( ! empty( $_POST['like-of'] ) && filter_var( wp_unslash( $_POST['like-of'] ), FILTER_VALIDATE_URL ) ) {
 			$url = wp_unslash( $_POST['like-of'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-			if ( ! class_exists( '\\IndieBlocks\\Micropub_Compat' ) ) {
+			if ( ! empty( $indieblocks['enable_blocks'] ) ) {
+				$content = \IndieBlocks\Micropub_Compat::render( 'like', $url );
+			} else {
 				/* translators: %s: URL of the page being "liked" */
 				$content = '<i>' . sprintf( __( 'Likes %s.', 'feed-reader' ), '<a class="u-like-of" href="' . esc_url( $url ) . '">' . esc_url( $url ) . '</a>' ) . '</i>';
-			} else {
-				$content = \IndieBlocks\Micropub_Compat::render( 'like', $url );
 			}
 
 			if ( ! empty( $indieblocks['enable_likes'] ) ) {

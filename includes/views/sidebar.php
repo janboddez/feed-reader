@@ -38,7 +38,11 @@ if ( 'categories' === \FeedReader\Router::get_controller() ) {
 		$cur_feed = (int) $_GET['id']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 } elseif ( 'entries' === \FeedReader\Router::get_controller() && ! empty( $entries[0]->feed_id ) ) {
-	$cur_cat = (int) ( \FeedReader\Models\Feed::find( $entries[0]->feed_id ) )->category_id; // Another useless query, but hey.
+	if ( 'view' === \FeedReader\Router::get_method() ) {
+		$cur_feed = (int) $entries[0]->feed_id;
+	} else {
+		$cur_cat = (int) ( \FeedReader\Models\Feed::find( $entries[0]->feed_id ) )->category_id; // Another useless query, but hey.
+	}
 }
 
 $categories = array_values( \FeedReader\Models\Category::all() );

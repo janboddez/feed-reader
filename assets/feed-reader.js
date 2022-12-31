@@ -1,12 +1,14 @@
 jQuery( document ).ready( function ( $ ) {
-	$( '.feed-reader img').each( function() {
+	$( '.feed-reader .entry-content img, .feed-reader .entry-summary img').each( function() {
 		if ( this.width > 250 ) {
 			// Don't display "wider" images inline.
 			$( this ).css( 'display', 'block' );
+		// } else if ( this.getBoundingClientRect().width <= 32 ) {
+		// 	$( this ).addClass( 'avatar' );
 		}
 	} );
 
-	$( '.feed-reader a:has(img)' ).each( function() {
+	$( '.feed-reader .entry-content a:has(img), .feed-reader .entry-summary a:has(img)' ).each( function() {
 		var link = $( this );
 
 		if ( link.width() > 250 ) {
