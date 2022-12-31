@@ -2,7 +2,7 @@
 
 namespace FeedReader\Helpers;
 
-function get_url( $controller, $method = null, $id = null, $all = false ) {
+function get_url( $controller = null, $method = null, $id = null, $all = false ) {
 	if ( in_array( $method, array( 'delete', 'mark-read' ), true ) ) {
 		return add_query_arg(
 			array(

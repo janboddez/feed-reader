@@ -23,6 +23,8 @@ class Router {
 
 		add_action( 'admin_menu', array( __CLASS__, 'create_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
+		add_action( 'admin_head', array( __CLASS__, 'admin_head' ) );
+
 		add_action( 'admin_footer', array( __CLASS__, 'include_icon_sprites' ) );
 
 		add_filter( 'parent_file', array( __CLASS__, 'highlight_menu_page' ) );
@@ -148,6 +150,8 @@ class Router {
 			array( OPML_Controller::class, 'upload' )
 		);
 
+		add_action( 'admin_head', array( __CLASS__, 'remove_submenu_pages' ) );
+
 		add_submenu_page(
 			'feed-reader',
 			__( 'Settings', 'feed-reader' ),
@@ -156,10 +160,10 @@ class Router {
 			'feed-reader/settings',
 			array( Settings_Controller::class, 'edit' )
 		);
+
 		add_action( 'admin_init', array( __CLASS__, 'add_settings' ) );
 
-		add_action( 'admin_head', array( __CLASS__, 'remove_submenu_pages' ) );
-
+		add_action( 'admin_bar_menu', array( __CLASS__, 'top_bar_menu' ), 99 );
 	}
 
 	public static function add_settings() {
@@ -179,6 +183,33 @@ class Router {
 		);
 	}
 
+	public static function top_bar_menu( $wp_admin_bar ) {
+		$wp_admin_bar->add_node(
+			array(
+				'id'    => 'feed-reader',
+				'title' => sprintf( '<span class="ab-icon" aria-hidden="true"></span> <span class="ab-label">%s</span>', esc_html__( 'Reader', 'feed-reader' ) ),
+				'href'  => esc_url( \FeedReader\Helpers\get_url() ),
+			)
+		);
+	}
+
+	public static function admin_head() {
+		?>
+		<style type="text/css">
+		#wp-admin-bar-feed-reader .ab-icon::before {
+			content: "\f303";
+			top: 2px;
+		}
+
+		@media screen and (max-width: 782px) {
+			#wpadminbar li#wp-admin-bar-feed-reader {
+				display: block;
+			}
+		}
+		</style>
+		<?php
+	}
+
 	public static function remove_submenu_pages() {
 		remove_submenu_page( 'feed-reader', 'feed-reader/entries/view' );
 		remove_submenu_page( 'feed-reader', 'feed-reader/feeds/view' );
@@ -193,6 +224,11 @@ class Router {
 		global $submenu_file;
 
 		if ( 'feed-reader' !== $parent_file ) {
+			return $parent_file;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( isset( $_GET['page'] ) && false === strpos( $_GET['page'], 'categories' ) && false === strpos( $_GET['page'], 'feeds' ) ) {
 			return $parent_file;
 		}
 
@@ -213,7 +249,7 @@ class Router {
 			wp_enqueue_style( 'feed-reader-fonts', plugins_url( '/assets/fonts.css', __DIR__ ), array(), \FeedReader\Reader::PLUGIN_VERSION );
 			wp_enqueue_style( 'feed-reader', plugins_url( '/assets/style.css', __DIR__ ), array( 'feed-reader-fonts' ), \FeedReader\Reader::PLUGIN_VERSION );
 
-			wp_enqueue_script( 'feed-reader', plugins_url( '/assets/feed-reader.js', __DIR__ ), array( 'jquery' ), null, true );
+			wp_enqueue_script( 'feed-reader', plugins_url( '/assets/feed-reader.js', __DIR__ ), array( 'jquery' ), \FeedReader\Reader::PLUGIN_VERSION, true );
 			wp_localize_script(
 				'feed-reader',
 				'feed_reader_obj',
@@ -308,7 +344,7 @@ class Router {
 
 	public static function get_controller() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( isset( $_GET['page'] ) && preg_match( '~^feed-reader/(categories|feeds)~', $_GET['page'], $matches ) ) {
+		if ( isset( $_GET['page'] ) && preg_match( '~^feed-reader/(feeds|categories)~', $_GET['page'], $matches ) ) {
 			return $matches[1];
 		}
 
