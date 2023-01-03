@@ -11,6 +11,20 @@ class ComposerStaticInitdfb0f003a1e25bf271717e4930899561
         '5d5e9acf267403f6978e5ef62f5f38d2' => __DIR__ . '/../..' . '/../includes/Helpers/functions.php',
     );
 
+    public static $prefixLengthsPsr4 = array (
+        'F' => 
+        array (
+            'FeedReader\\zz\\' => 14,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'FeedReader\\zz\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/deruli/html-minifier/src/zz',
+        ),
+    );
+
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'FeedReader\\Controllers\\Category_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-category-controller.php',
@@ -39,11 +53,18 @@ class ComposerStaticInitdfb0f003a1e25bf271717e4930899561
         'FeedReader\\Models\\Model' => __DIR__ . '/../..' . '/../includes/Models/class-model.php',
         'FeedReader\\Reader' => __DIR__ . '/../..' . '/../includes/class-reader.php',
         'FeedReader\\Router' => __DIR__ . '/../..' . '/../includes/class-router.php',
+        'FeedReader\\zz\\Html\\HTMLMinify' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/HTMLMinify.php',
+        'FeedReader\\zz\\Html\\HTMLNames' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/HTMLNames.php',
+        'FeedReader\\zz\\Html\\HTMLToken' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/HTMLToken.php',
+        'FeedReader\\zz\\Html\\HTMLTokenizer' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/HTMLTokenizer.php',
+        'FeedReader\\zz\\Html\\SegmentedString' => __DIR__ . '/..' . '/deruli/html-minifier/src/zz/Html/SegmentedString.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInitdfb0f003a1e25bf271717e4930899561::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitdfb0f003a1e25bf271717e4930899561::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInitdfb0f003a1e25bf271717e4930899561::$classMap;
 
         }, null, ClassLoader::class);

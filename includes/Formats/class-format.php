@@ -51,7 +51,7 @@ class Format {
 
 		// And "invalid" hyperlinks.
 		foreach ( $xpath->query( '//a' ) as $node ) {
-			if ( empty( $node->textContent ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			if ( ! $node->hasChildNodes() && empty( $node->textContent ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				$node->parentNode->removeChild( $node ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			}
 		}

@@ -33,4 +33,9 @@ return array(
     'FeedReader\\Models\\Model' => $baseDir . '/../includes/Models/class-model.php',
     'FeedReader\\Reader' => $baseDir . '/../includes/class-reader.php',
     'FeedReader\\Router' => $baseDir . '/../includes/class-router.php',
+    'FeedReader\\zz\\Html\\HTMLMinify' => $vendorDir . '/deruli/html-minifier/src/zz/Html/HTMLMinify.php',
+    'FeedReader\\zz\\Html\\HTMLNames' => $vendorDir . '/deruli/html-minifier/src/zz/Html/HTMLNames.php',
+    'FeedReader\\zz\\Html\\HTMLToken' => $vendorDir . '/deruli/html-minifier/src/zz/Html/HTMLToken.php',
+    'FeedReader\\zz\\Html\\HTMLTokenizer' => $vendorDir . '/deruli/html-minifier/src/zz/Html/HTMLTokenizer.php',
+    'FeedReader\\zz\\Html\\SegmentedString' => $vendorDir . '/deruli/html-minifier/src/zz/Html/SegmentedString.php',
 );

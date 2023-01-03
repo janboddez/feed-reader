@@ -1,10 +1,8 @@
 jQuery( document ).ready( function ( $ ) {
 	$( '.feed-reader .entry-content img, .feed-reader .entry-summary img').each( function() {
-		if ( this.width > 250 ) {
+		if ( this.width > 50 ) {
 			// Don't display "wider" images inline.
 			$( this ).css( 'display', 'block' );
-		// } else if ( this.getBoundingClientRect().width <= 32 ) {
-		// 	$( this ).addClass( 'avatar' );
 		}
 	} );
 
@@ -12,8 +10,6 @@ jQuery( document ).ready( function ( $ ) {
 		var link = $( this );
 
 		if ( link.width() > 250 ) {
-			link.addClass( 'image-wide' ); // We use this class to address "image captions" that follow the image (link).
-
 			// "Fix" WordPress's focus outlines.
 			link.css( 'display', 'inline-block' );
 			link.find( 'img' ).css( 'vertical-align', 'middle' );

@@ -82,15 +82,11 @@ class XML extends Format {
 		$content = $item->get_content();
 
 		if ( ! empty( $content ) ) {
-			$content = preg_replace( '~<!--.*?-->~s', '', $content );
-			$content = preg_replace( '~<style.*?>.*?</style>~s', '', $content );
+			$content = wpautop( \FeedReader\Helpers\kses( $content ), false );
 
 			if ( ! empty( $entry['properties']['url'] ) ) {
 				$content = static::absolutize_urls( $content, ( (array) $entry['properties']['url'] )[0] );
 			}
-
-			// @todo: Remove comments, script tags, and images without `src` attribute.
-			$content = wpautop( \FeedReader\Helpers\kses( $content ), false );
 
 			$entry['properties']['content'] = array(
 				array(

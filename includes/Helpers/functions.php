@@ -45,6 +45,12 @@ function show_in_full( $entry ) {
 }
 
 function kses( $string ) {
+	$string = preg_replace( '~<!--.*?-->~s', '', $string );
+	$string = preg_replace( '~<script.*?>.*?</script>~s', '', $string );
+	$string = preg_replace( '~<style.*?>.*?</style>~s', '', $string );
+
+	$string = \FeedReader\zz\Html\HTMLMinify::minify( $string );
+
 	$allowed_html = array(
 		'a'          => array(
 			'href' => true,
@@ -59,6 +65,7 @@ function kses( $string ) {
 		'blockquote' => array(
 			'cite' => array(),
 		),
+		'br'         => array(),
 		'cite'       => array(),
 		'code'       => array(),
 		'del'        => array(
@@ -82,7 +89,6 @@ function kses( $string ) {
 		'strike'     => array(),
 		'strong'     => array(),
 		'table'      => array(),
-		'tr'         => array(),
 		'td'         => array(
 			'colspan' => true,
 			'rowspan' => true,
@@ -91,6 +97,7 @@ function kses( $string ) {
 			'colspan' => true,
 			'rowspan' => true,
 		),
+		'tr'         => array(),
 		'pre'        => array(),
 		'dl'         => array(
 			'dd' => array(),

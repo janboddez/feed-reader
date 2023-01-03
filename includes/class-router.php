@@ -205,6 +205,10 @@ class Router {
 			#wpadminbar li#wp-admin-bar-feed-reader {
 				display: block;
 			}
+
+			#wp-admin-bar-feed-reader .ab-icon {
+				scale: 0.9;
+			}
 		}
 		</style>
 		<?php

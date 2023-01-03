@@ -4,18 +4,4 @@
 
 $loader = require_once __DIR__.'/autoload.php';
 
-// Aliases for the whitelisted classes. For more information see:
-// https://github.com/humbug/php-scoper/blob/master/README.md#class-whitelisting
-if (!class_exists('ComposerAutoloaderInitdfb0f003a1e25bf271717e4930899561', false) && !interface_exists('ComposerAutoloaderInitdfb0f003a1e25bf271717e4930899561', false) && !trait_exists('ComposerAutoloaderInitdfb0f003a1e25bf271717e4930899561', false)) {
-    spl_autoload_call('FeedReader\ComposerAutoloaderInitdfb0f003a1e25bf271717e4930899561');
-}
-
-// Functions whitelisting. For more information see:
-// https://github.com/humbug/php-scoper/blob/master/README.md#functions-whitelisting
-if (!function_exists('composerRequiredfb0f003a1e25bf271717e4930899561')) {
-    function composerRequiredfb0f003a1e25bf271717e4930899561() {
-        return \FeedReader\composerRequiredfb0f003a1e25bf271717e4930899561(...func_get_args());
-    }
-}
-
 return $loader;

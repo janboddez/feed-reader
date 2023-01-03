@@ -52,16 +52,11 @@ class JSON_Feed extends Format {
 
 		if ( ! empty( $item->content_html ) ) {
 			$content = $item->content_html;
-
-			$content = preg_replace( '~<!--.*?-->~s', '', $content );
-			$content = preg_replace( '~<style.*?>.*?</style>~s', '', $content );
+			$content = wpautop( \FeedReader\Helpers\kses( $content ), false );
 
 			if ( ! empty( $entry['properties']['url'] ) ) {
 				$content = static::absolutize_urls( $content, ( (array) $entry['properties']['url'] )[0] );
 			}
-
-			// @todo: Remove comments, script tags, and images without `src` attribute.
-			$content = wpautop( \FeedReader\Helpers\kses( $content ), false );
 
 			$entry['properties']['content'] = array(
 				array(
