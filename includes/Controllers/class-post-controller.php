@@ -4,7 +4,7 @@ namespace FeedReader\Controllers;
 
 class Post_Controller {
 	public static function process() {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
 			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
 		}
 

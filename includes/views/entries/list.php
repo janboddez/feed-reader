@@ -87,6 +87,16 @@ $options = get_option( 'feed_reader_settings' );
 								</p>
 							</div>
 							<?php
+							$data = \FeedReader\Models\Entry::data( $entry );
+
+							/** @todo: Support multiple images, video, and whatnot. */
+							if ( ! empty( $data['properties']['photo'][0] ) ) :
+								?>
+								<div class="entry-photo">
+									<img src="<?php echo esc_url( \FeedReader\Helpers\proxy_image( $data['properties']['photo'][0] ) ); ?>" alt="" />
+								</div>
+								<?php
+							endif;
 						endif;
 
 						// phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar,Squiz.PHP.CommentedOutCode.Found

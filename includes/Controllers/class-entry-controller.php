@@ -38,7 +38,7 @@ class Entry_Controller extends Controller {
 	}
 
 	public static function delete() {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
 			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
 		}
 
@@ -57,7 +57,7 @@ class Entry_Controller extends Controller {
 	}
 
 	public static function mark_read() {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
 			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
 		}
 
@@ -78,7 +78,7 @@ class Entry_Controller extends Controller {
 	}
 
 	public static function mark_unread() {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
 			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
 		}
 

@@ -13,7 +13,7 @@ class OPML_Controller extends Controller {
 	}
 
 	public static function export() {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
 			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
 		}
 
@@ -30,7 +30,7 @@ class OPML_Controller extends Controller {
 	}
 
 	public static function import() {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
 			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
 		}
 

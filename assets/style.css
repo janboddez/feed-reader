@@ -110,7 +110,7 @@
 .feed-reader .button-link:hover,
 .feed-reader .button-link:active,
 .feed-reader .button-link:focus {
-	color: #084bac;
+	color: #084bac; /* 20% darker. */
 }
 
 .feed-reader-sidebar a:link,

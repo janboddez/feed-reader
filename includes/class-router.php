@@ -49,7 +49,7 @@ class Router {
 		add_menu_page(
 			esc_html( static::get_title() ),
 			__( 'Reader', 'feed-reader' ),
-			'activate_plugins',
+			'edit_others_posts',
 			'feed-reader',
 			array( Entry_Controller::class, 'index' ),
 			'dashicons-rss',
@@ -60,7 +60,7 @@ class Router {
 			'feed-reader',
 			esc_html( static::get_title() ),
 			__( 'View Entry', 'feed-reader' ),
-			'activate_plugins',
+			'edit_others_posts',
 			'feed-reader/entries/view',
 			array( Entry_Controller::class, 'view' )
 		);
@@ -69,7 +69,7 @@ class Router {
 			'feed-reader',
 			__( 'Feeds', 'feed-reader' ),
 			__( 'Feeds', 'feed-reader' ),
-			'activate_plugins',
+			'edit_others_posts',
 			'feed-reader/feeds',
 			array( Feed_Controller::class, 'index' )
 		);
@@ -78,7 +78,7 @@ class Router {
 			'feed-reader',
 			esc_html( static::get_title() ),
 			__( 'View Feed', 'feed-reader' ),
-			'activate_plugins',
+			'edit_others_posts',
 			'feed-reader/feeds/view',
 			array( Feed_Controller::class, 'view' )
 		);
@@ -87,7 +87,7 @@ class Router {
 			'feed-reader',
 			__( 'Add Feed', 'feed-reader' ),
 			__( 'Add Feed', 'feed-reader' ),
-			'activate_plugins',
+			'edit_others_posts',
 			'feed-reader/feeds/create',
 			array( Feed_Controller::class, 'create' )
 		);
@@ -96,7 +96,7 @@ class Router {
 			'feed-reader',
 			__( 'Edit Feed', 'feed-reader' ),
 			__( 'Edit Feed', 'feed-reader' ),
-			'activate_plugins',
+			'edit_others_posts',
 			'feed-reader/feeds/edit',
 			array( Feed_Controller::class, 'edit' )
 		);
@@ -105,7 +105,7 @@ class Router {
 			'feed-reader',
 			__( 'Categories', 'feed-reader' ),
 			__( 'Categories', 'feed-reader' ),
-			'activate_plugins',
+			'edit_others_posts',
 			'feed-reader/categories',
 			array( Category_Controller::class, 'index' )
 		);
@@ -114,7 +114,7 @@ class Router {
 			'feed-reader',
 			esc_html( static::get_title() ),
 			__( 'View Category', 'feed-reader' ),
-			'activate_plugins',
+			'edit_others_posts',
 			'feed-reader/categories/view',
 			array( Category_Controller::class, 'view' )
 		);
@@ -123,7 +123,7 @@ class Router {
 			'feed-reader',
 			__( 'Add Category', 'feed-reader' ),
 			__( 'Add Category', 'feed-reader' ),
-			'activate_plugins',
+			'edit_others_posts',
 			'feed-reader/categories/create',
 			array( Category_Controller::class, 'create' )
 		);
@@ -132,7 +132,7 @@ class Router {
 			'feed-reader',
 			__( 'Edit Category', 'feed-reader' ),
 			__( 'Edit Category', 'feed-reader' ),
-			'activate_plugins',
+			'edit_others_posts',
 			'feed-reader/categories/edit',
 			array( Category_Controller::class, 'edit' )
 		);
@@ -141,7 +141,7 @@ class Router {
 			'feed-reader',
 			__( 'Import &amp; Export', 'feed-reader' ),
 			__( 'Import &amp; Export', 'feed-reader' ),
-			'activate_plugins',
+			'edit_others_posts',
 			'feed-reader/opml',
 			array( OPML_Controller::class, 'opml' )
 		);
@@ -177,6 +177,10 @@ class Router {
 	}
 
 	public static function top_bar_menu( $wp_admin_bar ) {
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			return;
+		}
+
 		$wp_admin_bar->add_node(
 			array(
 				'id'    => 'feed-reader',
@@ -187,6 +191,7 @@ class Router {
 	}
 
 	public static function admin_head() {
+		/** @todo: Move these to our CSS sheet (and enqueue it _everywhere_, which we currently don't)? */
 		?>
 		<style type="text/css">
 		#wp-admin-bar-feed-reader .ab-icon::before {

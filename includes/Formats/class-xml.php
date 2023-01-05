@@ -136,7 +136,6 @@ class XML extends Format {
 			$author_url  = $simplepie->get_link() ?: $feed->url;
 		}
 
-		// Pfff.
 		$author = array();
 
 		if ( ! empty( $author_name ) ) {
@@ -149,6 +148,34 @@ class XML extends Format {
 
 		if ( ! empty( $author ) ) {
 			$entry['properties']['author'] = array( $author );
+		}
+
+		$enclosure = $item->get_enclosure();
+
+		if ( $enclosure ) {
+			if ( $enclosure->get_type() ) {
+				switch ( $enclosure->get_type() ) {
+					case 'audio/mpeg':
+						$prop = 'audio';
+						break;
+
+					case 'image/jpeg':
+					case 'image/png':
+					case 'image/gif':
+						$prop = 'photo';
+						break;
+				}
+			} elseif ( $enclosure->get_medium() ) {
+				switch ( $enclosure->get_medium() ) {
+					case 'image':
+						$prop = 'photo';
+						break;
+				}
+			}
+
+			if ( ! empty( $prop ) ) {
+				$entry['properties'][ $prop ] = (array) esc_url_raw( $enclosure->get_link() );
+			}
 		}
 
 		// Convert to array that can be inserted directly into the database.

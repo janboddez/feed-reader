@@ -36,7 +36,7 @@ class Category_Controller extends Controller {
 	}
 
 	public static function store() {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
 			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
 		}
 
@@ -90,7 +90,7 @@ class Category_Controller extends Controller {
 	}
 
 	public static function update() {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
 			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
 		}
 
@@ -128,7 +128,7 @@ class Category_Controller extends Controller {
 	}
 
 	public static function delete() {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
 			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
 		}
 

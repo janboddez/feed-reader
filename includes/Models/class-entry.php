@@ -2,6 +2,8 @@
 
 namespace FeedReader\Models;
 
+use stdClass;
+
 class Entry extends Model {
 	/** @var string $table */
 	protected static $table = 'feed_reader_entries';
@@ -178,5 +180,13 @@ class Entry extends Model {
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
 		return $wpdb->get_var( $wpdb->prepare( $sql, $uid, $feed->id, $feed->user_id ) );
+	}
+
+	public static function data( $entry ) {
+		if ( empty( $entry->data ) ) {
+			return null;
+		}
+
+		return json_decode( $entry->data, true );
 	}
 }
