@@ -14,6 +14,8 @@ class Router {
 		add_option( 'feed_reader_settings', array() );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 
+		add_filter( 'login_redirect', array( __CLASS__, 'login_redirect' ), 10, 3 );
+
 		add_action( 'admin_bar_menu', array( __CLASS__, 'top_bar_menu' ), 40 );
 		add_action( 'admin_menu', array( __CLASS__, 'create_menu' ) );
 
@@ -43,6 +45,26 @@ class Router {
 		add_action( 'wp_ajax_feed_reader_post', array( Post_Controller::class, 'process' ) );
 
 		add_action( 'wp_ajax_feed_reader_feeds_discover', array( Feed_Controller::class, 'discover' ) );
+	}
+
+	public static function login_redirect( $redirect_to, $requested_redirect_to, $user ) {
+		$options = get_option( 'feed_reader_settings' ); /** @todo: We should make this a user-specific setting. */
+
+		if ( empty( $options['login_redirect'] ) ) {
+			return $redirect_to;
+		}
+
+		if ( admin_url() !== $requested_redirect_to ) {
+			// When we got here through a specific request, don't redirect.
+			return $redirect_to;
+		}
+
+		if ( is_wp_error( $user ) || ! user_can( $user, 'edit_others_posts' ) ) {
+			// Don't redirect users that wouldn't have access.
+			return $redirect_to;
+		}
+
+		return \FeedReader\Helpers\get_url();
 	}
 
 	public static function create_menu() {
@@ -173,6 +195,7 @@ class Router {
 			'show_actions'       => isset( $settings['show_actions'] ) ? true : false,
 			'image_proxy'        => isset( $settings['image_proxy'] ) ? true : false,
 			'image_proxy_secret' => isset( $settings['image_proxy_secret'] ) ? $settings['image_proxy_secret'] : '',
+			'login_redirect'     => isset( $settings['login_redirect'] ) ? true : false,
 		);
 	}
 

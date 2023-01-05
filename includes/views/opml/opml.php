@@ -1,6 +1,8 @@
 <?php
 /**
  * Based off WordPress's core OPML template.
+ *
+ * @package FeedReader
  */
 
 header( 'Content-Type: text/xml; charset=' . get_option( 'blog_charset' ), true );

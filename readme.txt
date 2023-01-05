@@ -2,7 +2,7 @@
 Contributors: janboddez
 Tags: reader, feeds, web feeds, rss, atom, opml, bookmarks
 Tested up to: 6.1
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GNU General Public License v3.0
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 

@@ -22,8 +22,15 @@ $options = get_option( 'feed_reader_settings' );
 				<?php else : ?>
 					<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'feeds', 'view', $feed->id, true ) ); ?>"><?php esc_html_e( 'Show All', 'feed-reader' ); ?></a>
 				<?php endif; ?>
+
 				<span aria-hidden="true">/</span>
 				<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'feeds', 'edit', $feed->id ) ); ?>"><?php esc_html_e( 'Edit Feed', 'feed-reader' ); ?></a>
+
+				<?php if ( ! empty( $feed->site_url ) ) : ?>
+					<span aria-hidden="true">/</span>
+					<a href="<?php echo esc_url( $feed->site_url ); ?>"><?php esc_html_e( 'Visit Site', 'feed-reader' ); ?></a>
+				<?php endif; ?>
+
 				<span aria-hidden="true">/</span>
 				<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'feeds', 'mark-read', $feed->id ) ); ?>"><?php esc_html_e( 'Mark as Read', 'feed-reader' ); ?></a>
 			</div>
@@ -35,6 +42,7 @@ $options = get_option( 'feed_reader_settings' );
 				<?php else : ?>
 					<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'categories', 'view', $category->id, true ) ); ?>"><?php esc_html_e( 'Show All', 'feed-reader' ); ?></a>
 				<?php endif; ?>
+
 				<span aria-hidden="true">/</span>
 				<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'categories', 'edit', $category->id ) ); ?>"><?php esc_html_e( 'Edit Category', 'feed-reader' ); ?></a>
 			</div>
@@ -62,6 +70,7 @@ $options = get_option( 'feed_reader_settings' );
 					<?php else : ?>
 						<article class="hentry <?php echo esc_attr( ! empty( $entry->name ) ? 'article' : 'note' ); ?>" data-id="<?php echo esc_attr( $entry->id ); ?>" data-feed-id="<?php echo esc_attr( $entry->feed_id ); ?>">
 					<?php endif; ?>
+
 						<?php if ( ! empty( $entry->name ) ) : ?>
 							<h2 class="entry-title"><a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( $entry->name ); ?></a></h2>
 						<?php elseif ( ! empty( $entry->summary ) ) : ?>

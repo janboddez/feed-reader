@@ -10,7 +10,7 @@ use FeedReader\Models\Feed;
 use FeedReader\Router;
 
 class Reader {
-	const PLUGIN_VERSION = '0.1.0';
+	const PLUGIN_VERSION = '0.1.1';
 	const DB_VERSION     = '2';
 
 	/** @var Feed_Reader $instance */
@@ -25,6 +25,8 @@ class Reader {
 	}
 
 	public function register() {
+		add_filter( 'cron_schedules', array( $this, 'add_cron_schedule' ) );
+
 		add_action( 'init', array( $this, 'init' ) );
 		add_action( 'feed_reader_poll_feeds', array( Poll_Feeds::class, 'poll_feeds' ) );
 
@@ -35,12 +37,21 @@ class Reader {
 
 	public function init() {
 		if ( false === wp_next_scheduled( 'feed_reader_poll_feeds' ) ) {
-			wp_schedule_event( time(), 'hourly', 'feed_reader_poll_feeds' );
+			wp_schedule_event( time(), 'every_15_minutes', 'feed_reader_poll_feeds' );
 		}
 
 		if ( get_option( 'feed_reader_db_version' ) !== self::DB_VERSION ) {
 			$this->migrate();
 		}
+	}
+
+	public function add_cron_schedule( $schedules ) {
+		$schedules['every_15_minutes'] = array(
+			'interval' => 900,
+			'display'  => __( 'Once every 15 minutes', 'feed-reader' ),
+		);
+
+		return $schedules;
 	}
 
 	public function migrate() {
