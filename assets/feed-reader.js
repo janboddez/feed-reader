@@ -9,6 +9,8 @@ jQuery( document ).ready( function ( $ ) {
 	$( '.feed-reader .entry-content a:has(img), .feed-reader .entry-summary a:has(img)' ).each( function() {
 		var link = $( this );
 
+		// Note that this does not always work, as the script may run before
+		// images are downloaded and then the styles may not be applied.
 		if ( link.width() > 250 ) {
 			// "Fix" WordPress's focus outlines.
 			link.css( 'display', 'inline-block' );
@@ -92,7 +94,7 @@ jQuery( document ).ready( function ( $ ) {
 			} else {
 				var url = new URL( window.location.href );
 				url.searchParams.delete( 'paged' );
-				url.searchParams.set( 'page', 'feed-reader-feeds-view' );
+				url.searchParams.set( 'page', 'feed-reader/feeds/view' );
 				url.searchParams.set( 'id', entry.data( 'feed-id' ) );
 				location.assign( url );
 			}

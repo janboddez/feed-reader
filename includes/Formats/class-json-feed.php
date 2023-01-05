@@ -73,11 +73,14 @@ class JSON_Feed extends Format {
 		}
 
 		if ( ! empty( $item->summary ) ) {
-			$entry['properties']['summary'] = (array) \FeedReader\Helpers\kses( $item->summary );
-		} elseif ( ! empty( $entry['properties']['content'][0]['html'] ) ) {
-			$entry['properties']['summary'] = (array) wp_trim_words( $entry['properties']['content'][0]['html'], 30, ' [&hellip;]' );
+			$summary = $item->summary;
+		} elseif ( ! empty( $entry['properties']['content'][0]['text'] ) ) {
+			$summary = $entry['properties']['content'][0]['text'];
 		}
-		/** @todo: Shorten also non-auto-generated summaries? */
+
+		if ( ! empty( $summary ) ) {
+			$entry['properties']['summary'] = (array) wp_trim_words( wp_strip_all_tags( $summary ), 30, ' [&hellip;]' );
+		}
 
 		if ( ! empty( $item->title ) ) {
 			$title = wp_strip_all_tags( $item->title );

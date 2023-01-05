@@ -98,7 +98,13 @@ class Mf2 extends Format {
 		}
 
 		if ( ! empty( $item['properties']['summary'] ) ) {
-			$entry['properties']['summary'] = (array) wpautop( \FeedReader\Helpers\kses( ( (array) $item['properties']['summary'] )[0] ), false );
+			$summary = ( (array) $item['properties']['summary'] )[0];
+		} elseif ( ! empty( $entry['properties']['content'][0]['text'] ) ) {
+			$summary = $entry['properties']['content'][0]['text'];
+		}
+
+		if ( ! empty( $summary ) ) {
+			$entry['properties']['summary'] = (array) wp_trim_words( wp_strip_all_tags( $summary ), 30, ' [&hellip;]' );
 		}
 
 		$base = ! empty( $entry['properties']['url'] )

@@ -11,15 +11,7 @@ use FeedReader\Controllers\Settings_Controller;
 
 class Router {
 	public static function register() {
-		add_option(
-			'feed_reader_settings',
-			array(
-				'collapse_menu' => false,
-				'hide_sidebar'  => false,
-				'show_actions'  => false,
-				'image_proxy'   => false,
-			)
-		);
+		add_option( 'feed_reader_settings', array() );
 
 		add_action( 'admin_menu', array( __CLASS__, 'create_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
@@ -39,6 +31,7 @@ class Router {
 		add_action( 'admin_post_feed_reader_feeds_mark_read', array( Feed_Controller::class, 'mark_read' ) );
 
 		add_action( 'admin_post_feed_reader_opml_import', array( OPML_Controller::class, 'import' ) );
+		add_action( 'admin_post_feed_reader_opml_export', array( OPML_Controller::class, 'export' ) );
 
 		add_action( 'wp_ajax_feed_reader_entries_delete', array( Entry_Controller::class, 'delete' ) );
 		add_action( 'wp_ajax_feed_reader_entries_mark_read', array( Entry_Controller::class, 'mark_read' ) );
@@ -143,11 +136,11 @@ class Router {
 
 		add_submenu_page(
 			'feed-reader',
-			__( 'Import OPML', 'feed-reader' ),
-			__( 'Import OPML', 'feed-reader' ),
+			__( 'Import &amp; Export', 'feed-reader' ),
+			__( 'Import &amp; Export', 'feed-reader' ),
 			'activate_plugins',
-			'feed-reader/opml/import',
-			array( OPML_Controller::class, 'upload' )
+			'feed-reader/opml',
+			array( OPML_Controller::class, 'opml' )
 		);
 
 		add_action( 'admin_head', array( __CLASS__, 'remove_submenu_pages' ) );
@@ -176,10 +169,11 @@ class Router {
 
 	public static function sanitize_settings( $settings ) {
 		return array(
-			'collapse_menu' => isset( $settings['collapse_menu'] ) ? true : false,
-			'hide_sidebar'  => isset( $settings['hide_sidebar'] ) ? true : false,
-			'show_actions'  => isset( $settings['show_actions'] ) ? true : false,
-			'image_proxy'   => isset( $settings['image_proxy'] ) ? true : false,
+			'collapse_menu'      => isset( $settings['collapse_menu'] ) ? true : false,
+			'hide_sidebar'       => isset( $settings['hide_sidebar'] ) ? true : false,
+			'show_actions'       => isset( $settings['show_actions'] ) ? true : false,
+			'image_proxy'        => isset( $settings['image_proxy'] ) ? true : false,
+			'image_proxy_secret' => isset( $settings['image_proxy_secret'] ) ? $settings['image_proxy_secret'] : '',
 		);
 	}
 
@@ -249,7 +243,6 @@ class Router {
 
 	public static function enqueue_scripts( $hook_suffix ) {
 		if ( false !== strpos( $hook_suffix, 'feed-reader' ) ) {
-			// Enqueue CSS and JS.
 			wp_enqueue_style( 'feed-reader-fonts', plugins_url( '/assets/fonts.css', __DIR__ ), array(), \FeedReader\Reader::PLUGIN_VERSION );
 			wp_enqueue_style( 'feed-reader', plugins_url( '/assets/style.css', __DIR__ ), array( 'feed-reader-fonts' ), \FeedReader\Reader::PLUGIN_VERSION );
 

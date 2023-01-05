@@ -95,8 +95,15 @@ class XML extends Format {
 				),
 			);
 
-			/* @todo: Look for an actual summary first. */
-			$entry['properties']['summary'] = (array) wp_trim_words( $entry['properties']['content'][0]['html'], 30, ' [&hellip;]' );
+			$summary = $item->get_description( true );
+
+			if ( empty( $summary ) && ! empty( $entry['properties']['content'][0]['text'] ) ) {
+				$summary = $entry['properties']['content'][0]['text'];
+			}
+
+			if ( ! empty( $summary ) ) {
+				$entry['properties']['summary'] = (array) wp_trim_words( wp_strip_all_tags( $summary ), 30, ' [&hellip;]' );
+			}
 		}
 
 		$title = $item->get_title();

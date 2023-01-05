@@ -187,8 +187,6 @@ class Feed_Controller extends Controller {
 		$feed = Feed::find( (int) $_GET['id'] ); // Ensure feed exists and belongs to the current user.
 
 		if ( $feed ) {
-			global $wpdb;
-
 			// Delete feed. Linked entries are handled by the cascade.
 			Feed::delete( $feed->id );
 		}

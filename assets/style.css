@@ -35,16 +35,16 @@
 .feed-reader {
 	align-items: start;
 	display: grid;
-	grid-template-columns: 1fr 1fr 40em 1fr 1fr;
+	grid-template-columns: 1fr 42em 1fr;
 	gap: 0.5em;
 	margin: 0;
 	font-family: 'Inter', sans-serif;
 	font-size: 16px;
-	line-height: 1.6;
+	line-height: 1.7;
 }
 
 .feed-reader.with-sidebar {
-	grid-template-columns: 290px 1fr 40em 1fr 1fr;
+	grid-template-columns: 290px 1fr 42em 1fr 1fr;
 }
 
 @media only screen and (max-width: 960px) {
@@ -56,11 +56,11 @@
 
 @media only screen and (max-width: 1300px) {
 	.feed-reader {
-		grid-template-columns: 1fr 1fr auto 1fr 1fr;
+		grid-template-columns: 1fr auto 1fr;
 	}
 
 	.feed-reader.with-sidebar {
-		grid-template-columns: 290px 1fr 40em 1fr 1fr;
+		grid-template-columns: 290px 1fr auto 1fr 1fr;
 	}
 }
 
@@ -204,6 +204,8 @@
 	border-radius: 50%;
 	margin-inline-end: 1px;
 	vertical-align: -0.125em;
+	width: 1em;
+	height: 1em;
 }
 
 .feed-reader-sidebar .avatar,
@@ -219,15 +221,15 @@
 
 .feed-reader .entry-summary,
 .feed-reader .entry-content {
-	font-family: 'Source Serif Pro', serif;
-	font-size: 18px;
+	font-family: 'Merriweather', serif;
+	font-size: 16px;
 	line-height: inherit;
 }
 
 @media only screen and (max-width: 960px) {
 	.feed-reader .entry-summary,
 	.feed-reader .entry-content {
-		font-size: 16px;
+		font-size: 14px;
 	}
 }
 

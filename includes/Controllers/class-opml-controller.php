@@ -8,8 +8,25 @@ use FeedReader\Models\Category;
 use FeedReader\Models\Feed;
 
 class OPML_Controller extends Controller {
-	public static function upload() {
-		static::render( 'opml/import' );
+	public static function opml() {
+		static::render( 'opml/form' );
+	}
+
+	public static function export() {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
+		}
+
+		$categories = Category::all();
+
+		if ( ! empty( $categories ) ) {
+			foreach ( $categories as $i => $category ) {
+				$categories[ $i ]->feeds = Category::feeds( $category->id, 'all' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			}
+		}
+		/** @todo: Add uncategorized feeds. */
+
+		static::render( 'opml/opml', compact( 'categories' ) );
 	}
 
 	public static function import() {

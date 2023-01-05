@@ -31,7 +31,9 @@ class Image_Proxy {
 
 		$hash = $request->get_param( 'hash' );
 
-		if ( defined( 'FEED_READER_PROXY_KEY' ) && hash_hmac( 'sha1', $url, FEED_READER_PROXY_KEY ) !== $hash ) {
+		$options = get_option( 'feed_reader_settings' );
+
+		if ( ! empty( $options['image_proxy'] ) && ! empty( $options['image_proxy_secret'] ) && hash_hmac( 'sha1', $url, $options['image_proxy_secret'] ) !== $hash ) {
 			return new \WP_Error( 'invalid_hash', esc_html__( 'Invalid hash.', 'feed-reader' ), array( 'status' => 400 ) );
 		}
 

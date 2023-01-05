@@ -3,13 +3,18 @@
 namespace FeedReader\Helpers;
 
 function get_url( $controller = null, $method = null, $id = null, $all = false ) {
-	if ( in_array( $method, array( 'delete', 'mark-read' ), true ) ) {
+	if ( in_array( $method, array( 'delete', 'mark-read', 'export' ), true ) ) {
+		$args = array(
+			'action' => "feed_reader_{$controller}_" . str_replace( '-', '_', $method ),
+			'id'     => $id,
+		);
+
+		if ( ! empty( $id ) ) {
+			$args['_wpnonce'] = wp_create_nonce( "feed-reader-{$controller}:{$method}:$id" );
+		}
+
 		return add_query_arg(
-			array(
-				'action'   => "feed_reader_{$controller}_" . str_replace( '-', '_', $method ),
-				'id'       => $id,
-				'_wpnonce' => wp_create_nonce( "feed-reader-{$controller}:{$method}:{$id}" ),
-			),
+			$args,
 			admin_url( 'admin-post.php' )
 		);
 	}
@@ -208,7 +213,13 @@ function parse_cursor( $cursor ) {
 }
 
 function proxy_images( $html ) {
-	if ( ! defined( 'FEED_READER_PROXY_KEY' ) ) {
+	$options = get_option( 'feed_reader_settings' );
+
+	if ( empty( $options['image_proxy'] ) ) {
+		return $html;
+	}
+
+	if ( empty( $options['image_proxy_secret'] ) ) {
 		return $html;
 	}
 
@@ -253,13 +264,19 @@ function proxy_images( $html ) {
 }
 
 function proxy_image( $url ) {
-	if ( ! defined( 'FEED_READER_PROXY_KEY' ) ) {
+	$options = get_option( 'feed_reader_settings' );
+
+	if ( empty( $options['image_proxy'] ) ) {
+		return $url;
+	}
+
+	if ( empty( $options['image_proxy_secret'] ) ) {
 		return $url;
 	}
 
 	$query_string = http_build_query(
 		array(
-			'hash' => hash_hmac( 'sha1', $url, FEED_READER_PROXY_KEY ),
+			'hash' => hash_hmac( 'sha1', $url, $options['image_proxy_secret'] ),
 			'url'  => rawurlencode( $url ),
 		)
 	);

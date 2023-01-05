@@ -4,7 +4,8 @@
 	font-weight: 400;
 	font-display: swap;
 	src: local(''),
-		 url(fonts/Inter-Regular.woff2) format('woff2');
+		 url(fonts/Inter-Regular.woff2) format('woff2'),
+		 url(fonts/Inter-Regular.woff) format('woff');
 }
 
 @font-face {
@@ -13,7 +14,8 @@
 	font-weight: 400;
 	font-display: swap;
 	src: local(''),
-		 url(fonts/Inter-Italic.woff2) format('woff2');
+		 url(fonts/Inter-Italic.woff2) format('woff2'),
+		 url(fonts/Inter-Italic.woff) format('woff');
 }
 
 @font-face {
@@ -22,7 +24,8 @@
 	font-weight: 700;
 	font-display: swap;
 	src: local(''),
-		 url(fonts/Inter-Bold.woff2) format('woff2');
+		 url(fonts/Inter-Bold.woff2) format('woff2'),
+		 url(fonts/Inter-Bold.woff) format('woff');
 }
 
 @font-face {
@@ -31,41 +34,46 @@
 	font-weight: 700;
 	font-display: swap;
 	src: local(''),
-		 url(fonts/Inter-BoldItalic.woff2) format('woff2');
+		 url(fonts/Inter-BoldItalic.woff2) format('woff2'),
+		 url(fonts/Inter-BoldItalic.woff) format('woff');
 }
 
 @font-face {
-	font-family: 'Source Serif Pro';
-	src: local(''),
-		 url(fonts/source-serif-pro-v15-latin-ext_latin-regular.woff2) format('woff2');
-	font-weight: 400;
+	font-family: 'Merriweather';
 	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'Source Serif Pro';
-	src: local(''),
-		 url(fonts/source-serif-pro-v15-latin-ext_latin-italic.woff2) format('woff2');
 	font-weight: 400;
-	font-style: italic;
 	font-display: swap;
+	src: local(''),
+		 url(fonts/merriweather-v30-latin-ext_latin-regular.woff2) format('woff2'),
+		 url(fonts/merriweather-v30-latin-ext_latin-regular.woff) format('woff');
 }
 
 @font-face {
-	font-family: 'Source Serif Pro';
+	font-family: 'Merriweather';
+	font-style: italic;
+	font-weight: 400;
+	font-display: swap;
 	src: local(''),
-		 url(fonts/source-serif-pro-v15-latin-ext_latin-700.woff2) format('woff2');
-	font-weight: 700;
+		 url(fonts/merriweather-v30-latin-ext_latin-italic.woff2) format('woff2'),
+		 url(fonts/merriweather-v30-latin-ext_latin-italic.woff) format('woff');
+}
+
+@font-face {
+	font-family: 'Merriweather';
 	font-style: normal;
+	font-weight: 700;
 	font-display: swap;
+	src: local(''),
+		 url(fonts/merriweather-v30-latin-ext_latin-700.woff2) format('woff2'),
+		 url(fonts/merriweather-v30-latin-ext_latin-700.woff) format('woff');
 }
 
 @font-face {
-	font-family: 'Source Serif Pro';
-	src: local(''),
-		 url(fonts/source-serif-pro-v15-latin-ext_latin-700italic.woff2) format('woff2');
-	font-weight: 700;
+	font-family: 'Merriweather';
 	font-style: italic;
+	font-weight: 700;
 	font-display: swap;
+	src: local(''),
+		 url(fonts/merriweather-v30-latin-ext_latin-700italic.woff2) format('woff2'),
+		 url(fonts/merriweather-v30-latin-ext_latin-700italic.woff) format('woff');
 }
