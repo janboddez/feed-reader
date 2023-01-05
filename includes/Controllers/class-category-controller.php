@@ -10,10 +10,10 @@ use FeedReader\Models\Feed;
 
 class Category_Controller extends Controller {
 	public static function index() {
-		$feed_table = new Category_List_Table();
-		$feed_table->prepare_items();
+		$category_table = new Category_List_Table();
+		$category_table->prepare_items();
 
-		static::render( 'categories/list', compact( 'feed_table' ) );
+		static::render( 'categories/list', compact( 'category_table' ) );
 	}
 
 	public static function view() {
@@ -65,13 +65,18 @@ class Category_Controller extends Controller {
 				$exists = $wpdb->get_var( $wpdb->prepare( $sql, $uid ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
 			} while ( $exists );
 
-			$result = Category::insert(
+			$category_id = Category::insert(
 				array(
 					'name'    => $name,
 					'uid'     => $uid,
 					'user_id' => get_current_user_id(),
 				)
 			);
+		}
+
+		if ( $category_id ) {
+			wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'categories', 'view', $category_id ) ) );
+			exit;
 		}
 
 		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'categories' ) ) );
@@ -118,7 +123,7 @@ class Category_Controller extends Controller {
 			);
 		}
 
-		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'categories' ) ) );
+		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'categories', 'view', $category->id ) ) );
 		exit;
 	}
 

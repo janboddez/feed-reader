@@ -105,41 +105,6 @@ jQuery( document ).ready( function ( $ ) {
 		return confirm( feed_reader_obj.confirm );
 	} );
 
-	/** @todo: Rewrite this without the need for JS. */
-	$( '#feed-reader-category-search-input' ).keyup( function( e ) {
-		if ( 'Enter' === e.key ) {
-			$( '#categories-filter #search-submit' ).click();
-		}
-	} );
-
-	$( '#categories-filter #search-submit' ).click( function() {
-		var search = $( '#feed-reader-category-search-input' ).val();
-
-		if ( search ) {
-			var url = new URL( window.location.href );
-			url.searchParams.delete( 'paged' );
-			url.searchParams.set( 's', search );
-			location.assign( url );
-		}
-	} );
-
-	$( '#feed-reader-feed-search-input' ).keyup( function( e ) {
-		if ( 'Enter' === e.key ) {
-			$( '#feeds-filter #search-submit' ).click();
-		}
-	} );
-
-	$( '#feeds-filter #search-submit' ).click( function() {
-		var search = $( '#feed-reader-feed-search-input' ).val();
-
-		if ( search ) {
-			var url = new URL( window.location.href );
-			url.searchParams.delete( 'paged' );
-			url.searchParams.set( 's', search );
-			location.assign( url );
-		}
-	} );
-
 	$( '.feed-reader .button-reply' ).click( function() {
 		var entry = $( this ).closest( '.hentry' );
 		var form  = entry.find( '.reply-form' );
@@ -299,5 +264,18 @@ jQuery( document ).ready( function ( $ ) {
 		if ( 'Enter' === e.key ) {
 			$( '#feed-discover button' ).click();
 		}
+	} );
+
+	$( '#feed-reader-generate-secret' ).click( function() {
+		var chars = '0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		var pass  = '';
+		var rand  = 0;
+
+		for ( var i = 0; i <= 32; i++ ) {
+			rand  = Math.floor( Math.random() * chars.length );
+			pass += chars.substring( rand, rand + 1 );
+		}
+
+		$( '#feed-reader-image-proxy-secret' ).val( pass );
 	} );
 } );

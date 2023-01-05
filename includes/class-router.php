@@ -12,8 +12,11 @@ use FeedReader\Controllers\Settings_Controller;
 class Router {
 	public static function register() {
 		add_option( 'feed_reader_settings', array() );
+		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 
+		add_action( 'admin_bar_menu', array( __CLASS__, 'top_bar_menu' ), 40 );
 		add_action( 'admin_menu', array( __CLASS__, 'create_menu' ) );
+
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 		add_action( 'admin_head', array( __CLASS__, 'admin_head' ) );
 
@@ -153,13 +156,9 @@ class Router {
 			'feed-reader/settings',
 			array( Settings_Controller::class, 'edit' )
 		);
-
-		add_action( 'admin_init', array( __CLASS__, 'add_settings' ) );
-
-		add_action( 'admin_bar_menu', array( __CLASS__, 'top_bar_menu' ), 99 );
 	}
 
-	public static function add_settings() {
+	public static function register_settings() {
 		register_setting(
 			'feed-reader-settings-group',
 			'feed_reader_settings',

@@ -10,10 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<hr class="wp-header-end" />
 
-	<div id="categories-filter">
-		<?php $feed_table->search_box( esc_html__( 'Search Categories' ), 'feed-reader-category' ); ?>
+	<form id="categories-filter" action="admin.php" method="get">
+		<input type="hidden" name="page" value="feed-reader/categories" />
+		<?php $category_table->search_box( esc_html__( 'Search Categories' ), 'feed-reader-category' ); ?>
 		<div style="clear: both;"></div>
-	</div>
+	</form>
 
-	<?php $feed_table->display(); ?>
+	<?php $category_table->display(); ?>
 </div>

@@ -72,7 +72,9 @@ class Feed_Controller extends Controller {
 			$category = Category::find( (int) $_POST['category'] );
 		}
 
-		if ( ! Feed::exists( esc_url_raw( $url ) ) ) {
+		$feed_id = Feed::exists( esc_url_raw( $url ) );
+
+		if ( ! $feed_id ) {
 			$feed_id = Feed::insert(
 				array(
 					'url'         => esc_url_raw( $url ),
@@ -92,6 +94,11 @@ class Feed_Controller extends Controller {
 
 				Poll_Feeds::poll_feed( $feed );
 			}
+		}
+
+		if ( $feed_id ) {
+			wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'feeds', 'view', $feed_id ) ) );
+			exit;
 		}
 
 		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'feeds' ) ) );
@@ -144,6 +151,7 @@ class Feed_Controller extends Controller {
 
 		$exists = Feed::exists( esc_url_raw( $url ) );
 
+		// Should we do this? Update only if another feed doesn't already have this URL?
 		if ( ! $exists || intval( $feed->id ) === $exists ) {
 			$result = Feed::update(
 				array(
@@ -164,7 +172,7 @@ class Feed_Controller extends Controller {
 			}
 		}
 
-		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'feeds' ) ) );
+		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'feeds', 'view', $feed->id ) ) );
 		exit;
 	}
 

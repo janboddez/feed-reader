@@ -56,6 +56,7 @@ function kses( $string ) {
 
 	$string = \FeedReader\zz\Html\HTMLMinify::minify( $string );
 
+	/** @todo: Allow certain `iframe` elements, like the ones that point to YouTube, only? */
 	$allowed_html = array(
 		'a'          => array(
 			'href' => true,
