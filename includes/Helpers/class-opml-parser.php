@@ -100,7 +100,8 @@ class OPML_Parser {
 			}
 
 			if ( empty( $url ) && empty( $attrs['XMLURL'] ) ) {
-				// Not a link or feed. Category?
+				// Not a link or feed. Category? Note that this _will not_
+				// "clear" the current category for "uncategorized" feeds.
 				if ( '' !== $name && $this->categories_enabled ) {
 					$this->current_category = $name;
 				}
@@ -109,13 +110,24 @@ class OPML_Parser {
 				return;
 			}
 
+			$category = '';
+
+			if ( isset( $attrs['CATEGORY'] ) ) {
+				$category = explode( ',', $attrs['CATEGORY'] );
+				$category = trim( reset( $category ) ); // We support only one category per feed.
+			} elseif ( '' !== $this->current_category ) {
+				// OPML v1 uses outlines for categories rather than a `category`
+				// attribute.
+				$category = $this->current_category;
+			}
+
 			$this->feeds[] = array(
 				'name'        => $name,
 				'site_url'    => $url,
 				'target'      => isset( $attrs['TARGET'] ) ? $attrs['TARGET'] : '',
 				'url'         => isset( $attrs['XMLURL'] ) ? $attrs['XMLURL'] : '',
 				'description' => isset( $attrs['DESCRIPTION'] ) ? $attrs['DESCRIPTION'] : '',
-				'category'    => '' !== $this->current_category ? $this->current_category : '',
+				'category'    => $category,
 				'type'        => isset( $attrs['TYPE'] ) ? $attrs['TYPE'] : '',
 			);
 		}
