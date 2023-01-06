@@ -14,6 +14,11 @@ class Entry extends Model {
 		} elseif ( $category_id ) {
 			// Fetch all of this category's feeds.
 			$feeds = Category::feeds( $category_id );
+
+			if ( empty( $feeds ) ) {
+				// Stop here.
+				return array( array(), null, null );
+			}
 		}
 
 		global $wpdb;
