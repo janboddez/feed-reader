@@ -294,6 +294,10 @@
 	display: block;
 }
 
+.feed-reader th {
+	text-align: start;
+}
+
 .feed-reader td {
 	vertical-align: top;
 }
