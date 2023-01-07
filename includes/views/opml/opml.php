@@ -13,8 +13,8 @@ echo '<?xml version="1.0"?' . ">\n";
 	<head>
 		<title>
 		<?php
-			/* translators: %s: Site title. */
-			printf( esc_html__( 'Links for %s' ), esc_attr( get_bloginfo( 'name', 'display' ) ) );
+			/* translators: %s: site title */
+			printf( esc_html__( 'Subscriptions for %s' ), esc_attr( get_bloginfo( 'name', 'display' ) ) );
 		?>
 		</title>
 		<dateCreated><?php echo gmdate( 'D, d M Y H:i:s' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> GMT</dateCreated>

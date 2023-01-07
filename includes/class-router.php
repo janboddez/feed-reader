@@ -11,21 +11,10 @@ use FeedReader\Controllers\Settings_Controller;
 
 class Router {
 	public static function register() {
-		add_option( 'feed_reader_settings', array() );
-		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
-
-		add_filter( 'login_redirect', array( __CLASS__, 'login_redirect' ), 10, 3 );
-
-		add_action( 'admin_bar_menu', array( __CLASS__, 'top_bar_menu' ), 40 );
-		add_action( 'admin_menu', array( __CLASS__, 'create_menu' ) );
-
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
-		add_action( 'admin_head', array( __CLASS__, 'admin_head' ) );
-
-		add_action( 'admin_footer', array( __CLASS__, 'include_icon_sprites' ) );
-
+		add_action( 'admin_menu', array( __CLASS__, 'create_menu' ) ); // `GET` routes.
 		add_filter( 'parent_file', array( __CLASS__, 'highlight_menu_page' ) );
 
+		// `POST` routes.
 		add_action( 'admin_post_feed_reader_categories_store', array( Category_Controller::class, 'store' ) );
 		add_action( 'admin_post_feed_reader_categories_update', array( Category_Controller::class, 'update' ) );
 		add_action( 'admin_post_feed_reader_categories_delete', array( Category_Controller::class, 'delete' ) );
@@ -45,26 +34,6 @@ class Router {
 		add_action( 'wp_ajax_feed_reader_post', array( Post_Controller::class, 'process' ) );
 
 		add_action( 'wp_ajax_feed_reader_feeds_discover', array( Feed_Controller::class, 'discover' ) );
-	}
-
-	public static function login_redirect( $redirect_to, $requested_redirect_to, $user ) {
-		$options = get_option( 'feed_reader_settings' ); /** @todo: We should make this a user-specific setting. */
-
-		if ( empty( $options['login_redirect'] ) ) {
-			return $redirect_to;
-		}
-
-		if ( admin_url() !== $requested_redirect_to ) {
-			// When we got here through a specific request, don't redirect.
-			return $redirect_to;
-		}
-
-		if ( is_wp_error( $user ) || ! user_can( $user, 'edit_others_posts' ) ) {
-			// Don't redirect users that wouldn't have access.
-			return $redirect_to;
-		}
-
-		return \FeedReader\Helpers\get_url();
 	}
 
 	public static function create_menu() {
@@ -180,61 +149,6 @@ class Router {
 		);
 	}
 
-	public static function register_settings() {
-		register_setting(
-			'feed-reader-settings-group',
-			'feed_reader_settings',
-			array( 'sanitize_callback' => array( __CLASS__, 'sanitize_settings' ) )
-		);
-	}
-
-	public static function sanitize_settings( $settings ) {
-		return array(
-			'collapse_menu'      => isset( $settings['collapse_menu'] ) ? true : false,
-			'hide_sidebar'       => isset( $settings['hide_sidebar'] ) ? true : false,
-			'show_actions'       => isset( $settings['show_actions'] ) ? true : false,
-			'image_proxy'        => isset( $settings['image_proxy'] ) ? true : false,
-			'image_proxy_secret' => isset( $settings['image_proxy_secret'] ) ? $settings['image_proxy_secret'] : '',
-			'login_redirect'     => isset( $settings['login_redirect'] ) ? true : false,
-		);
-	}
-
-	public static function top_bar_menu( $wp_admin_bar ) {
-		if ( ! current_user_can( 'edit_others_posts' ) ) {
-			return;
-		}
-
-		$wp_admin_bar->add_node(
-			array(
-				'id'    => 'feed-reader',
-				'title' => sprintf( '<span class="ab-icon" aria-hidden="true"></span> <span class="ab-label">%s</span>', esc_html__( 'Reader', 'feed-reader' ) ),
-				'href'  => esc_url( \FeedReader\Helpers\get_url() ),
-			)
-		);
-	}
-
-	public static function admin_head() {
-		/** @todo: Move these to our CSS sheet (and enqueue it _everywhere_, which we currently don't)? */
-		?>
-		<style type="text/css">
-		#wp-admin-bar-feed-reader .ab-icon::before {
-			content: "\f303";
-			top: 2px;
-		}
-
-		@media screen and (max-width: 782px) {
-			#wpadminbar li#wp-admin-bar-feed-reader {
-				display: block;
-			}
-
-			#wp-admin-bar-feed-reader .ab-icon {
-				scale: 0.9;
-			}
-		}
-		</style>
-		<?php
-	}
-
 	public static function remove_submenu_pages() {
 		remove_submenu_page( 'feed-reader', 'feed-reader/entries/view' );
 		remove_submenu_page( 'feed-reader', 'feed-reader/feeds/view' );
@@ -266,50 +180,6 @@ class Router {
 		}
 
 		return $parent_file;
-	}
-
-	public static function enqueue_scripts( $hook_suffix ) {
-		if ( false !== strpos( $hook_suffix, 'feed-reader' ) ) {
-			wp_enqueue_style( 'feed-reader-fonts', plugins_url( '/assets/fonts.css', __DIR__ ), array(), \FeedReader\Reader::PLUGIN_VERSION );
-			wp_enqueue_style( 'feed-reader', plugins_url( '/assets/style.css', __DIR__ ), array( 'feed-reader-fonts' ), \FeedReader\Reader::PLUGIN_VERSION );
-
-			wp_enqueue_script( 'feed-reader', plugins_url( '/assets/feed-reader.js', __DIR__ ), array( 'jquery' ), \FeedReader\Reader::PLUGIN_VERSION, true );
-			wp_localize_script(
-				'feed-reader',
-				'feed_reader_obj',
-				array(
-					'confirm'     => esc_attr__( 'Are you sure?', 'feed-reader' ),
-					'mark_read'   => esc_attr__( 'Mark read', 'feed-reader' ),
-					'mark_unread' => esc_attr__( 'Mark unread', 'feed-reader' ),
-					'all_done'    => sprintf(
-						'<section class="hentry note"><div class="entry-summary"><p>%s</p></div></section>',
-						__( 'Seems you&rsquo;re all caught up!', 'feed-reader' )
-					),
-				)
-			);
-		}
-
-		$options = get_option( 'feed_reader_settings' );
-
-		if ( ! empty( $options['collapse_menu'] ) && in_array( $hook_suffix, array( 'toplevel_page_feed-reader', 'reader_page_feed-reader/entries/view', 'reader_page_feed-reader/feeds/view', 'reader_page_feed-reader/categories/view' ), true ) ) {
-			add_filter( 'admin_body_class', array( __CLASS__, 'body_class' ) );
-		}
-	}
-
-	public static function body_class( $classes ) {
-		$classes   = explode( ' ', $classes );
-		$classes[] = 'folded';
-
-		return implode( ' ', array_unique( $classes ) );
-	}
-
-	public static function include_icon_sprites() {
-		/** @todo: Load these only where relevant. */
-		$svg_icons = __DIR__ . '/../assets/icons.svg';
-
-		if ( is_file( $svg_icons ) ) {
-			require $svg_icons;
-		}
 	}
 
 	protected static function get_title() {
