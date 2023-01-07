@@ -138,6 +138,10 @@ class HTMLTokenizer
      */
     protected $_appropriateEndTagName = '';
     /**
+     * @var mixed[]
+     */
+    protected $_option = array();
+    /**
      * @var bool
      */
     protected $_debug = \false;

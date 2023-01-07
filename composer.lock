@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "deruli/html-minifier",
-            "version": "0.5.1",
+            "version": "0.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/derUli/html-minifier.git",
-                "reference": "c07f1a732fb27e27e438ad2010c0af48461dc1c1"
+                "reference": "f47527ccd3ed8ffe461dccb660f5477d7f4be314"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/derUli/html-minifier/zipball/c07f1a732fb27e27e438ad2010c0af48461dc1c1",
-                "reference": "c07f1a732fb27e27e438ad2010c0af48461dc1c1",
+                "url": "https://api.github.com/repos/derUli/html-minifier/zipball/f47527ccd3ed8ffe461dccb660f5477d7f4be314",
+                "reference": "f47527ccd3ed8ffe461dccb660f5477d7f4be314",
                 "shasum": ""
             },
             "require": {
@@ -66,9 +66,9 @@
                 "php"
             ],
             "support": {
-                "source": "https://github.com/derUli/html-minifier/tree/master"
+                "source": "https://github.com/derUli/html-minifier/tree/0.5.2"
             },
-            "time": "2019-02-24T18:52:13+00:00"
+            "time": "2023-01-05T13:00:22+00:00"
         },
         {
             "name": "mf2/mf2",

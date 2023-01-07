@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitdfb0f003a1e25bf271717e4930899561
+class ComposerStaticInit36608929c0d6073e4c2dab8f3404c1b6
 {
     public static $files = array (
         '757772e28a0943a9afe83def8db95bdf' => __DIR__ . '/..' . '/mf2/mf2/Mf2/Parser.php',
@@ -63,9 +63,9 @@ class ComposerStaticInitdfb0f003a1e25bf271717e4930899561
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitdfb0f003a1e25bf271717e4930899561::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitdfb0f003a1e25bf271717e4930899561::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitdfb0f003a1e25bf271717e4930899561::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit36608929c0d6073e4c2dab8f3404c1b6::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit36608929c0d6073e4c2dab8f3404c1b6::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit36608929c0d6073e4c2dab8f3404c1b6::$classMap;
 
         }, null, ClassLoader::class);
     }
