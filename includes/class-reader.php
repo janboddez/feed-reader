@@ -97,9 +97,9 @@ class Reader {
 		$user_settings = get_user_meta( $user->ID, 'feed_reader_settings', true );
 		?>
 			<tr>
-				<th><?php esc_html_e( 'Login Redirect', 'feed-reader' ); ?></th>
+				<th><?php esc_html_e( 'Feed Reader Redirect', 'feed-reader' ); ?></th>
 				<td><label><input type="checkbox" name="feed_reader_settings[login_redirect]" <?php checked( ! empty( $user_settings['login_redirect'] ) ); ?> />
-				<?php esc_html_e( 'Get redirected to your reader after logging in.', 'feed-reader' ); ?></label></td>
+				<?php esc_html_e( 'After logging in, get sent to your feed reader rather than WordPress&rsquo; dashboard', 'feed-reader' ); ?></label></td>
 			</tr>
 		<?php
 	}
