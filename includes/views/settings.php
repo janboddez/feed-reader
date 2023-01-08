@@ -15,13 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<table class="form-table">
 			<tr valign="top">
-				<th scope="row"><?php esc_html_e( 'Login Redirect', 'feed-reader' ); ?></th>
-				<td>
-					<label><input type="checkbox" name="feed_reader_settings[login_redirect]" <?php checked( ! empty( $options['login_redirect'] ) ); ?> /> <?php esc_html_e( 'Enable login redirect', 'feed-reader' ); ?></label>
-					<p class="description"><?php esc_html_e( 'After logging in, get sent to your reader rather than WordPress&rsquo; dashboard.', 'feed-reader' ); ?></p>
-				</td>
-			</tr>
-			<tr valign="top">
 				<th scope="row"><?php esc_html_e( 'Collapse Menu', 'feed-reader' ); ?></th>
 				<td>
 					<label><input type="checkbox" name="feed_reader_settings[collapse_menu]" <?php checked( ! empty( $options['collapse_menu'] ) ); ?> /> <?php esc_html_e( 'Auto-collapse WordPress&rsquo; admin menu', 'feed-reader' ); ?></label>

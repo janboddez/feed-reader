@@ -13,14 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<table class="form-table">
 			<tr valign="top">
-				<th scope="row"><label for="opml-file"><?php esc_html_e( 'Export OPML', 'feed-reader' ); ?></label></th>
+				<th scope="row"><?php esc_html_e( 'Export OPML', 'feed-reader' ); ?></th>
 				<td><a class="button" href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'opml', 'export' ) ); ?>"><?php esc_html_e( 'Export OPML', 'feed-reader' ); ?></a>
 				<p class="description"><?php esc_html_e( 'Export your subscriptions as OPML.', 'feed-reader' ); ?></p></td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="opml-file"><?php esc_html_e( 'Import OPML', 'feed-reader' ); ?></label></th>
+				<th scope="row"><label for="feed-reader-opml-file"><?php esc_html_e( 'Import OPML', 'feed-reader' ); ?></label></th>
 				<td>
-					<input type="file" name="opml_file" id="opml-file" accept="text/xml">
+					<input type="file" name="opml_file" id="feed-reader-opml-file" accept="text/xml">
 					<p class="description"><?php esc_html_e( 'OPML file to be imported.', 'feed-reader' ); ?></p>
 				</td>
 			</tr>

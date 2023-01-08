@@ -66,11 +66,17 @@ class Reader {
 	}
 
 	public function register_settings() {
+		// General plugin settings.
 		register_setting(
 			'feed-reader-settings-group',
 			'feed_reader_settings',
 			array( 'sanitize_callback' => array( $this, 'sanitize_settings' ) )
 		);
+
+		// User-specific settings.
+		add_action( 'personal_options', array( $this, 'profile_fields' ) );
+		add_action( 'personal_options_update', array( $this, 'save_profile_fields' ) );
+		add_action( 'edit_user_profile_update', array( $this, 'save_profile_fields' ) );
 	}
 
 	public function sanitize_settings( $settings ) {
@@ -80,8 +86,49 @@ class Reader {
 			'show_actions'       => isset( $settings['show_actions'] ) ? true : false,
 			'image_proxy'        => isset( $settings['image_proxy'] ) ? true : false,
 			'image_proxy_secret' => isset( $settings['image_proxy_secret'] ) ? $settings['image_proxy_secret'] : '',
-			'login_redirect'     => isset( $settings['login_redirect'] ) ? true : false,
 		);
+	}
+
+	public function profile_fields( $user ) {
+		if ( ! user_can( $user, 'edit_others_posts' ) ) {
+			return;
+		}
+
+		$user_settings = get_user_meta( $user->ID, 'feed_reader_settings', true );
+		?>
+			<tr>
+				<th><?php esc_html_e( 'Login Redirect', 'feed-reader' ); ?></th>
+				<td><label><input type="checkbox" name="feed_reader_settings[login_redirect]" <?php checked( ! empty( $user_settings['login_redirect'] ) ); ?> />
+				<?php esc_html_e( 'Get redirected to your reader after logging in.', 'feed-reader' ); ?></label></td>
+			</tr>
+		<?php
+	}
+
+	public function save_profile_fields( $user_id ) {
+		if ( ! current_user_can( 'edit_user', $user_id ) ) {
+			// Unauthorized.
+			return;
+		}
+
+		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), "update-user_{$user_id}" ) ) {
+			// Invalid nonce.
+			return;
+		}
+
+		if ( ! user_can( $user_id, 'edit_others_posts' ) ) {
+			// Unsupported role.
+			return;
+		}
+
+		$settings = ! empty( $_POST['feed_reader_settings'] )
+			? $_POST['feed_reader_settings'] // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			: array();
+
+		$user_settings = array(
+			'login_redirect' => isset( $settings['login_redirect'] ) ? true : false,
+		);
+
+		update_user_meta( $user_id, 'feed_reader_settings', $user_settings );
 	}
 
 	public function top_bar_menu( $wp_admin_bar ) {
@@ -168,14 +215,15 @@ class Reader {
 	}
 
 	public static function login_redirect( $redirect_to, $requested_redirect_to, $user ) {
-		$options = get_option( 'feed_reader_settings' ); /** @todo: We should make this a user-specific setting. */
-
-		if ( empty( $options['login_redirect'] ) ) {
+		if ( admin_url() !== $requested_redirect_to ) {
+			// When we got here through a specific request, don't redirect.
 			return $redirect_to;
 		}
 
-		if ( admin_url() !== $requested_redirect_to ) {
-			// When we got here through a specific request, don't redirect.
+		$user_settings = get_user_meta( $user->ID, 'feed_reader_settings', true );
+
+		if ( empty( $user_settings['login_redirect'] ) ) {
+			// Do nothing.
 			return $redirect_to;
 		}
 
