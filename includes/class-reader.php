@@ -39,6 +39,7 @@ class Reader {
 
 		// Additional admin styles and functions.
 		add_action( 'admin_bar_menu', array( $this, 'top_bar_menu' ), 40 ); // After "home" button.
+		add_action( 'wp_before_admin_bar_render', array( $this, 'new_content' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_head', array( $this, 'admin_head' ) );
 		add_action( 'admin_footer', array( $this, 'include_icon_sprites' ) );
@@ -143,6 +144,23 @@ class Reader {
 				'href'  => esc_url( \FeedReader\Helpers\get_url() ),
 			)
 		);
+	}
+
+	public function new_content() {
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			return;
+		}
+
+		global $wp_admin_bar;
+
+		$args = array(
+			'id'     => 'feed-reader-new-feed',
+			'title'  => esc_html__( 'Feed', 'feed-reader' ),
+			'parent' => 'new-content',
+			'href'   => \FeedReader\Helpers\get_url( 'feeds', 'create' ),
+		);
+
+		$wp_admin_bar->add_node( $args );
 	}
 
 	public function admin_head() {
