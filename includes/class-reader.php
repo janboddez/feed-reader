@@ -157,7 +157,7 @@ class Reader {
 			'id'     => 'feed-reader-new-feed',
 			'title'  => esc_html__( 'Feed', 'feed-reader' ),
 			'parent' => 'new-content',
-			'href'   => \FeedReader\Helpers\get_url( 'feeds', 'create' ),
+			'href'   => esc_url_raw( \FeedReader\Helpers\get_url( 'feeds', 'create' ) ),
 		);
 
 		$wp_admin_bar->add_node( $args );
@@ -250,7 +250,7 @@ class Reader {
 			return $redirect_to;
 		}
 
-		return \FeedReader\Helpers\get_url();
+		return esc_url_raw( \FeedReader\Helpers\get_url() );
 	}
 
 	protected function migrate() {
