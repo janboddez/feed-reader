@@ -284,3 +284,11 @@ function proxy_image( $url ) {
 
 	return get_rest_url( null, '/feed-reader/v1/imageproxy' ) . "?$query_string";
 }
+
+function get_user_agent( $url = '' ) {
+	$wp_version = get_bloginfo( 'version' );
+	$user_agent = 'WordPress/' . $wp_version . '; ' . get_bloginfo( 'url' ) . '; FeedReader';
+
+	// Allow developers to override this user agent.
+	return apply_filters( 'feed_reader_user_agent', $user_agent, $url );
+}

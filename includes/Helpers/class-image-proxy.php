@@ -61,6 +61,7 @@ class Image_Proxy {
 				'follow_location' => true,
 				'ignore_errors'   => true, // "Allow," i.e., don't crash on, HTTP errors (4xx, 5xx).
 				'timeout'         => 11,
+				'user_agent'      => \FeedReader\Helpers\get_user_agent( $url ),
 			),
 		);
 

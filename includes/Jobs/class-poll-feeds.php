@@ -49,7 +49,11 @@ class Poll_Feeds {
 			error_log( '[Reader] Downloading feed at ' . esc_url_raw( $feed->url ) . '.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 
 			$response = wp_safe_remote_get(
-				esc_url_raw( $feed->url )
+				esc_url_raw( $feed->url ),
+				array(
+					'timeout'    => 11,
+					'user-agent' => \FeedReader\Helpers\get_user_agent( $feed->url ),
+				)
 			);
 
 			$data = null;

@@ -236,10 +236,11 @@ class Feed_Controller extends Controller {
 
 		$url = esc_url_raw( $_POST['url'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-		$response = wp_remote_get(
-			esc_url_raw( $url ), // Already escaped above, but.
+		$response = wp_safe_remote_get(
+			esc_url_raw( $url ),
 			array(
-				'timeout' => 11,
+				'timeout'    => 11,
+				'user-agent' => \FeedReader\Helpers\get_user_agent( $url ),
 			)
 		);
 
@@ -264,23 +265,23 @@ class Feed_Controller extends Controller {
 			if ( ! empty( $data->version ) && false !== strpos( $data->version, 'https://jsonfeed.org/version/' ) ) {
 				$feeds[] = array(
 					'format' => 'json_feed',
-					'url'    => esc_url_raw( $url ), // Already escaped above, but.
+					'url'    => esc_url_raw( $url ),
 				);
 			}
 		} elseif ( in_array( $content_type, array( 'application/rss+xml' ), true ) ) {
 			$feeds[] = array(
 				'format' => 'rss',
-				'url'    => esc_url_raw( $url ), // Already escaped above, but.
+				'url'    => esc_url_raw( $url ),
 			);
 		} elseif ( in_array( $content_type, array( 'application/atom+xml' ), true ) ) {
 			$feeds[] = array(
 				'format' => 'atom',
-				'url'    => esc_url_raw( $url ), // Already escaped above, but.
+				'url'    => esc_url_raw( $url ),
 			);
 		} elseif ( in_array( $content_type, array( 'text/xml', 'application/xml' ), true ) ) {
 			$feeds[] = array(
 				'format' => 'xml',
-				'url'    => esc_url_raw( $url ), // Already escaped above, but.
+				'url'    => esc_url_raw( $url ),
 			);
 		} else {
 			// Get page title, if any. Note that `mb_detect_encoding()`, used

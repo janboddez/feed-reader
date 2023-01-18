@@ -163,10 +163,11 @@ class Feed extends Model {
 		}
 
 		$icon     = "https://icons.duckduckgo.com/ip3/{$domain}.ico"; // Note: Despite the extension, may in fact return ICO, PNG, SVG, JPEG or GIF files.
-		$response = wp_remote_get(
+		$response = wp_safe_remote_get(
 			esc_url_raw( $icon ),
 			array(
-				'timeout' => 11,
+				'timeout'    => 11,
+				'user-agent' => \FeedReader\Helpers\get_user_agent( $icon ),
 			)
 		);
 
