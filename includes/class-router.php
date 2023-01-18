@@ -246,12 +246,9 @@ class Router {
 	}
 
 	public static function get_method() {
-		if ( isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$method = preg_replace( '~^feed-reader/(?:entries|feeds|categories)/~', '', $_GET['page'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-
-			if ( in_array( $method, array( 'view', 'edit' ), true ) ) {
-				return $method;
-			}
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( isset( $_GET['page'] ) && preg_match( '~^feed-reader/(?:entries|feeds|categories)/(view|edit)~', $_GET['page'], $matches ) ) {
+			return $matches[1];
 		}
 
 		return 'index';

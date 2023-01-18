@@ -62,12 +62,6 @@ class Feed_Controller extends Controller {
 		}
 
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( isset( $_POST['site_url'] ) && wp_http_validate_url( $_POST['site_url'] ) ) {
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$site_url = $_POST['site_url'];
-		}
-
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		if ( isset( $_POST['category'] ) && ctype_digit( $_POST['category'] ) ) {
 			$category = Category::find( (int) $_POST['category'] );
 		}
@@ -79,7 +73,8 @@ class Feed_Controller extends Controller {
 				array(
 					'url'         => esc_url_raw( $url ),
 					'name'        => isset( $name ) ? $name : preg_replace( '~^www~', '', wp_parse_url( $url, PHP_URL_HOST ) ),
-					'site_url'    => isset( $site_url ) ? esc_url_raw( $site_url ) : null,
+					// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					'site_url'    => isset( $_POST['site_url'] ) && wp_http_validate_url( $_POST['site_url'] ) ? esc_url_raw( $_POST['site_url'] ) : null,
 					'category_id' => isset( $category->id ) ? $category->id : null,
 					'user_id'     => get_current_user_id(),
 				)
@@ -125,23 +120,17 @@ class Feed_Controller extends Controller {
 			wp_die( esc_html__( 'Invalid URL.', 'feed-reader' ) );
 		}
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$url = esc_url_raw( $_POST['feed_url'] );
+
 		$feed = Feed::find( (int) $_POST['id'] );
 
 		if ( ! $feed ) {
 			wp_die( esc_html__( 'Unknown feed.', 'feed-reader' ) );
 		}
 
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$url = $_POST['feed_url'];
-
 		if ( isset( $_POST['feed_name'] ) && is_string( $_POST['feed_name'] ) ) {
 			$name = sanitize_text_field( wp_unslash( $_POST['feed_name'] ) );
-		}
-
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( isset( $_POST['site_url'] ) && wp_http_validate_url( $_POST['site_url'] ) ) {
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$site_url = $_POST['site_url'];
 		}
 
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
@@ -149,15 +138,16 @@ class Feed_Controller extends Controller {
 			$category = Category::find( (int) $_POST['category'] );
 		}
 
-		$exists = Feed::exists( esc_url_raw( $url ) );
+		$exists = Feed::exists( $url );
 
 		// Should we do this? Update only if another feed doesn't already have this URL?
 		if ( ! $exists || intval( $feed->id ) === $exists ) {
 			$result = Feed::update(
 				array(
-					'url'         => esc_url_raw( $url ),
+					'url'         => $url,
 					'name'        => isset( $name ) ? $name : preg_replace( '~^www~', '', wp_parse_url( $url, PHP_URL_HOST ) ),
-					'site_url'    => isset( $site_url ) ? esc_url_raw( $site_url ) : null,
+					// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					'site_url'    => isset( $_POST['site_url'] ) && wp_http_validate_url( $_POST['site_url'] ) ? esc_url_raw( $_POST['site_url'] ) : null,
 					'category_id' => isset( $category->id ) ? $category->id : null,
 				),
 				array( 'id' => $feed->id )
@@ -240,14 +230,14 @@ class Feed_Controller extends Controller {
 			wp_die( esc_html__( 'This page should not be accessed directly.', 'feed-reader' ) );
 		}
 
-		if ( empty( $_POST['url'] ) || ! wp_http_validate_url( wp_unslash( $_POST['url'] ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( empty( $_POST['url'] ) || ! wp_http_validate_url( $_POST['url'] ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			wp_die( esc_html__( 'Invalid URL.', 'feed-reader' ) );
 		}
 
-		$url = wp_unslash( $_POST['url'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$url = esc_url_raw( $_POST['url'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		$response = wp_remote_get(
-			esc_url_raw( $url ),
+			esc_url_raw( $url ), // Already escaped above, but.
 			array(
 				'timeout' => 11,
 			)
@@ -274,26 +264,28 @@ class Feed_Controller extends Controller {
 			if ( ! empty( $data->version ) && false !== strpos( $data->version, 'https://jsonfeed.org/version/' ) ) {
 				$feeds[] = array(
 					'format' => 'json_feed',
-					'url'    => esc_url_raw( $url ),
+					'url'    => esc_url_raw( $url ), // Already escaped above, but.
 				);
 			}
 		} elseif ( in_array( $content_type, array( 'application/rss+xml' ), true ) ) {
 			$feeds[] = array(
 				'format' => 'rss',
-				'url'    => esc_url_raw( $url ),
+				'url'    => esc_url_raw( $url ), // Already escaped above, but.
 			);
 		} elseif ( in_array( $content_type, array( 'application/atom+xml' ), true ) ) {
 			$feeds[] = array(
 				'format' => 'atom',
-				'url'    => esc_url_raw( $url ),
+				'url'    => esc_url_raw( $url ), // Already escaped above, but.
 			);
 		} elseif ( in_array( $content_type, array( 'text/xml', 'application/xml' ), true ) ) {
 			$feeds[] = array(
 				'format' => 'xml',
-				'url'    => esc_url_raw( $url ),
+				'url'    => esc_url_raw( $url ), // Already escaped above, but.
 			);
 		} else {
-			// Get page title, if any.
+			// Get page title, if any. Note that `mb_detect_encoding()`, used
+			// this way, does not actually provide very robust results. Anyway,
+			// it doesn't _not_ work, either.
 			$body = mb_convert_encoding( $body, 'HTML-ENTITIES', mb_detect_encoding( $body ) );
 			$dom  = new \DOMDocument();
 
