@@ -16,10 +16,13 @@ On top of that, it's possible to reply to and bookmark others' blog posts right 
 == Installation ==
 Upload this plugin's ZIP file via the Plugins > Add New > "Upload Plugin" button.
 
-After activation, head over to *Settings > IndieBlocks*, and enable or disable its different features.
+After activation, head over to *Reader > Settings*, and enable or disable the few options this plugin offers.
 
 More details can be found on [https://jan.boddez.net/wordpress/feed-reader](https://jan.boddez.net/wordpress/feed-reader). Issues may be filed at [https://github.com/janboddez/feed-reader](https://github.com/janboddez/feed-reader).
 
 == Changelog ==
+= 0.2.0 =
+Per-user redirect setting, "New Feed" top bar item.
+
 = 0.1.0 =
 Very first version.

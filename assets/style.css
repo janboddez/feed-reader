@@ -38,7 +38,6 @@
 	grid-template-columns: 1fr 1fr 42em 1fr 1fr;
 	gap: 0.5em;
 	margin: 0;
-	font-family: 'Inter', sans-serif;
 	font-size: 16px;
 	line-height: 1.7;
 }
@@ -90,7 +89,7 @@
 }
 
 .feed-reader-sidebar details summary {
-	font-weight: bold;
+	font-weight: 600;
 	margin: 0.25em;
 }
 
@@ -159,7 +158,7 @@
 
 .feed-reader .page-title,
 .feed-reader .entry-title {
-	font-weight: bold;
+	font-weight: 600;
 	margin: 1.25em 0 0;
 }
 
@@ -210,7 +209,6 @@
 
 .feed-reader .entry-summary,
 .feed-reader .entry-content {
-	font-family: 'Merriweather', serif;
 	font-size: 16px;
 	line-height: inherit;
 }

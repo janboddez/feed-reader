@@ -28,6 +28,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</td>
 			</tr>
 			<tr valign="top">
+				<th scope="row"><?php esc_html_e( 'System Fonts', 'feed-reader' ); ?></th>
+				<td>
+					<label><input type="checkbox" name="feed_reader_settings[system_fonts]" <?php checked( ! empty( $options['system_fonts'] ) ); ?> /> <?php esc_html_e( 'Use system fonts rather than Feed Reader&rsquo;s', 'feed-reader' ); ?></label>
+				</td>
+			</tr>
+			<tr valign="top">
 				<th scope="row"><?php esc_html_e( 'Show Actions', 'feed-reader' ); ?></th>
 				<td>
 					<label><input type="checkbox" name="feed_reader_settings[show_actions]" <?php checked( ! empty( $options['show_actions'] ) ); ?> /> <?php esc_html_e( 'Display &ldquo;action buttons&rdquo; below single entries', 'feed-reader' ); ?></label>

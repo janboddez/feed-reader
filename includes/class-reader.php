@@ -84,6 +84,7 @@ class Reader {
 		return array(
 			'collapse_menu'      => isset( $settings['collapse_menu'] ) ? true : false,
 			'hide_sidebar'       => isset( $settings['hide_sidebar'] ) ? true : false,
+			'system_fonts'       => isset( $settings['system_fonts'] ) ? true : false,
 			'show_actions'       => isset( $settings['show_actions'] ) ? true : false,
 			'image_proxy'        => isset( $settings['image_proxy'] ) ? true : false,
 			'image_proxy_secret' => isset( $settings['image_proxy_secret'] ) ? $settings['image_proxy_secret'] : '',
@@ -164,6 +165,8 @@ class Reader {
 	}
 
 	public function admin_head() {
+		$options = get_option( 'feed_reader_settings' );
+
 		/** @todo: Move these to our CSS sheet (and enqueue it _everywhere_, which we currently don't)? */
 		?>
 		<style type="text/css">
@@ -181,14 +184,33 @@ class Reader {
 				scale: 0.9;
 			}
 		}
+		<?php if ( empty( $options['system_fonts'] ) ) : ?>
+			.feed-reader {
+				font-family: "Inter", sans-serif;
+			}
+			.feed-reader .entry-content,
+			.feed-reader .entry-summary {
+				font-family: "Merriweather", serif;
+			}
+			.feed-reader .page-title,
+			.feed-reader .entry-title,
+			.feed-reader-sidebar details summary {
+				font-weight: bold;
+			}
+		<?php endif; ?>
 		</style>
 		<?php
 	}
 
 	public function enqueue_scripts( $hook_suffix ) {
 		if ( false !== strpos( $hook_suffix, 'feed-reader' ) ) {
-			wp_enqueue_style( 'feed-reader-fonts', plugins_url( '/assets/fonts.css', __DIR__ ), array(), self::PLUGIN_VERSION );
-			wp_enqueue_style( 'feed-reader', plugins_url( '/assets/style.css', __DIR__ ), array( 'feed-reader-fonts' ), self::PLUGIN_VERSION );
+			$options = get_option( 'feed_reader_settings' );
+
+			if ( empty( $options['system_fonts'] ) ) {
+				wp_enqueue_style( 'feed-reader-fonts', plugins_url( '/assets/fonts.css', __DIR__ ), array(), self::PLUGIN_VERSION );
+			}
+
+			wp_enqueue_style( 'feed-reader', plugins_url( '/assets/style.css', __DIR__ ), array(), self::PLUGIN_VERSION );
 
 			wp_enqueue_script( 'feed-reader', plugins_url( '/assets/feed-reader.js', __DIR__ ), array( 'jquery' ), self::PLUGIN_VERSION, true );
 			wp_localize_script(
