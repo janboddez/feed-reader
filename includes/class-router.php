@@ -214,9 +214,9 @@ class Router {
 	}
 
 	protected static function get_model( $controller ) {
-		$result = wp_cache_get( 'feed-reader:model' );
+		$result = \FeedReader\Helpers\current_model();
 
-		if ( false !== $result ) {
+		if ( $result ) {
 			return $result;
 		}
 
@@ -228,12 +228,10 @@ class Router {
 		$result = $model::find( $_GET['id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		if ( ! $result ) {
-			wp_cache_set( 'feed-reader:model', null );
 			return null;
 		}
 
-		wp_cache_set( 'feed-reader:model', $result );
-		return $result;
+		return \FeedReader\Helpers\current_model( $result ); // "Cache" and return model.
 	}
 
 	public static function get_controller() {

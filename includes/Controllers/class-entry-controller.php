@@ -14,8 +14,7 @@ class Entry_Controller extends Controller {
 	}
 
 	public static function view() {
-		$entry = wp_cache_get( 'feed-reader:model' );
-		wp_cache_delete( 'feed-reader:model' );
+		$entry = \FeedReader\Helpers\current_model();
 
 		if ( ! $entry ) {
 			wp_die( esc_html_e( 'Unknown entry.', 'feed-reader' ) );
