@@ -5,7 +5,7 @@ namespace FeedReader\Helpers;
 function current_model( $value = null ) {
 	static $model = null;
 
-	if ($value) {
+	if ($value && $value instanceof \FeedReader\Models\Model) {
 		$model = $value;
 	}
 
