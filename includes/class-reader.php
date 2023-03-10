@@ -184,20 +184,6 @@ class Reader {
 				scale: 0.9;
 			}
 		}
-		<?php if ( empty( $options['system_fonts'] ) ) : ?>
-			.feed-reader {
-				font-family: "Inter", sans-serif;
-			}
-			.feed-reader .entry-content,
-			.feed-reader .entry-summary {
-				font-family: "Merriweather", serif;
-			}
-			.feed-reader .page-title,
-			.feed-reader .entry-title,
-			.feed-reader-sidebar details summary {
-				font-weight: bold;
-			}
-		<?php endif; ?>
 		</style>
 		<?php
 	}
@@ -210,9 +196,12 @@ class Reader {
 				wp_enqueue_style( 'feed-reader-fonts', plugins_url( '/assets/fonts.css', __DIR__ ), array(), self::PLUGIN_VERSION );
 			}
 
+			wp_enqueue_style( 'highlight-js-css', plugins_url( '/assets/highlight.min.css', __DIR__ ), array(), self::PLUGIN_VERSION ); // Our "own" highlight.js styles.
 			wp_enqueue_style( 'feed-reader', plugins_url( '/assets/style.css', __DIR__ ), array(), self::PLUGIN_VERSION );
 
-			wp_enqueue_script( 'feed-reader', plugins_url( '/assets/feed-reader.js', __DIR__ ), array( 'jquery' ), self::PLUGIN_VERSION, true );
+			wp_enqueue_script( 'highlight-js', plugins_url( '/assets/highlight.min.js', __DIR__ ), array(), '1.7.0', true );
+			wp_enqueue_script( 'feed-reader', plugins_url( '/assets/feed-reader.js', __DIR__ ), array( 'jquery', 'highlight-js' ), self::PLUGIN_VERSION, true );
+
 			wp_localize_script(
 				'feed-reader',
 				'feed_reader_obj',
@@ -260,15 +249,15 @@ class Reader {
 			return $redirect_to;
 		}
 
+		if ( is_wp_error( $user ) || ! user_can( $user, 'edit_others_posts' ) ) {
+			// Don't redirect users that wouldn't have access.
+			return $redirect_to;
+		}
+
 		$user_settings = get_user_meta( $user->ID, 'feed_reader_settings', true );
 
 		if ( empty( $user_settings['login_redirect'] ) ) {
 			// Do nothing.
-			return $redirect_to;
-		}
-
-		if ( is_wp_error( $user ) || ! user_can( $user, 'edit_others_posts' ) ) {
-			// Don't redirect users that wouldn't have access.
 			return $redirect_to;
 		}
 

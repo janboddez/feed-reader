@@ -1,4 +1,10 @@
 jQuery( document ).ready( function ( $ ) {
+	if ( hljs ) {
+		document.querySelectorAll( '.feed-reader article pre' ).forEach( function ( el ) {
+			hljs.highlightElement( el );
+		} );
+	}
+
 	$( '.feed-reader .entry-content img, .feed-reader .entry-summary img').each( function() {
 		if ( this.width > 50 ) {
 			// Don't display "wider" images inline.

@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $options = get_option( 'feed_reader_settings' );
 ?>
-<div class="wrap feed-reader <?php echo esc_attr( empty( $options['hide_sidebar'] ) ? 'with-sidebar' : '' ); ?>">
+<div class="wrap feed-reader <?php echo esc_attr( empty( $options['hide_sidebar'] ) ? 'with-sidebar' : '' ); ?> <?php echo esc_attr( empty( $options['system_fonts'] ) ? 'custom-fonts' : '' ); ?>">
 	<?php if ( empty( $options['hide_sidebar'] ) ) : ?>
 		<aside class="feed-reader-sidebar">
 			<?php static::render( 'sidebar', array( 'entries' => isset( $entries ) ? $entries : array() ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope ?>
