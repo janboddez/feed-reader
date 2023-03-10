@@ -2,6 +2,16 @@
 
 namespace FeedReader\Helpers;
 
+function current_model( $value = null ) {
+	static $model = null;
+
+	if ($value) {
+		$model = $value;
+	}
+
+	return $model;
+}
+
 function get_url( $controller = null, $method = null, $id = null, $all = false ) {
 	if ( in_array( $method, array( 'delete', 'mark-read', 'export' ), true ) ) {
 		$args = array(
