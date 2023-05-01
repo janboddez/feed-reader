@@ -14,7 +14,7 @@ class Format {
 	 * @return array          Entry, ready to be inserted into the database.
 	 */
 	protected static function parse_item( $item, $feed, $source = null ) {
-		return array(
+		$entry = array(
 			'uid'       => $item['properties']['uid'][0],
 			'published' => $item['properties']['published'][0],
 			'url'       => ! empty( $item['properties']['url'][0] ) ? $item['properties']['url'][0] : null,
@@ -27,6 +27,11 @@ class Format {
 			'user_id'   => $feed->user_id,
 			'data'      => wp_json_encode( $item ), // Store `$item` as Mf2 JSON, for (eventual) use with Microsub readers.
 		);
+
+		$entry['name']   = apply_filters( 'feed_reader_set_entry_name', $entry['name'], $item, $feed );
+		$entry['author'] = apply_filters( 'feed_reader_set_entry_author', $entry['author'], $item, $feed );
+
+		return $entry;
 	}
 
 	protected static function absolutize_urls( $html, $base ) {

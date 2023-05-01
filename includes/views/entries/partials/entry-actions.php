@@ -73,7 +73,7 @@ if ( empty( $options['show_actions'] ) ) {
 				?>
 			</div>
 			<div>
-				<button class="button buttton-primary button-publish-bookmark"><?php esc_html_e( 'Bookmark', 'feed-reader' ); ?></button>
+				<button class="button buttton-primary button-publish-reply"><?php esc_html_e( 'Reply', 'feed-reader' ); ?></button>
 			</div>
 		</div>
 	</div>

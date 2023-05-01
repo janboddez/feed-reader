@@ -18,6 +18,7 @@ class Post_Controller {
 
 		$name      = '';
 		$content   = '';
+		$status    = 'draft';
 		$post_type = 'post';
 
 		if ( ! empty( $_POST['name'] ) ) {
@@ -26,6 +27,10 @@ class Post_Controller {
 
 		if ( ! empty( $_POST['content'] ) ) {
 			$content = sanitize_textarea_field( wp_unslash( $_POST['content'] ) );
+		}
+
+		if ( ! empty( $_POST['status'] ) && in_array( wp_unslash( $_POST['status'] ), array( 'draft', 'private', 'publish' ), true ) ) {
+			$status = $_POST['status']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		}
 
 		if ( ! empty( $_POST['in-reply-to'] ) && filter_var( wp_unslash( $_POST['in-reply-to'] ), FILTER_VALIDATE_URL ) ) {
@@ -86,7 +91,7 @@ class Post_Controller {
 
 		$args = array(
 			'post_content' => $content,
-			'post_status'  => apply_filters( 'feed_reader_post_status', 'draft', $content ),
+			'post_status'  => apply_filters( 'feed_reader_post_status', $status, $content ),
 			'post_author'  => get_current_user_id(),
 			'post_type'    => apply_filters( 'feed_reader_post_type', $post_type, $content ),
 		);
@@ -100,11 +105,10 @@ class Post_Controller {
 			wp_die();
 		}
 
-		error_log( print_r( $_POST, true ) );
-
 		$synd_requested = array();
+
 		if ( ! empty( $_POST['mp-syndicate-to'] ) && is_array( $_POST['mp-syndicate-to'] ) ) {
-			$synd_requested = $_POST['mp-syndicate-to'];
+			$synd_requested = wp_unslash( $_POST['mp-syndicate-to'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		}
 
 		do_action( 'micropub_syndication', $post_id, $synd_requested );

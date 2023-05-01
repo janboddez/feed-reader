@@ -139,6 +139,8 @@ jQuery( document ).ready( function ( $ ) {
 			'in-reply-to': entry.data( 'url' ),
 			'name': form.find( 'input[type="text"]' ).val(),
 			'content': form.find( 'textarea' ).val(),
+			'status': form.find( 'select' ).val(),
+			'mp-syndicate-to': form.find( 'input:checked' ).map( function() { return $( this ).val(); } ).get(),
 			'_wpnonce': button.closest( '.actions' ).data( 'nonce' )
 		};
 
@@ -192,6 +194,8 @@ jQuery( document ).ready( function ( $ ) {
 			'bookmark-of': entry.data( 'url' ),
 			'name': form.find( 'input[type="text"]' ).val(),
 			'content': form.find( 'textarea' ).val(),
+			'status': form.find( 'select' ).val(),
+			'mp-syndicate-to': form.find( 'input:checked' ).map( function() { return $( this ).val(); } ).get(),
 			'_wpnonce': button.closest( '.actions' ).data( 'nonce' )
 		};
 
