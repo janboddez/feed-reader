@@ -32,7 +32,7 @@ $options = get_option( 'feed_reader_settings' );
 				<?php endif; ?>
 
 				<span aria-hidden="true">/</span>
-				<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'feeds', 'mark-read', $feed->id ) ); ?>"><?php esc_html_e( 'Mark as Read', 'feed-reader' ); ?></a>
+				<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'feeds', 'mark-read', $feed->id ) ); ?>"><?php esc_html_e( 'Mark Read', 'feed-reader' ); ?></a>
 			</div>
 		<?php elseif ( ! empty( $category->name ) ) : ?>
 			<h1 class="page-title"><?php echo esc_html( $category->name ); ?></h1>
@@ -45,6 +45,9 @@ $options = get_option( 'feed_reader_settings' );
 
 				<span aria-hidden="true">/</span>
 				<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'categories', 'edit', $category->id ) ); ?>"><?php esc_html_e( 'Edit Category', 'feed-reader' ); ?></a>
+
+				<span aria-hidden="true">/</span>
+				<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'categories', 'mark-read', $category->id ) ); ?>"><?php esc_html_e( 'Mark Read', 'feed-reader' ); ?></a>
 			</div>
 		<?php elseif ( isset( $_GET['all'] ) && '1' === $_GET['all'] ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
 			<h1 class="page-title"><?php esc_html_e( 'All Entries', 'feed-reader' ); ?></h1>

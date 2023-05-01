@@ -158,4 +158,36 @@ class Category_Controller extends Controller {
 		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'categories' ) ) );
 		exit;
 	}
+
+	public static function mark_read() {
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		if ( empty( $_GET['_wpnonce'] ) || empty( $_GET['id'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'feed-reader-categories:mark-read:' . intval( $_GET['id'] ) ) ) {
+			wp_die( esc_html__( 'This page should not be accessed directly.', 'feed-reader' ) );
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$category = Category::find( (int) $_GET['id'] ); // Ensure feed exists and belongs to the current user.
+
+		if ( $category ) {
+			$feeds = Category::feeds( $category->id );
+
+			foreach ( $feeds as $feed ) {
+				// We can later rewrite this to use `WHERE IN` (which `$wpdb` doesn't support).
+				Entry::update(
+					array( 'is_read' => 1 ),
+					array( 'feed_id' => $feed->id )
+				);
+			}
+
+			wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'categories', 'view', $category->id ) ) );
+			exit;
+		}
+
+		wp_safe_redirect( esc_url_raw( \FeedReader\Helpers\get_url( 'categories' ) ) );
+		exit;
+	}
 }
