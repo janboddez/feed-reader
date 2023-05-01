@@ -49,12 +49,64 @@ if ( empty( $options['show_actions'] ) ) {
 	<div class="reply-form" style="display: none;">
 		<input type="text" class="widefat" placeholder="<?php esc_attr_e( '(Optional) Title', 'feed-reader' ); ?>">
 		<textarea rows="4" class="widefat"></textarea>
-		<button class="button buttton-primary button-publish-reply"><?php esc_html_e( 'Reply', 'feed-reader' ); ?></button>
+		<div style="display: flex; justify-content: space-between; gap: 1.5em; align-items: start;">
+			<div>
+				<select>
+					<option value="draft" selected="selected"><?php esc_html_e( 'Draft', 'feed-reader' ); ?></option>
+					<option value="publish"><?php esc_html_e( 'Publish', 'feed-reader' ); ?></option>
+				</select>
+			</div>
+			<div>
+				<?php
+				$syndication_targets = apply_filters( 'micropub_syndicate-to', array(), get_current_user_id() );
+
+				if ( ! empty( $syndication_targets ) && is_array( $syndication_targets ) ) {
+					foreach ( $syndication_targets as $syndication_target ) {
+						if ( empty( $syndication_target['uid'] ) || empty( $syndication_target['name'] ) ) {
+							continue;
+						}
+						?>
+						<label><input type="checkbox" value="<?php echo esc_attr( $syndication_target['uid'] ); ?>"> <?php echo esc_html( $syndication_target['name'] ); ?></label>
+						<?php
+					}
+				}
+				?>
+			</div>
+			<div>
+				<button class="button buttton-primary button-publish-bookmark"><?php esc_html_e( 'Bookmark', 'feed-reader' ); ?></button>
+			</div>
+		</div>
 	</div>
 
 	<div class="bookmark-form" style="display: none;">
 		<input type="text" class="widefat" placeholder="<?php esc_attr_e( '(Optional) Title', 'feed-reader' ); ?>">
 		<textarea rows="4" class="widefat"></textarea>
-		<button class="button buttton-primary button-publish-bookmark"><?php esc_html_e( 'Bookmark', 'feed-reader' ); ?></button>
+		<div style="display: flex; justify-content: space-between; gap: 1.5em; align-items: start;">
+			<div>
+				<select>
+					<option value="draft" selected="selected"><?php esc_html_e( 'Draft', 'feed-reader' ); ?></option>
+					<option value="publish"><?php esc_html_e( 'Publish', 'feed-reader' ); ?></option>
+				</select>
+			</div>
+			<div>
+				<?php
+				$syndication_targets = apply_filters( 'micropub_syndicate-to', array(), get_current_user_id() );
+
+				if ( ! empty( $syndication_targets ) && is_array( $syndication_targets ) ) {
+					foreach ( $syndication_targets as $syndication_target ) {
+						if ( empty( $syndication_target['uid'] ) || empty( $syndication_target['name'] ) ) {
+							continue;
+						}
+						?>
+						<label><input type="checkbox" value="<?php echo esc_attr( $syndication_target['uid'] ); ?>"> <?php echo esc_html( $syndication_target['name'] ); ?></label>
+						<?php
+					}
+				}
+				?>
+			</div>
+			<div>
+				<button class="button buttton-primary button-publish-bookmark"><?php esc_html_e( 'Bookmark', 'feed-reader' ); ?></button>
+			</div>
+		</div>
 	</div>
 </div>

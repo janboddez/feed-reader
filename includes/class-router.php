@@ -231,7 +231,7 @@ class Router {
 			return null;
 		}
 
-		return \FeedReader\Helpers\current_model( $result ); // "Cache" and return model.
+		return \FeedReader\Helpers\current_model( $result );
 	}
 
 	public static function get_controller() {

@@ -351,11 +351,11 @@
 	vertical-align: middle;
 }
 
-.feed-reader .actions div {
+.feed-reader .actions > div {
 	margin: 1.67em 0;
 }
 
-.feed-reader .actions div textarea {
+.feed-reader .actions > div textarea {
 	display: block;
 	box-sizing: border-box;
 	font-size: inherit;
@@ -364,7 +364,11 @@
 	width: 100%;
 }
 
-.feed-reader .actions div button {
+.feed-reader .actions > div select {
+	margin-inline-start: 0;
+}
+
+.feed-reader .actions > div button {
 	display: block;
 	font-size: inherit;
 	margin-inline-start: auto;

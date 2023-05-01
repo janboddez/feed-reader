@@ -37,7 +37,7 @@ class Post_Controller {
 			} else {
 				/* translators: %s: URL of the page being replied to */
 				$context = sprintf( __( 'In reply to %s.', 'feed-reader' ), '<a class="in-reply-to" href="' . esc_url( $url ) . '">' . esc_url( $url ) . '</a>' );
-				$content = trim( '<i>' . $context . '</i>' . PHP_EOL . PHP_EOL . $content );
+				$content = trim( '<i>' . $context . '</i>' . PHP_EOL . PHP_EOL . '<div class="e-content">' . $content . '</div>' );
 			}
 
 			if ( ! empty( $indieblocks['enable_notes'] ) ) {
@@ -54,7 +54,7 @@ class Post_Controller {
 			} else {
 				/* translators: %s: Bookmark URL */
 				$context = sprintf( __( 'Bookmarked %s.', 'feed-reader' ), '<a class="u-bookmark-of" href="' . esc_url( $url ) . '">' . esc_url( $url ) . '</a>' );
-				$content = '<i>' . $context . '</i>' . PHP_EOL . PHP_EOL . $content;
+				$content = trim( '<i>' . $context . '</i>' . PHP_EOL . PHP_EOL . '<div class="e-content">' . $content . '</div>' );
 			}
 
 			if ( ! empty( $indieblocks['enable_notes'] ) ) {
@@ -95,7 +95,19 @@ class Post_Controller {
 			$args['post_title'] = $name;
 		}
 
-		wp_insert_post( apply_filters( 'feed_reader_post_args', $args ) );
+		$post_id = wp_insert_post( apply_filters( 'feed_reader_post_args', $args ) );
+		if ( is_wp_error( $post_id ) ) {
+			wp_die();
+		}
+
+		error_log( print_r( $_POST, true ) );
+
+		$synd_requested = array();
+		if ( ! empty( $_POST['mp-syndicate-to'] ) && is_array( $_POST['mp-syndicate-to'] ) ) {
+			$synd_requested = $_POST['mp-syndicate-to'];
+		}
+
+		do_action( 'micropub_syndication', $post_id, $synd_requested );
 		wp_die();
 	}
 }
