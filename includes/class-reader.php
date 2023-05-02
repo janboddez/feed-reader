@@ -75,16 +75,14 @@ class Reader {
 		);
 
 		// User-specific settings.
-		add_action( 'personal_options', array( $this, 'profile_fields' ) );
+		add_action( 'show_user_profile', array( $this, 'profile_fields' ) );
+		add_action( 'edit_user_profile', array( $this, 'profile_fields' ) );
 		add_action( 'personal_options_update', array( $this, 'save_profile_fields' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'save_profile_fields' ) );
 	}
 
 	public function sanitize_settings( $settings ) {
 		return array(
-			'collapse_menu'      => isset( $settings['collapse_menu'] ) ? true : false,
-			'hide_sidebar'       => isset( $settings['hide_sidebar'] ) ? true : false,
-			'system_fonts'       => isset( $settings['system_fonts'] ) ? true : false,
 			'show_actions'       => isset( $settings['show_actions'] ) ? true : false,
 			'image_proxy'        => isset( $settings['image_proxy'] ) ? true : false,
 			'image_proxy_secret' => isset( $settings['image_proxy_secret'] ) ? $settings['image_proxy_secret'] : '',
@@ -98,11 +96,32 @@ class Reader {
 
 		$user_settings = get_user_meta( $user->ID, 'feed_reader_settings', true );
 		?>
-			<tr>
-				<th><?php esc_html_e( 'Feed Reader Redirect', 'feed-reader' ); ?></th>
-				<td><label><input type="checkbox" name="feed_reader_settings[login_redirect]" <?php checked( ! empty( $user_settings['login_redirect'] ) ); ?> />
-				<?php esc_html_e( 'After logging in, get sent to your feed reader rather than WordPress&rsquo; dashboard', 'feed-reader' ); ?></label></td>
-			</tr>
+			<div id="feed-reader-section">
+				<h2><?php esc_html_e( 'Feed Reader', 'feed-reader' ); ?></h2>
+				<table class="form-table">
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Collapse Menu', 'feed-reader' ); ?></th>
+						<td><label><input type="checkbox" name="feed_reader_settings[collapse_menu]" <?php checked( ! empty( $user_settings['collapse_menu'] ) ); ?> />
+						<?php esc_html_e( 'Auto-collapse WordPress&rsquo; admin menu', 'feed-reader' ); ?></label>
+						<p class="description"><?php esc_html_e( 'Avoid distraction by auto-collapsing WordPress&rsquo; side menu while reading.', 'feed-reader' ); ?></p></td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'System Fonts', 'feed-reader' ); ?></th>
+						<td><label><input type="checkbox" name="feed_reader_settings[system_fonts]" <?php checked( ! empty( $user_settings['system_fonts'] ) ); ?> />
+						<?php esc_html_e( 'Use system fonts rather than Feed Reader&rsquo;s', 'feed-reader' ); ?></label></td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Hide Sidebar', 'feed-reader' ); ?></th>
+						<td><label><input type="checkbox" name="feed_reader_settings[hide_sidebar]" <?php checked( ! empty( $user_settings['hide_sidebar'] ) ); ?> />
+						<?php esc_html_e( 'Hide the category and feed sidebar', 'feed-reader' ); ?></label></td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Redirect After Login', 'feed-reader' ); ?></th>
+						<td><label><input type="checkbox" name="feed_reader_settings[login_redirect]" <?php checked( ! empty( $user_settings['login_redirect'] ) ); ?> />
+						<?php esc_html_e( 'After logging in, get sent to your feed reader rather than WordPress&rsquo; dashboard', 'feed-reader' ); ?></label></td>
+					</tr>
+				</table>
+		</div>
 		<?php
 	}
 
@@ -123,10 +142,13 @@ class Reader {
 		}
 
 		$settings = ! empty( $_POST['feed_reader_settings'] )
-			? $_POST['feed_reader_settings'] // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			? wp_unslash( $_POST['feed_reader_settings'] ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			: array();
 
 		$user_settings = array(
+			'collapse_menu'  => isset( $settings['collapse_menu'] ) ? true : false,
+			'system_fonts'   => isset( $settings['system_fonts'] ) ? true : false,
+			'hide_sidebar'   => isset( $settings['hide_sidebar'] ) ? true : false,
 			'login_redirect' => isset( $settings['login_redirect'] ) ? true : false,
 		);
 
@@ -184,15 +206,20 @@ class Reader {
 				scale: 0.9;
 			}
 		}
+
+		body.profile-php #application-passwords-section + #feed-reader-section h2,
+		body.user-edit-php #application-passwords-section + #feed-reader-section h2 {
+			margin-block-start: 2em;
+		}
 		</style>
 		<?php
 	}
 
 	public function enqueue_scripts( $hook_suffix ) {
 		if ( false !== strpos( $hook_suffix, 'feed-reader' ) ) {
-			$options = get_option( 'feed_reader_settings' );
+			$user_settings = get_user_meta( get_current_user_id(), 'feed_reader_settings', true );
 
-			if ( empty( $options['system_fonts'] ) ) {
+			if ( empty( $user_settings['system_fonts'] ) ) {
 				wp_enqueue_style( 'feed-reader-fonts', plugins_url( '/assets/fonts.css', __DIR__ ), array(), self::PLUGIN_VERSION );
 			}
 
@@ -217,10 +244,10 @@ class Reader {
 			);
 		}
 
-		$options = get_option( 'feed_reader_settings' );
+		$user_settings = get_user_meta( get_current_user_id(), 'feed_reader_settings', true );
 
 		if (
-			! empty( $options['collapse_menu'] ) &&
+			! empty( $user_settings['collapse_menu'] ) &&
 			in_array( $hook_suffix, array( 'toplevel_page_feed-reader', 'reader_page_feed-reader/entries/view', 'reader_page_feed-reader/feeds/view', 'reader_page_feed-reader/categories/view' ), true )
 		) {
 			add_filter( 'admin_body_class', array( $this, 'body_class' ) );

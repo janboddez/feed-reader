@@ -4,10 +4,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$options = get_option( 'feed_reader_settings' );
+$options       = get_option( 'feed_reader_settings' );
+$user_settings = get_user_meta( get_current_user_id(), 'feed_reader_settings', true );
 ?>
-<div class="wrap feed-reader <?php echo esc_attr( empty( $options['hide_sidebar'] ) ? 'with-sidebar' : '' ); ?> <?php echo esc_attr( empty( $options['system_fonts'] ) ? 'custom-fonts' : '' ); ?>">
-	<?php if ( empty( $options['hide_sidebar'] ) ) : ?>
+<div class="wrap feed-reader <?php echo esc_attr( empty( $user_settings['hide_sidebar'] ) ? 'with-sidebar' : '' ); ?> <?php echo esc_attr( empty( $user_settings['system_fonts'] ) ? 'custom-fonts' : '' ); ?>">
+	<?php if ( empty( $user_settings['hide_sidebar'] ) ) : ?>
 		<aside class="feed-reader-sidebar">
 			<?php static::render( 'sidebar', array( 'entries' => isset( $entries ) ? $entries : array() ) ); // phpcs:ignore PHPCompatibility.Classes.NewLateStaticBinding.OutsideClassScope ?>
 		</aside>
