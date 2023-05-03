@@ -52,6 +52,7 @@ class JSON_Feed extends Format {
 
 		if ( ! empty( $item->content_html ) ) {
 			$content = $item->content_html;
+			$content = str_replace( '&mldr;', '&hellip;', $content );
 			$content = wpautop( \FeedReader\Helpers\kses( $content ), false );
 
 			if ( ! empty( $entry['properties']['url'] ) ) {

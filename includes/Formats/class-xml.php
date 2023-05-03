@@ -82,6 +82,7 @@ class XML extends Format {
 		$content = $item->get_content();
 
 		if ( ! empty( $content ) ) {
+			$content = str_replace( '&mldr;', '&hellip;', $content );
 			$content = wpautop( \FeedReader\Helpers\kses( $content ), false );
 
 			if ( ! empty( $entry['properties']['url'] ) ) {
