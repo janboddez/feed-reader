@@ -2,6 +2,12 @@
 
 namespace FeedReader\Helpers;
 
+/**
+ * Temporarily "stores," and subsequently returns, the "current" model.
+ *
+ * @param  mixed $value The "current" model, i.e., category, feed or entry.
+ * @return mixed        The "current" model, or `null`.
+ */
 function current_model( $value = null ) {
 	static $model = null;
 
@@ -12,6 +18,16 @@ function current_model( $value = null ) {
 	return $model;
 }
 
+/**
+ * Generates the URL, including a complete query string, for a specific "feed
+ * reader" route.
+ *
+ * @param  string|null $controller Controller.
+ * @param  string|null $method     Controller method.
+ * @param  string|null $id         Model ID.
+ * @param  string|null $all        If all entries should be queried (or just the unread ones).
+ * @return string                  (Admin) URL.
+ */
 function get_url( $controller = null, $method = null, $id = null, $all = false ) {
 	if ( in_array( $method, array( 'delete', 'mark-read', 'export' ), true ) ) {
 		$args = array(
@@ -51,6 +67,12 @@ function singularize( $value ) {
 	return array_key_exists( $value, $args ) ? $args[ $value ] : $value;
 }
 
+/**
+ * Determines whether an entry should be shown in full.
+ *
+ * @param  \FeedReader\Models\Entry $entry Entry.
+ * @return bool                            If the entry should be shown in full.
+ */
 function show_in_full( $entry ) {
 	if ( empty( $entry->content ) ) {
 		return false;
@@ -59,6 +81,12 @@ function show_in_full( $entry ) {
 	return mb_strlen( wp_strip_all_tags( $entry->content ) ) <= 500;
 }
 
+/**
+ * Cleans up potentially unsafe HTML.
+ *
+ * @param  string $string Raw HTML.
+ * @return string         Sanitized HTML.
+ */
 function kses( $string ) {
 	$string = preg_replace( '~<!--.*?-->~s', '', $string );
 	$string = preg_replace( '~<script.*?>.*?</script>~s', '', $string );
@@ -160,6 +188,12 @@ function kses( $string ) {
 	return wp_kses( $string, $allowed_html );
 }
 
+/**
+ * Prints the entry pagination menu.
+ *
+ * @param  string|null $before "Before" cursor, if any.
+ * @param  string|null $after  "After" cursor, if any.
+ */
 function cursor_pagination( $before, $after ) {
 	?>
 	<nav class="pagination">
@@ -180,6 +214,11 @@ function cursor_pagination( $before, $after ) {
 	<?php
 }
 
+/**
+ * Returns the current admin URL.
+ *
+ * For use with cursor pagination.
+ */
 function get_current_admin_url() {
 	if ( ! is_admin() ) {
 		return null;
@@ -195,8 +234,6 @@ function get_current_admin_url() {
 		unset( $args['after'] );
 		$url .= '?' . http_build_query( $args ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
-
-	// @todo: Remove cursor parameters.
 
 	return $url;
 }
@@ -223,6 +260,12 @@ function parse_cursor( $cursor ) {
 	return null;
 }
 
+/**
+ * Replaces `img` URLs with our "proxy" URLs.
+ *
+ * @param  string $html Source HTML.
+ * @return string       Filtered HTML.
+ */
 function proxy_images( $html ) {
 	$options = get_option( 'feed_reader_settings' );
 
@@ -243,7 +286,6 @@ function proxy_images( $html ) {
 
 	$xpath = new \DOMXPath( $doc );
 
-	// @todo: Currently leaves `srcset` untouched; we should fix that.
 	foreach ( $xpath->query( '//*[@src or @srcset]' ) as $node ) {
 		if ( $node->hasAttribute( 'src' ) ) {
 			$node->setAttribute( 'src', proxy_image( $node->getAttribute( 'src' ) ) );
@@ -274,6 +316,12 @@ function proxy_images( $html ) {
 	return $html;
 }
 
+/**
+ * Replaces a single media URLs with its "proxy" alternative.
+ *
+ * @param  string $url (Media) URL.
+ * @return string      Proxy URL.
+ */
 function proxy_image( $url ) {
 	$options = get_option( 'feed_reader_settings' );
 
@@ -295,9 +343,14 @@ function proxy_image( $url ) {
 	return get_rest_url( null, '/feed-reader/v1/imageproxy' ) . "?$query_string";
 }
 
+/**
+ * Returns Feed Reader's "user agent" string.
+ *
+ * @param  string $url URL of whatever we're about be fetch.
+ * @return string      User agent string.
+ */
 function get_user_agent( $url = '' ) {
-	$wp_version = get_bloginfo( 'version' );
-	$user_agent = 'WordPress/' . $wp_version . '; ' . get_bloginfo( 'url' ) . '; FeedReader';
+	$user_agent = 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) . '; FeedReader';
 
 	// Allow developers to override this user agent.
 	return apply_filters( 'feed_reader_user_agent', $user_agent, $url );
