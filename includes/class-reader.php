@@ -163,7 +163,7 @@ class Reader {
 		$wp_admin_bar->add_node(
 			array(
 				'id'    => 'feed-reader',
-				'title' => sprintf( '<span class="ab-icon" aria-hidden="true"></span> <span class="ab-label">%s</span>', esc_html__( 'Reader', 'feed-reader' ) ),
+				'title' => sprintf( '<span class="ab-icon" aria-hidden="true"></span> <span class="ab-label">%s (%d)</span>', esc_html__( 'Reader', 'feed-reader' ), Entry::count() ),
 				'href'  => esc_url( \FeedReader\Helpers\get_url() ),
 			)
 		);
