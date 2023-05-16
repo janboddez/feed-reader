@@ -226,7 +226,7 @@ class Reader {
 			wp_enqueue_style( 'highlight-js-css', plugins_url( '/assets/highlight.min.css', __DIR__ ), array(), self::PLUGIN_VERSION ); // Our "own" highlight.js styles.
 			wp_enqueue_style( 'feed-reader', plugins_url( '/assets/style.css', __DIR__ ), array(), self::PLUGIN_VERSION );
 
-			wp_enqueue_script( 'highlight-js', plugins_url( '/assets/highlight.min.js', __DIR__ ), array(), '1.7.0', true );
+			wp_enqueue_script( 'highlight-js', plugins_url( '/assets/highlight.min.js', __DIR__ ), array(), '11.7.0', true );
 			wp_enqueue_script( 'feed-reader', plugins_url( '/assets/feed-reader.js', __DIR__ ), array( 'jquery', 'highlight-js' ), self::PLUGIN_VERSION, true );
 
 			wp_localize_script(
