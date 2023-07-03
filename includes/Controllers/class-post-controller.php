@@ -41,8 +41,8 @@ class Post_Controller {
 				$content = \IndieBlocks\Micropub_Compat::render( 'reply', $url, $input );
 			} else {
 				/* translators: %s: URL of the page being replied to */
-				$context = sprintf( __( 'In reply to %s.', 'feed-reader' ), '<a class="in-reply-to" href="' . esc_url( $url ) . '">' . esc_url( $url ) . '</a>' );
-				$content = trim( '<i>' . $context . '</i>' . PHP_EOL . PHP_EOL . '<div class="e-content">' . $content . '</div>' );
+				$context = sprintf( __( 'In reply to %s.', 'feed-reader' ), '<a class="u-in-reply-to" href="' . esc_url( $url ) . '">' . esc_url( $url ) . '</a>' );
+				$content = trim( '<i>' . $context . '</i>' . PHP_EOL . PHP_EOL . '<div class="e-content">' . PHP_EOL . $content . PHP_EOL . '</div>' );
 			}
 
 			if ( ! empty( $indieblocks['enable_notes'] ) ) {
@@ -59,7 +59,7 @@ class Post_Controller {
 			} else {
 				/* translators: %s: Bookmark URL */
 				$context = sprintf( __( 'Bookmarked %s.', 'feed-reader' ), '<a class="u-bookmark-of" href="' . esc_url( $url ) . '">' . esc_url( $url ) . '</a>' );
-				$content = trim( '<i>' . $context . '</i>' . PHP_EOL . PHP_EOL . '<div class="e-content">' . $content . '</div>' );
+				$content = trim( '<i>' . $context . '</i>' . PHP_EOL . PHP_EOL . '<div class="e-content">' . PHP_EOL . $content . PHP_EOL . '</div>' );
 			}
 
 			if ( ! empty( $indieblocks['enable_notes'] ) ) {
