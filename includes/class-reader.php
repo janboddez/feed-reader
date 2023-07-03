@@ -41,7 +41,8 @@ class Reader {
 		add_action( 'admin_bar_menu', array( $this, 'top_bar_menu' ), 40 ); // After "home" button.
 		add_action( 'wp_before_admin_bar_render', array( $this, 'new_content' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_action( 'admin_head', array( $this, 'admin_head' ) );
+		add_action( 'admin_head', array( $this, 'wp_head' ) );
+		add_action( 'wp_head', array( $this, 'wp_head' ) );
 		add_action( 'admin_footer', array( $this, 'include_icon_sprites' ) );
 
 		Router::register();
@@ -186,10 +187,8 @@ class Reader {
 		$wp_admin_bar->add_node( $args );
 	}
 
-	public function admin_head() {
-		$options = get_option( 'feed_reader_settings' );
-
-		/** @todo: Move these to our CSS sheet (and enqueue it _everywhere_, which we currently don't)? */
+	public function wp_head() {
+		/** @todo: Move these to our CSS sheet. */
 		?>
 		<style type="text/css">
 		#wp-admin-bar-feed-reader .ab-icon::before {
