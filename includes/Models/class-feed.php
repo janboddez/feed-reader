@@ -41,7 +41,7 @@ class Feed extends Model {
 			$search = str_replace( array( '\\', '_', '%' ), array( '\\\\', '\\_', '\\%' ), $search );
 
 			$sql .= $wpdb->prepare(
-				' WHERE user_id = %d AND (url LIKE %s OR name LIKE %s) ORDER BY ISNULL(NULLIF(last_error, "")), REGEXP_REPLACE(url, "^https?://", "") ASC LIMIT %d OFFSET %d',
+				' WHERE user_id = %d AND (url LIKE %s OR name LIKE %s) ORDER BY ISNULL(NULLIF(last_error, "")), REGEXP_REPLACE(url, "^https?://(www.)?", "") ASC LIMIT %d OFFSET %d',
 				get_current_user_id(),
 				"%$search%",
 				"%$search%",
@@ -49,7 +49,7 @@ class Feed extends Model {
 				$offset
 			);
 		} else {
-			$sql .= $wpdb->prepare( ' WHERE user_id = %d ORDER BY ISNULL(NULLIF(last_error, "")), REGEXP_REPLACE(url, "^https?://", "") ASC LIMIT %d OFFSET %d', get_current_user_id(), $limit, $offset );
+			$sql .= $wpdb->prepare( ' WHERE user_id = %d ORDER BY ISNULL(NULLIF(last_error, "")), REGEXP_REPLACE(url, "^https?://(www.)?", "") ASC LIMIT %d OFFSET %d', get_current_user_id(), $limit, $offset );
 		}
 
 		$total = preg_replace( '~^SELECT \*~', 'SELECT COUNT(*)', $sql );
