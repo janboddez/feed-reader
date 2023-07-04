@@ -116,7 +116,7 @@ class XML extends Format {
 
 			if (
 				! empty( $content ) &&
-				0 === stripos( preg_replace( '~\s~', '', html_entity_decode( wp_strip_all_tags( $content ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, mb_detect_encoding( $content ) ), $check )
+				0 === stripos( preg_replace( '~\s~', '', html_entity_decode( wp_strip_all_tags( $content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, mb_detect_encoding( $content ) ), $check ) )
 			) {
 				// If the content starts with the title, treat the entry as a note.
 				$title = '';
