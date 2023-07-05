@@ -6,11 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $options       = get_option( 'feed_reader_settings' );
 $user_settings = get_user_meta( get_current_user_id(), 'feed_reader_settings', true );
-
-if ( empty( $user_settings['login_redirect'] ) ) {
-	// Do nothing.
-	return $redirect_to;
-}
 ?>
 <div class="wrap feed-reader <?php echo esc_attr( empty( $user_settings['hide_sidebar'] ) ? 'with-sidebar' : '' ); ?> <?php echo esc_attr( empty( $user_settings['system_fonts'] ) ? 'custom-fonts' : '' ); ?>">
 	<?php if ( empty( $user_settings['hide_sidebar'] ) ) : ?>
