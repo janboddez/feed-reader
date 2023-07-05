@@ -107,7 +107,7 @@ jQuery( document ).ready( function ( $ ) {
 		} );
 	} );
 
-	$( '.reader_page_feed-reader-feeds-edit .delete, .reader_page_feed-reader-categories-edit .delete' ).click( function() {
+	$( '.reader_page_feed-reader-feeds .delete, .reader_page_feed-reader-categories .delete, .reader_page_feed-reader-feeds-edit .delete, .reader_page_feed-reader-categories-edit .delete' ).click( function() {
 		return confirm( feed_reader_obj.confirm );
 	} );
 
