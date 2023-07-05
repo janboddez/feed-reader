@@ -144,7 +144,7 @@ class Router {
 			'feed-reader',
 			__( 'Settings', 'feed-reader' ),
 			__( 'Settings', 'feed-reader' ),
-			'activate_plugins',
+			'manage_options',
 			'feed-reader/settings',
 			array( Settings_Controller::class, 'edit' )
 		);
