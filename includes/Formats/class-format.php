@@ -37,7 +37,7 @@ class Format {
 	protected static function absolutize_urls( $html, $base ) {
 		// There must (!) be a root-level element at all times. This'll get
 		// stripped out during sanitization.
-		$html = '<div>' . mb_convert_encoding( $html, 'HTML-ENTITIES', mb_detect_encoding( $html ) ) . '</div>';
+		$html = '<div>' . mb_convert_encoding( $html, 'HTML-ENTITIES', \FeedReader\Helpers\detect_encoding( $html ) ) . '</div>';
 
 		libxml_use_internal_errors( true );
 

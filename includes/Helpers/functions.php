@@ -277,7 +277,7 @@ function proxy_images( $html ) {
 		return $html;
 	}
 
-	$html = '<div>' . mb_convert_encoding( $html, 'HTML-ENTITIES', mb_detect_encoding( $html ) ) . '</div>';
+	$html = '<div>' . mb_convert_encoding( $html, 'HTML-ENTITIES', \FeedReader\Helpers\detect_encoding( $html ) ) . '</div>';
 
 	libxml_use_internal_errors( true );
 
@@ -354,4 +354,20 @@ function get_user_agent( $url = '' ) {
 
 	// Allow developers to override this user agent.
 	return apply_filters( 'feed_reader_user_agent', $user_agent, $url );
+}
+
+/**
+ * Wrapper around PHP's built-in `mb_detect_encoding()`.
+ *
+ * @param  string $string The string being inspected.
+ * @return string         Detected encoding.
+ */
+function detect_encoding( $string ) {
+	$encoding = mb_detect_encoding( $string );
+
+	if ( 'ASCII' === $encoding ) {
+		$encoding = 'UTF-8';
+	}
+
+	return $encoding;
 }

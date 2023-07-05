@@ -85,12 +85,12 @@ class JSON_Feed extends Format {
 
 		if ( ! empty( $item->title ) ) {
 			$title = wp_strip_all_tags( $item->title );
-			$title = html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, mb_detect_encoding( $title ) ); // To be escaped on output!
+			$title = html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, \FeedReader\Helpers\detect_encoding( $title ) ); // To be escaped on output!
 			$check = preg_replace( array( '~\s~', '~...$~', '~…$~' ), '', $title );
 
 			if (
 				! empty( $content ) &&
-				0 === stripos( preg_replace( '~\s~', '', html_entity_decode( wp_strip_all_tags( $content ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, mb_detect_encoding( $content ) ), $check )
+				0 === stripos( preg_replace( '~\s~', '', html_entity_decode( wp_strip_all_tags( $content ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, \FeedReader\Helpers\detect_encoding( $content ) ), $check )
 			) {
 				// If the content starts with the title, treat the entry as a note.
 				$title = '';

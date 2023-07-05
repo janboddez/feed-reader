@@ -286,7 +286,7 @@ class Feed_Controller extends Controller {
 			// Get page title, if any. Note that `mb_detect_encoding()`, used
 			// this way, does not actually provide very robust results. Anyway,
 			// it doesn't _not_ work, either.
-			$body = mb_convert_encoding( $body, 'HTML-ENTITIES', mb_detect_encoding( $body ) );
+			$body = mb_convert_encoding( $body, 'HTML-ENTITIES', \FeedReader\Helpers\detect_encoding( $body ) );
 			$dom  = new \DOMDocument();
 
 			libxml_use_internal_errors( true );
