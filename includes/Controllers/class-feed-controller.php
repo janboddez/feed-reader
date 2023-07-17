@@ -283,9 +283,6 @@ class Feed_Controller extends Controller {
 				'url'    => esc_url_raw( $url ),
 			);
 		} else {
-			// Get page title, if any. Note that `mb_detect_encoding()`, used
-			// this way, does not actually provide very robust results. Anyway,
-			// it doesn't _not_ work, either.
 			$body = mb_convert_encoding( $body, 'HTML-ENTITIES', \FeedReader\Helpers\detect_encoding( $body ) );
 			$dom  = new \DOMDocument();
 
@@ -334,7 +331,21 @@ class Feed_Controller extends Controller {
 				}
 			}
 
-			// @todo: Look for h-feed items.
+			// Look for mf2.
+			$hash = hash( 'sha256', esc_url_raw( $url ) );
+			$data = wp_cache_get( "feed-reader:mf2:$hash" );
+
+			if ( false === $data ) {
+				$data = \FeedReader\Mf2\parse( $body, $url );
+				wp_cache_set( "feed-reader:mf2:$hash", $data, '', 3600 ); /** @todo: Use transients instead? */
+			}
+
+			if ( ! empty( $data['items'][0]['type'] ) && in_array( 'h-feed', $data['items'][0]['type'], true ) ) {
+				$feeds[] = array(
+					'format' => 'microformats',
+					'url'    => esc_url_raw( $url ),
+				);
+			}
 		}
 
 		header( 'Content-Type: application/json' );
