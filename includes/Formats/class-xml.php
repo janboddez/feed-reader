@@ -77,7 +77,7 @@ class XML extends Format {
 				: '#' . md5( wp_json_encode( $item ) );
 		}
 
-		$entry['properties']['uid'] = (array) $uid;
+		$entry['properties']['uid'] = (array) sanitize_text_field( $uid );
 
 		$content = $item->get_content();
 

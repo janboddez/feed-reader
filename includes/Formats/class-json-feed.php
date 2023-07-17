@@ -28,6 +28,7 @@ class JSON_Feed extends Format {
 	protected static function parse_item( $item, $feed, $data = null ) {
 		$entry = array();
 
+		// Sanitize publication date.
 		$published = ! empty( $item->date_published ) ? $item->date_published : '';
 
 		if ( in_array( strtotime( $published ), array( false, 0 ), true ) || strtotime( $published ) > time() ) {
@@ -40,6 +41,7 @@ class JSON_Feed extends Format {
 			$entry['properties']['url'] = (array) esc_url_raw( $item->url );
 		}
 
+		// Ensure an ID is set.
 		if ( ! empty( $item->id ) ) {
 			$uid = $item->id;
 		} else {
@@ -48,7 +50,7 @@ class JSON_Feed extends Format {
 				: '#' . md5( wp_json_encode( $item ) );
 		}
 
-		$entry['properties']['uid'] = (array) $uid;
+		$entry['properties']['uid'] = (array) sanitize_text_field( $uid );
 
 		if ( ! empty( $item->content_html ) ) {
 			$content = $item->content_html;
@@ -80,7 +82,7 @@ class JSON_Feed extends Format {
 		}
 
 		if ( ! empty( $summary ) ) {
-			$entry['properties']['summary'] = (array) wp_trim_words( wp_strip_all_tags( $summary ), 30, ' [&hellip;]' );
+			$entry['properties']['summary'] = (array) wp_trim_words( $summary, 30, ' [&hellip;]' );
 		}
 
 		if ( ! empty( $item->title ) ) {
@@ -106,25 +108,25 @@ class JSON_Feed extends Format {
 			: $feed->url;
 
 		if ( ! empty( $item->image ) ) {
-			$entry['properties']['photo'] = esc_url_raw( (string) SimplePie_IRI::absolutize( $item->image, $base ) );
+			$entry['properties']['photo'] = (array) esc_url_raw( (string) SimplePie_IRI::absolutize( $item->image, $base ) );
 		}
 
 		if ( ! empty( $item->tags ) ) {
-			$entry['properties']['category'] = array_map( 'wp_strip_all_tags', (array) $item->tags );
+			$entry['properties']['category'] = array_map( 'sanitize_text_field', (array) $item->tags );
 		}
 
 		$author = array();
-
-		if ( ! empty( $item->author->url ) && filter_var( $item->author->url, FILTER_VALIDATE_URL ) ) {
-			$author['url'] = (array) esc_url_raw( $item->author->url );
-		} elseif ( ! empty( $data->home_page_url ) && filter_var( $data->home_page_url, FILTER_VALIDATE_URL ) ) {
-			$author['url'] = (array) esc_url_raw( $data->home_page_url );
-		}
 
 		if ( ! empty( $item->author->name ) ) {
 			$author['name'] = (array) sanitize_text_field( $item->author->name );
 		} elseif ( ! empty( $data->title ) ) {
 			$author['name'] = (array) sanitize_text_field( $data->title );
+		}
+
+		if ( ! empty( $item->author->url ) && filter_var( $item->author->url, FILTER_VALIDATE_URL ) ) {
+			$author['url'] = (array) esc_url_raw( $item->author->url );
+		} elseif ( ! empty( $data->home_page_url ) && filter_var( $data->home_page_url, FILTER_VALIDATE_URL ) ) {
+			$author['url'] = (array) esc_url_raw( $data->home_page_url );
 		}
 
 		if ( ! empty( $item->author->avatar ) && filter_var( $item->author->avatar, FILTER_VALIDATE_URL ) ) {
