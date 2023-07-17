@@ -125,6 +125,9 @@ function kses( $string ) {
 			'srcset' => true,
 			'width'  => true,
 			'height' => true,
+			'style'  => array(
+				'values' => array( 'u-photo' ),
+			),
 		),
 		'p'          => array(),
 		'q'          => array(
