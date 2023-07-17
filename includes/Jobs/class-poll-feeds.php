@@ -3,6 +3,7 @@
 namespace FeedReader\Jobs;
 
 use FeedReader\Formats\JSON_Feed;
+use FeedReader\Formats\Mf2;
 use FeedReader\Formats\XML;
 use FeedReader\Models\Entry;
 use FeedReader\Models\Feed;
@@ -106,8 +107,12 @@ class Poll_Feeds {
 				break;
 
 			case 'xml':
-			default:
 				$entries = XML::parse( $data['body'], $feed );
+				break;
+
+			case 'mf2':
+			default:
+				$entries = MF2::parse( $data['body'], $feed );
 				break;
 		}
 

@@ -234,6 +234,7 @@ jQuery( document ).ready( function ( $ ) {
 					'json_feed': 'JSON Feed',
 					'rss':       'RSS',
 					'xml':       'XML',
+					'mf2':       'Microformats',
 				};
 
 				button.removeClass( 'button-primary' );

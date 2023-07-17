@@ -140,23 +140,23 @@ class Mf2 extends Format {
 	protected static function get_author( $item, $data ) {
 		$author = array();
 
-		if ( ! empty( $item['author'][0] ) ) {
-			if ( is_string( $item['author'][0] ) ) {
-				$author['name'] = (array) sanitize_text_field( $item['author'][0] );
+		if ( ! empty( $item['properties']['author'][0] ) ) {
+			if ( is_string( $item['properties']['author'][0] ) ) {
+				$author['name'] = (array) sanitize_text_field( $item['properties']['author'][0] );
 
 				return $author;
 			}
 
-			if ( ! empty( $item['author'][0]['properties']['name'] ) ) {
-				$author['name'] = (array) sanitize_text_field( ( (array) $item['author'][0]['properties']['name'] )[0] );
+			if ( ! empty( $item['properties']['author'][0]['properties']['name'] ) ) {
+				$author['name'] = (array) sanitize_text_field( ( (array) $item['properties']['author'][0]['properties']['name'] )[0] );
 			}
 
-			if ( ! empty( $item['author'][0]['properties']['url'] ) && filter_var( ( (array) $item['author'][0]['properties']['url'] )[0], FILTER_VALIDATE_URL ) ) {
-				$author['url'] = (array) esc_url_raw( ( (array) $item['author'][0]['properties']['url'] )[0] );
+			if ( ! empty( $item['properties']['author'][0]['properties']['url'] ) && filter_var( ( (array) $item['properties']['author'][0]['properties']['url'] )[0], FILTER_VALIDATE_URL ) ) {
+				$author['url'] = (array) esc_url_raw( ( (array) $item['properties']['author'][0]['properties']['url'] )[0] );
 			}
 
-			if ( ! empty( $item['author'][0]['properties']['photo'][0]['value'] ) && filter_var( $item['author'][0]['properties']['photo'][0]['value'], FILTER_VALIDATE_URL ) ) {
-				$author['photo'] = (array) esc_url_raw( $item['author'][0]['properties']['photo'][0]['value'] );
+			if ( ! empty( $item['properties']['author'][0]['properties']['photo'][0]['value'] ) && filter_var( $item['properties']['author'][0]['properties']['photo'][0]['value'], FILTER_VALIDATE_URL ) ) {
+				$author['photo'] = (array) esc_url_raw( $item['properties']['author'][0]['properties']['photo'][0]['value'] );
 			}
 
 			return $author;

@@ -342,7 +342,7 @@ class Feed_Controller extends Controller {
 
 			if ( ! empty( $data['items'][0]['type'] ) && in_array( 'h-feed', $data['items'][0]['type'], true ) ) {
 				$feeds[] = array(
-					'format' => 'microformats',
+					'format' => 'mf2',
 					'url'    => esc_url_raw( $url ),
 				);
 			}
