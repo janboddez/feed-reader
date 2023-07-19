@@ -20,9 +20,7 @@ class Format {
 			'url'       => ! empty( $item['properties']['url'][0] ) ? $item['properties']['url'][0] : null,
 			'name'      => ! empty( $item['properties']['name'][0] ) ? $item['properties']['name'][0] : null,
 			'author'    => ! empty( $item['properties']['author'][0]['name'][0] ) ? $item['properties']['author'][0]['name'][0] : null,
-			'content'   => ! empty( $item['properties']['content'][0]['html'] )
-				? $item['properties']['content'][0]['html']
-				: null,
+			'content'   => ! empty( $item['properties']['content'][0]['html'] ) ? $item['properties']['content'][0]['html'] : null,
 			'summary'   => ! empty( $item['properties']['summary'][0] ) ? $item['properties']['summary'][0] : null,
 			'is_read'   => is_null( $feed->last_polled ) ? 1 : 0, // Mark newly added feeds as read.
 			'feed_id'   => $feed->id,

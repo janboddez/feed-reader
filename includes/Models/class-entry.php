@@ -2,8 +2,6 @@
 
 namespace FeedReader\Models;
 
-use stdClass;
-
 class Entry extends Model {
 	/** @var string $table */
 	protected static $table = 'feed_reader_entries';
