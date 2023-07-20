@@ -86,7 +86,7 @@ class Format {
 			}
 		}
 
-		$html = $doc->saveHTML();
+		$html = trim( $doc->saveHTML() );
 		$html = str_replace( '</source>', '', $html ); // Work around https://bugs.php.net/bug.php?id=73175.
 
 		// Remove `<div>` tags.
