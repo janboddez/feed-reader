@@ -45,6 +45,7 @@ CREATE TABLE <?php echo \FeedReader\Models\Entry::table(); // phpcs:ignore WordP
 	summary text,
 	is_read boolean DEFAULT 0 NOT NULL,
 	is_starred boolean DEFAULT 0 NOT NULL,
+	in_feed boolean DEFAULT 1 NOT NULL,
 	published datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 	created_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 	modified_at datetime,

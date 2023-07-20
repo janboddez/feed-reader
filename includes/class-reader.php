@@ -11,8 +11,8 @@ use FeedReader\Models\Feed;
 use FeedReader\Router;
 
 class Reader {
-	const PLUGIN_VERSION = '0.2.0';
-	const DB_VERSION     = '2';
+	const PLUGIN_VERSION = '0.3.0';
+	const DB_VERSION     = '3';
 
 	/** @var Feed_Reader $instance */
 	private static $instance;
@@ -26,7 +26,7 @@ class Reader {
 	}
 
 	public function register() {
-		if ( defined( 'WP_CLI' ) && WP_CLI && class_exists( 'WP_CLI' ) ) {
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			// Register our new CLI command.
 			\WP_CLI::add_command( 'reader', Commands::class );
 		}

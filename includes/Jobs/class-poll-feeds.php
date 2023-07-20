@@ -139,15 +139,21 @@ class Poll_Feeds {
 			return;
 		}
 
+		// Temporarily mark existing entries as not currently in the feed.
+		global $wpdb;
+		$sql = $wpdb->prepare( sprintf( 'UPDATE %s SET in_feed = 0 WHERE feed_id = %%d AND user_id = %%d', Entry::table() ), $feed->id, $feed->user_id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+
 		$new_items = false;
 
 		foreach ( $entries as $entry ) {
 			$exists = Entry::exists( $entry['uid'], $feed );
 
-			if ( ! $exists ) {
+			if ( $exists ) {
+				Entry::update( array( 'in_feed' => 1 ), array( 'id' => $exists ) );
+			} else {
 				$new_items = true;
-
-				Entry::insert( $entry );
+				Entry::insert( $entry ); // New entries already get `in_feed = 1`.
 			}
 		}
 

@@ -23,6 +23,7 @@ class Format {
 			'content'   => ! empty( $item['properties']['content'][0]['html'] ) ? $item['properties']['content'][0]['html'] : null,
 			'summary'   => ! empty( $item['properties']['summary'][0] ) ? $item['properties']['summary'][0] : null,
 			'is_read'   => is_null( $feed->last_polled ) ? 1 : 0, // Mark newly added feeds as read.
+			'in_feed'   => 1, // Mark freshly parsed items as present in the feed.
 			'feed_id'   => $feed->id,
 			'user_id'   => $feed->user_id,
 			'data'      => wp_json_encode( $item ), // Store `$item` as Mf2 JSON, for (eventual) use with Microsub readers.
@@ -35,8 +36,6 @@ class Format {
 	}
 
 	protected static function absolutize_urls( $html, $base ) {
-		// There must (!) be a root-level element at all times. This'll get
-		// stripped out during sanitization.
 		$html = '<div>' . mb_convert_encoding( $html, 'HTML-ENTITIES', \FeedReader\Helpers\detect_encoding( $html ) ) . '</div>';
 
 		libxml_use_internal_errors( true );
@@ -89,6 +88,10 @@ class Format {
 
 		$html = $doc->saveHTML();
 		$html = str_replace( '</source>', '', $html ); // Work around https://bugs.php.net/bug.php?id=73175.
+
+		// Remove `<div>` tags.
+		$html = substr( $html, 5 );
+		$html = substr( $html, 0, -6 );
 
 		return $html;
 	}
