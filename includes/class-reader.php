@@ -2,6 +2,7 @@
 
 namespace FeedReader;
 
+use FeedReader\Commands\Commands;
 use FeedReader\Helpers\Image_Proxy;
 use FeedReader\Jobs\Poll_Feeds;
 use FeedReader\Models\Category;
@@ -25,6 +26,11 @@ class Reader {
 	}
 
 	public function register() {
+		if ( defined( 'WP_CLI' ) && WP_CLI && class_exists( 'WP_CLI' ) ) {
+			// Register our new CLI command.
+			\WP_CLI::add_command( 'reader', Commands::class );
+		}
+
 		// Cron events, etc.
 		add_filter( 'cron_schedules', array( $this, 'add_cron_schedule' ) );
 		add_action( 'feed_reader_poll_feeds', array( Poll_Feeds::class, 'poll_feeds' ) );

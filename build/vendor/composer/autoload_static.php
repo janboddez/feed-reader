@@ -27,6 +27,7 @@ class ComposerStaticInit36608929c0d6073e4c2dab8f3404c1b6
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'FeedReader\\Commands\\Commands' => __DIR__ . '/../..' . '/../includes/Commands/class-commands.php',
         'FeedReader\\Controllers\\Category_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-category-controller.php',
         'FeedReader\\Controllers\\Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-controller.php',
         'FeedReader\\Controllers\\Entry_Controller' => __DIR__ . '/../..' . '/../includes/Controllers/class-entry-controller.php',
