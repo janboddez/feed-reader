@@ -29,7 +29,7 @@ class Commands {
 		global $wpdb;
 
 		// We're looking for items that are read or "deleted" and not currently
-		// in a feed, and that are over 30 days old.
+		// in a feed, and that are over `$days` days old.
 		$sql   = sprintf( 'SELECT COUNT(*) FROM %s WHERE published < %%s AND in_feed = %%d AND (is_read = %%d OR deleted_at IS NOT NULL)', Entry::table() );
 		$count = $wpdb->get_var( $wpdb->prepare( $sql, $max_timestamp, 0, 1 ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
 
