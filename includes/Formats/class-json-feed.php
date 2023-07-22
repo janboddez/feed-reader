@@ -6,13 +6,14 @@ use SimplePie_IRI;
 
 class JSON_Feed extends Format {
 	public static function parse( $body, $feed ) {
-		$items = array();
-		$data  = json_decode( $body );
+		$data = json_decode( $body );
 
 		if ( empty( $data->items ) ) {
 			/** @todo: Update `$feed` here rather than in the poll job? */
-			return $items;
+			return array();
 		}
+
+		$items = array();
 
 		foreach ( $data->items as $item ) {
 			$entry = static::parse_item( $item, $feed, $data );
@@ -52,8 +53,16 @@ class JSON_Feed extends Format {
 
 		$entry['properties']['uid'] = (array) sanitize_text_field( $uid );
 
+		// Set `content`.
 		if ( ! empty( $item->content_html ) ) {
 			$content = $item->content_html;
+		} elseif ( ! empty( $item->content_text ) ) {
+			$content = $item->content_text;
+		} elseif ( ! empty( $item->summary ) ) {
+			$content = $item->summary;
+		}
+
+		if ( ! empty( $content ) ) {
 			$content = str_replace( '&mldr;', '&hellip;', $content );
 			$content = wpautop( \FeedReader\Helpers\kses( $content ), false );
 
@@ -64,30 +73,24 @@ class JSON_Feed extends Format {
 			$entry['properties']['content'] = array(
 				array(
 					'html' => $content,
-					'text' => ! empty( $item->content_text )
-						? wp_strip_all_tags( $item->content_text )
-						: wp_strip_all_tags( $content ),
+					'text' => wp_strip_all_tags( $content ),
 				),
-			);
-		} elseif ( ! empty( $item->content_text ) ) {
-			$entry['properties']['content'] = array(
-				array( 'text' => wp_strip_all_tags( $item->content_text ) ),
 			);
 		}
 
 		if ( ! empty( $item->summary ) ) {
-			$summary = $item->summary;
-		} elseif ( ! empty( $entry['properties']['content'][0]['text'] ) ) {
-			$summary = $entry['properties']['content'][0]['text'];
+			$summary = wp_strip_all_tags( $item->summary ); // If there's a summary, use it.
+		} elseif ( ! empty( $content ) ) {
+			$summary = wp_trim_words( $content, 30, ' [&hellip;]' ); // Else, generate one based on `$content`.
 		}
 
 		if ( ! empty( $summary ) ) {
-			$entry['properties']['summary'] = (array) wp_trim_words( $summary, 30, ' [&hellip;]' );
+			$entry['properties']['summary'] = (array) $summary;
 		}
 
 		if ( ! empty( $item->title ) ) {
 			$title = wp_strip_all_tags( $item->title );
-			$title = html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, \FeedReader\Helpers\detect_encoding( $title ) ); // To be escaped on output!
+			$title = html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, \FeedReader\Helpers\detect_encoding( $title ) );
 			$check = preg_replace( array( '~\s~', '~...$~', '~…$~' ), '', $title );
 
 			if (
