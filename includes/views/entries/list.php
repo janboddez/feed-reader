@@ -103,10 +103,22 @@ $user_settings = get_user_meta( get_current_user_id(), 'feed_reader_settings', t
 							$data = \FeedReader\Models\Entry::data( $entry );
 
 							/** @todo: Support multiple images, video, and whatnot. */
-							if ( ! empty( $data['properties']['photo'][0] ) ) :
+							if ( ! empty( $data['properties']['photo'] ) ) :
 								?>
 								<div class="entry-photo">
-									<img src="<?php echo esc_url( \FeedReader\Helpers\proxy_image( $data['properties']['photo'][0] ) ); ?>" alt="" />
+									<?php foreach ( $data['properties']['photo'] as $photo ) : /** @todo: Add alt text support. */ ?>
+										<img src="<?php echo esc_url( \FeedReader\Helpers\proxy_image( $photo ) ); ?>" alt="" loading="lazy">
+									<?php endforeach; ?>
+								</div>
+								<?php
+							endif;
+
+							if ( ! empty( $data['properties']['video'] ) ) :
+								?>
+								<div class="entry-video">
+									<?php foreach ( $data['properties']['video'] as $video ) : ?>
+										<video src="<?php echo esc_url( \FeedReader\Helpers\proxy_image( $video ) ); ?>" controls="controls">
+									<?php endforeach; ?>
 								</div>
 								<?php
 							endif;

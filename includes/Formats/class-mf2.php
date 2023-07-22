@@ -127,8 +127,34 @@ class Mf2 extends Format {
 			? esc_url_raw( ( (array) $entry['properties']['url'] )[0] )
 			: $feed->url;
 
-		if ( ! empty( $item['properties']['photo'][0]['value'] ) ) {
-			$entry['properties']['photo'] = (array) esc_url_raw( (string) SimplePie_IRI::absolutize( $item['properties']['photo'][0]['value'], $base ) );
+		if ( ! empty( $item['properties']['photo'] ) && is_array( $item['properties']['photo'] ) ) {
+			$photos = array();
+
+			foreach ( $item['properties']['photo'] as $photo ) {
+				if ( is_string( $photo ) && filter_var( $photo, FILTER_VALIDATE_URL ) ) {
+					$photos[] = esc_url_raw( (string) SimplePie_IRI::absolutize( $base, $photo ) );
+				} elseif ( ! empty( $photo['value'] ) && filter_var( $photo['value'], FILTER_VALIDATE_URL ) ) {
+					$photos[] = esc_url_raw( (string) SimplePie_IRI::absolutize( $base, $photo['value'] ) );
+				}
+			}
+
+			if ( ! empty( $photos ) ) {
+				$entry['properties']['photo'] = $photos;
+			}
+		}
+
+		if ( ! empty( $item['properties']['video'] ) && is_array( $item['properties']['video'] ) ) {
+			$videos = array();
+
+			foreach ( $item['properties']['video'] as $video ) {
+				if ( is_string( $video ) && filter_var( $video, FILTER_VALIDATE_URL ) ) {
+					$videos[] = esc_url_raw( (string) SimplePie_IRI::absolutize( $base, $video ) );
+				}
+			}
+
+			if ( ! empty( $videos ) ) {
+				$entry['properties']['video'] = $videos;
+			}
 		}
 
 		if ( ! empty( $item['properties']['category'] ) ) {

@@ -111,7 +111,7 @@ class JSON_Feed extends Format {
 			: $feed->url;
 
 		if ( ! empty( $item->image ) ) {
-			$entry['properties']['photo'] = (array) esc_url_raw( (string) SimplePie_IRI::absolutize( $item->image, $base ) );
+			$entry['properties']['photo'] = (array) esc_url_raw( (string) SimplePie_IRI::absolutize( $base, $item->image ) );
 		}
 
 		if ( ! empty( $item->tags ) ) {

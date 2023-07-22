@@ -54,7 +54,7 @@ class XML extends Format {
 		$base = $simplepie->get_link() ?: $feed->url;
 
 		if ( 0 !== strpos( $base, 'http' ) || 0 !== strpos( $base, '//' ) ) {
-			$base = (string) SimplePie_IRI::absolutize( $feed->url, $base );
+			$base = (string) SimplePie_IRI::absolutize( $feed->url, $base ); // Using the feed URL as base.
 		}
 
 		$base = (string) SimplePie_IRI::absolutize( $base, './' ); // Converts, e.g., `http://example.org/blog/feed.xml` to `http://example.org/blog/`. I think.

@@ -212,7 +212,7 @@ class Poll_Feeds {
 		$hash = hash( 'sha256', esc_url_raw( $feed->url ) );
 		$mf2  = wp_cache_get( "feed-reader:mf2:$hash" );
 		if ( false === $mf2 ) {
-			$data = \FeedReader\Mf2\parse( $body, $feed->url );
+			$mf2 = \FeedReader\Mf2\parse( $body, $feed->url );
 			wp_cache_set( "feed-reader:mf2:$hash", $mf2, '', 3600 ); /** @todo: Use transients instead? */
 		}
 
