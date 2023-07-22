@@ -106,13 +106,13 @@ class Poll_Feeds {
 				$entries = JSON_Feed::parse( $data['body'], $feed );
 				break;
 
-			case 'xml':
-				$entries = XML::parse( $data['body'], $feed );
+			case 'mf2':
+				$entries = MF2::parse( $data['body'], $feed );
 				break;
 
-			case 'mf2':
+			case 'xml': // A lot of XML feeds are wrongly served with a content type of `text/html`, which is why `xml` should go at the bottom.
 			default:
-				$entries = MF2::parse( $data['body'], $feed );
+				$entries = XML::parse( $data['body'], $feed );
 				break;
 		}
 
@@ -206,6 +206,18 @@ class Poll_Feeds {
 			if ( ! empty( $data->version ) && false !== strpos( $data->version, 'https://jsonfeed.org/version/' ) ) {
 				return 'json_feed';
 			}
+		}
+
+		// Look for mf2.
+		$hash = hash( 'sha256', esc_url_raw( $feed->url ) );
+		$mf2  = wp_cache_get( "feed-reader:mf2:$hash" );
+		if ( false === $mf2 ) {
+			$data = \FeedReader\Mf2\parse( $body, $feed->url );
+			wp_cache_set( "feed-reader:mf2:$hash", $mf2, '', 3600 ); /** @todo: Use transients instead? */
+		}
+
+		if ( ! empty( $mf2['items'][0]['type'] ) && in_array( 'h-feed', $mf2['items'][0]['type'], true ) ) {
+			return 'mf2';
 		}
 
 		if ( in_array( $content_type, array( 'application/rss+xml', 'application/atom+xml', 'text/xml', 'application/xml' ), true ) ) {
