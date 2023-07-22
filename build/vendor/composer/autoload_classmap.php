@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'FeedReader\\Commands\\Commands' => $baseDir . '/../includes/Commands/class-commands.php',
     'FeedReader\\Controllers\\Category_Controller' => $baseDir . '/../includes/Controllers/class-category-controller.php',
     'FeedReader\\Controllers\\Controller' => $baseDir . '/../includes/Controllers/class-controller.php',
     'FeedReader\\Controllers\\Entry_Controller' => $baseDir . '/../includes/Controllers/class-entry-controller.php',

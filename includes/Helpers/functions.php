@@ -313,6 +313,7 @@ function proxy_images( $html ) {
 
 	$html = trim( $doc->saveHTML() );
 
+	// Remove `<div>` tags.
 	$html = substr( $html, 5 );
 	$html = substr( $html, 0, -6 );
 

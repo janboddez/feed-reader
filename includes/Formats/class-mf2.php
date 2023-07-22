@@ -6,8 +6,6 @@ use SimplePie_IRI;
 
 class Mf2 extends Format {
 	public static function parse( $body, $feed ) {
-		$items = array();
-
 		// Look for cached mf2.
 		$hash = hash( 'sha256', esc_url_raw( $feed->url ) );
 		$data = wp_cache_get( "feed-reader:mf2:$hash" );
@@ -19,8 +17,10 @@ class Mf2 extends Format {
 
 		if ( empty( $data['items'][0]['type'] ) || ! in_array( 'h-feed', $data['items'][0]['type'], true ) || empty( $data['items'][0]['children'] ) ) {
 			/** @todo: Update `$feed` here rather than in the poll job? */
-			return $items;
+			return array();
 		}
+
+		$items = array();
 
 		foreach ( $data['items'][0]['children'] as $item ) {
 			$entry = static::parse_item( $item, $feed, $data );
@@ -34,22 +34,17 @@ class Mf2 extends Format {
 	}
 
 	protected static function parse_item( $item, $feed, $data = null ) {
-		if ( ! empty( $item['type'] ) && in_array( 'h-entry', (array) $item['type'], true ) ) { /** @todo: Expand to `h-review`, etc. */
+		if ( empty( $item['type'] ) || ! in_array( 'h-entry', (array) $item['type'], true ) ) { /** @todo: Expand to `h-review`, etc. */
 			// We currently only offer support for `h-entry`.
-			$entry = static::parse_as_hentry( $item, $feed, $data );
-		} else {
 			return null;
 		}
 
-		return parent::parse_item( $entry, $feed );
-	}
+		$entry = array();
 
-	protected static function parse_as_hentry( $item, $feed = null, $data = null ) {
-		// Sanitize publication date.
+		// Set `published`.
 		$published = ! empty( $item['properties']['published'][0] ) ? $item['properties']['published'][0] : '';
-
 		if ( in_array( strtotime( $published ), array( false, 0 ), true ) || strtotime( $published ) > time() ) {
-			$published = current_time( 'mysql', 1 );
+			$published = current_time( 'mysql', 1 ); // Fall back to current date.
 		}
 
 		$entry['properties']['published'] = (array) $published;
@@ -58,7 +53,7 @@ class Mf2 extends Format {
 			$entry['properties']['url'] = (array) esc_url_raw( ( (array) $item['properties']['url'] )[0] );
 		}
 
-		// Ensure an ID is set.
+		// Set `uid`.
 		if ( ! empty( $item['properties']['uid'] ) ) {
 			$uid = $item['properties']['uid'];
 		} else {
@@ -69,42 +64,50 @@ class Mf2 extends Format {
 
 		$entry['properties']['uid'] = (array) sanitize_text_field( $uid );
 
+		// Set `content`.
 		if ( ! empty( $item['properties']['content'][0]['html'] ) ) {
 			$content = $item['properties']['content'][0]['html'];
+		} elseif ( ! empty( $item['properties']['content'][0]['value'] ) ) {
+			$content = $item['properties']['content'][0]['value'];
+		} elseif ( ! empty( $item['properties']['content'][0]['text'] ) ) {
+			$content = $item['properties']['content'][0]['text'];
+		} elseif ( ! empty( $item['properties']['summary'] ) ) {
+			$content = ( (array) $item['properties']['summary'] )[0]; // Fall back to summary.
+		}
+
+		if ( ! empty( $content ) ) {
+			// Sanitize.
 			$content = str_replace( '&mldr;', '&hellip;', $content );
 			$content = wpautop( \FeedReader\Helpers\kses( $content ), false );
 
 			if ( ! empty( $entry['properties']['url'] ) ) {
+				// Resolve URLs.
 				$content = static::absolutize_urls( $content, ( (array) $entry['properties']['url'] )[0] );
 			}
 
 			$entry['properties']['content'] = array(
 				array(
 					'html' => $content,
-					'text' => ! empty( $item['properties']['content'][0]['value'] )
-						? wp_strip_all_tags( $item['properties']['content'][0]['value'] )
-						: wp_strip_all_tags( $content ),
+					'text' => wp_strip_all_tags( $content ),
 				),
-			);
-		} elseif ( ! empty( $item['properties']['content'][0]['value'] ) ) {
-			$entry['properties']['content'] = array(
-				array( 'text' => wp_strip_all_tags( $item['properties']['content'][0]['value'] ) ),
 			);
 		}
 
+		// Set `summary`.
 		if ( ! empty( $item['properties']['summary'] ) ) {
-			$summary = ( (array) $item['properties']['summary'] )[0];
-		} elseif ( ! empty( $entry['properties']['content'][0]['text'] ) ) {
-			$summary = $entry['properties']['content'][0]['text'];
+			$summary = wp_strip_all_tags( ( (array) $item['properties']['summary'] )[0] ); // If there's a summary, use it.
+		} elseif ( ! empty( $content ) ) {
+			$summary = wp_trim_words( $content, 30, ' [&hellip;]' ); // Else, generate one based on `$content`.
 		}
 
 		if ( ! empty( $summary ) ) {
-			$entry['properties']['summary'] = (array) wp_trim_words( $summary, 30, ' [&hellip;]' );
+			$entry['properties']['summary'] = (array) $summary;
 		}
 
+		// Set `name`.
 		if ( ! empty( $item['properties']['name'] ) ) {
 			$title = wp_strip_all_tags( ( (array) $item['properties']['name'] )[0] );
-			$title = html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, \FeedReader\Helpers\detect_encoding( $title ) ); // To be escaped on output!
+			$title = html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, \FeedReader\Helpers\detect_encoding( $title ) );
 			$check = preg_replace( array( '~\s~', '~...$~', '~…$~' ), '', $title );
 
 			if (
@@ -134,7 +137,7 @@ class Mf2 extends Format {
 
 		$entry['properties']['author'] = array( static::get_author( $item, $data ) );
 
-		return $entry;
+		return parent::parse_item( $entry, $feed );
 	}
 
 	protected static function get_author( $item, $data ) {

@@ -106,13 +106,13 @@ class Poll_Feeds {
 				$entries = JSON_Feed::parse( $data['body'], $feed );
 				break;
 
-			case 'xml':
-				$entries = XML::parse( $data['body'], $feed );
+			case 'mf2':
+				$entries = MF2::parse( $data['body'], $feed );
 				break;
 
-			case 'mf2':
+			case 'xml': // A lot of XML feeds are wrongly served with a content type of `text/html`, which is why `xml` should go at the bottom.
 			default:
-				$entries = MF2::parse( $data['body'], $feed );
+				$entries = XML::parse( $data['body'], $feed );
 				break;
 		}
 
@@ -139,15 +139,21 @@ class Poll_Feeds {
 			return;
 		}
 
+		// Temporarily mark existing entries as not currently in the feed.
+		global $wpdb;
+		$sql = $wpdb->prepare( sprintf( 'UPDATE %s SET in_feed = 0 WHERE feed_id = %%d AND user_id = %%d', Entry::table() ), $feed->id, $feed->user_id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+
 		$new_items = false;
 
 		foreach ( $entries as $entry ) {
 			$exists = Entry::exists( $entry['uid'], $feed );
 
-			if ( ! $exists ) {
+			if ( $exists ) {
+				Entry::update( array( 'in_feed' => 1 ), array( 'id' => $exists ) );
+			} else {
 				$new_items = true;
-
-				Entry::insert( $entry );
+				Entry::insert( $entry ); // New entries already get `in_feed = 1`.
 			}
 		}
 
@@ -200,6 +206,18 @@ class Poll_Feeds {
 			if ( ! empty( $data->version ) && false !== strpos( $data->version, 'https://jsonfeed.org/version/' ) ) {
 				return 'json_feed';
 			}
+		}
+
+		// Look for mf2.
+		$hash = hash( 'sha256', esc_url_raw( $feed->url ) );
+		$mf2  = wp_cache_get( "feed-reader:mf2:$hash" );
+		if ( false === $mf2 ) {
+			$data = \FeedReader\Mf2\parse( $body, $feed->url );
+			wp_cache_set( "feed-reader:mf2:$hash", $mf2, '', 3600 ); /** @todo: Use transients instead? */
+		}
+
+		if ( ! empty( $mf2['items'][0]['type'] ) && in_array( 'h-feed', $mf2['items'][0]['type'], true ) ) {
+			return 'mf2';
 		}
 
 		if ( in_array( $content_type, array( 'application/rss+xml', 'application/atom+xml', 'text/xml', 'application/xml' ), true ) ) {

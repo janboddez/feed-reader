@@ -22,6 +22,9 @@ After activation, head over to *Reader > Settings*, and enable or disable the fe
 More details can be found on [https://jan.boddez.net/wordpress/feed-reader](https://jan.boddez.net/wordpress/feed-reader). Issues may be filed at [https://github.com/janboddez/feed-reader](https://github.com/janboddez/feed-reader).
 
 == Changelog ==
+= 0.3.0 =
+New WP_CLI command: `reader cleanup`, to remove old entries.
+
 = 0.2.0 =
 Per-user redirect setting, "New Feed" top bar item.
 
