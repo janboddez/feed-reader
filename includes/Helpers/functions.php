@@ -105,6 +105,7 @@ function kses( $string ) {
 		'acronym'    => array(
 			'title' => true,
 		),
+		'aside'      => array(),
 		'b'          => array(),
 		'blockquote' => array(
 			'cite' => array(),
@@ -115,9 +116,12 @@ function kses( $string ) {
 		'del'        => array(
 			'datetime' => true,
 		),
+		'div'        => array(),
 		'em'         => array(),
 		'figure'     => array(),
 		'figcaption' => array(),
+		'footer'     => array(),
+		'header'     => array(),
 		'i'          => array(),
 		'img'        => array(
 			'alt'    => true,
