@@ -1,5 +1,5 @@
 jQuery( document ).ready( function ( $ ) {
-	if ( hljs ) {
+	if ( 'undefined' !== typeof hljs ) {
 		document.querySelectorAll( '.feed-reader article pre' ).forEach( function ( el ) {
 			hljs.highlightElement( el );
 		} );
