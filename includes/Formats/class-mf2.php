@@ -8,22 +8,22 @@ class Mf2 extends Format {
 	public static function parse( $body, $feed ) {
 		// Look for cached mf2.
 		$hash = hash( 'sha256', esc_url_raw( $feed->url ) );
-		$data = wp_cache_get( "feed-reader:mf2:$hash" );
+		$mf2  = get_transient( "feed-reader:mf2:$hash" );
 
-		if ( false === $data ) {
-			$data = \FeedReader\Mf2\parse( $body, $feed->url );
-			wp_cache_set( "feed-reader:mf2:$hash", $data, '', 3600 ); /** @todo: Use transients instead? */
+		if ( false === $mf2 ) {
+			$mf2 = \FeedReader\Mf2\parse( $body, $feed->url );
+			set_transient( "feed-reader:mf2:$hash", $mf2, 3600 );
 		}
 
-		if ( empty( $data['items'][0]['type'] ) || ! in_array( 'h-feed', $data['items'][0]['type'], true ) || empty( $data['items'][0]['children'] ) ) {
+		if ( empty( $mf2['items'][0]['type'] ) || ! in_array( 'h-feed', $mf2['items'][0]['type'], true ) || empty( $mf2['items'][0]['children'] ) ) {
 			/** @todo: Update `$feed` here rather than in the poll job? */
 			return array();
 		}
 
 		$items = array();
 
-		foreach ( $data['items'][0]['children'] as $item ) {
-			$entry = static::parse_item( $item, $feed, $data );
+		foreach ( $mf2['items'][0]['children'] as $item ) {
+			$entry = static::parse_item( $item, $feed, $mf2 );
 
 			if ( ! empty( $entry ) ) {
 				$items[] = $entry;
