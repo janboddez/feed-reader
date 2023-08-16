@@ -14,6 +14,9 @@ class Format {
 	 * @return array          Entry, ready to be inserted into the database.
 	 */
 	protected static function parse_item( $item, $feed, $source = null ) {
+		$orig = $item;
+		unset( $item['properties']['original_name'] );
+
 		$entry = array(
 			'uid'       => $item['properties']['uid'][0],
 			'published' => $item['properties']['published'][0],
@@ -29,8 +32,8 @@ class Format {
 			'data'      => wp_json_encode( $item ), // Store `$item` as Mf2 JSON, for (eventual) use with Microsub readers.
 		);
 
-		$entry['name']   = apply_filters( 'feed_reader_set_entry_name', $entry['name'], $item, $feed );
-		$entry['author'] = apply_filters( 'feed_reader_set_entry_author', $entry['author'], $item, $feed );
+		$entry['name']   = apply_filters( 'feed_reader_set_entry_name', $entry['name'], $orig, $feed );
+		$entry['author'] = apply_filters( 'feed_reader_set_entry_author', $entry['author'], $orig, $feed );
 
 		return $entry;
 	}

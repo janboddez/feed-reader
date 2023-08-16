@@ -88,14 +88,14 @@ class Mf2 extends Format {
 			$entry['properties']['content'] = array(
 				array(
 					'html' => $content,
-					'text' => wp_strip_all_tags( $content ),
+					'text' => preg_replace( '~\R\R+~', PHP_EOL . PHP_EOL, wp_strip_all_tags( $content ) ),
 				),
 			);
 		}
 
 		// Set `summary`.
 		if ( ! empty( $item['properties']['summary'] ) ) {
-			$summary = wp_strip_all_tags( ( (array) $item['properties']['summary'] )[0] ); // If there's a summary, use it.
+			$summary = preg_replace( '~\R\R+~', PHP_EOL . PHP_EOL, wp_strip_all_tags( ( (array) $item['properties']['summary'] )[0] ) ); // If there's a summary, use it.
 		} elseif ( ! empty( $content ) ) {
 			$summary = wp_trim_words( $content, 30, ' [&hellip;]' ); // Else, generate one based on `$content`.
 		}
@@ -114,11 +114,11 @@ class Mf2 extends Format {
 				! empty( $content ) &&
 				0 === stripos( preg_replace( '~\s~', '', html_entity_decode( wp_strip_all_tags( $content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, \FeedReader\Helpers\detect_encoding( $content ) ) ), $check )
 			) {
-				// If the content starts with the title, treat the entry as a note.
-				$title = '';
-			}
-
-			if ( $title !== $entry['properties']['url'][0] ) {
+				// We'll delete this afterward.
+				$entry['properties']['original_name'] = (array) sanitize_text_field( $title );
+			} elseif ( $title !== $entry['properties']['url'][0] ) {
+				// Only store a title if it both doesn't meet the criteria above
+				// and is not the item's URL.
 				$entry['properties']['name'] = (array) sanitize_text_field( $title );
 			}
 		}
