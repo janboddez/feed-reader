@@ -192,7 +192,10 @@ function kses( $string ) {
 		'hr'         => array(),
 	);
 
-	return wp_kses( $string, $allowed_html );
+	$string = wp_kses( $string, $allowed_html );
+	$string = str_replace( array( '<p></p>', '<div></div>' ), '', $string );
+
+	return $string;
 }
 
 /**
@@ -293,7 +296,7 @@ function proxy_images( $html ) {
 
 	$xpath = new \DOMXPath( $doc );
 
-	foreach ( $xpath->query( '//*[@src or @srcset]' ) as $node ) {
+	foreach ( $xpath->query( '//*[@src or @srcset or @poster]' ) as $node ) {
 		if ( $node->hasAttribute( 'src' ) ) {
 			$node->setAttribute( 'src', proxy_image( $node->getAttribute( 'src' ) ) );
 		}
@@ -312,6 +315,10 @@ function proxy_images( $html ) {
 			if ( ! empty( $srcset ) ) {
 				$node->setAttribute( 'srcset', implode( ', ', $srcset ) );
 			}
+		}
+
+		if ( $node->hasAttribute( 'poster' ) ) {
+			$node->setAttribute( 'poster', proxy_image( $node->getAttribute( 'poster' ) ) );
 		}
 	}
 
