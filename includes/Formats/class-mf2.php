@@ -34,7 +34,11 @@ class Mf2 extends Format {
 	}
 
 	protected static function parse_item( $item, $feed, $data = null ) {
-		if ( empty( $item['type'] ) || ! in_array( 'h-entry', (array) $item['type'], true ) ) { /** @todo: Expand to `h-review`, etc. */
+		if ( ! empty( $item['type'] ) ) {
+			$matches = array_intersect( array( 'h-entry', 'h-event', 'h-recipe', 'h-review' ), (array) $item['type'] );
+		}
+
+		if ( empty( $matches ) ) {
 			// We currently only offer support for `h-entry`.
 			return null;
 		}
@@ -162,6 +166,36 @@ class Mf2 extends Format {
 		}
 
 		$entry['properties']['author'] = array( static::get_author( $item, $data ) );
+
+		$additional_properties = array(
+			// If I'm not mistaken, these can be a simple URL or an associated
+			// array for `h-cite`-like bookmarks, etc. Not sure if we should
+			// even sanitize them further here (because the `mf2-php` package
+			// has already done so).
+			'bookmark-of' => ! empty( $item['properties']['bookmark-of'] )
+				? (array) $item['properties']['bookmark-of']
+				: null,
+			'like-of'     => ! empty( $item['properties']['like-of'] )
+				? (array) $item['properties']['like-of']
+				: null,
+			'listen-of'   => ! empty( $item['properties']['like-of'] )
+				? (array) $item['properties']['listen-of']
+				: null,
+			'favorite-of' => ! empty( $item['properties']['favorite-of'] )
+				? (array) $item['properties']['favorite-of']
+				: null,
+			'in-reply-to' => ! empty( $item['properties']['in-reply-to'] )
+				? (array) $item['properties']['in-reply-to']
+				: null,
+			'read-of'     => ! empty( $item['properties']['read-of'] )
+				? (array) $item['properties']['read-of']
+				: null,
+			'repost-of'   => ! empty( $item['properties']['repost-of'] )
+				? (array) $item['properties']['repost-of']
+				: null,
+		);
+
+		$entry['properties'] = array_merge( $entry['properties'], array_filter( $additional_properties ) );
 
 		return parent::parse_item( $entry, $feed );
 	}
