@@ -1,7 +1,7 @@
 === Feed Reader ===
 Contributors: janboddez
 Tags: reader, feeds, web feeds, rss, atom, opml, bookmarks
-Tested up to: 6.2
+Tested up to: 6.4
 Stable tag: 0.2.0
 Requires at least: 5.9
 License: GNU General Public License v3.0
