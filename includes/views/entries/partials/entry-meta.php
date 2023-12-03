@@ -23,18 +23,18 @@ $options = get_option( 'feed_reader_settings' );
 
 	<?php if ( isset( $_GET['page'] ) && 'feed-reader-entries-view' === $_GET['page'] ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
 		<?php if ( ! empty( $entry->url ) ) : ?>
-			<time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>">
+			<time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>" title="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>">
 				<?php /* translators: %s: Human-readable time ago */ ?>
 				<a href="<?php echo esc_url( $entry->url ); ?>"><?php echo esc_html( sprintf( __( '%s ago', 'feed-reader' ), human_time_diff( strtotime( $entry->published ), time() ) ) ); ?></a>
 			</time>
 		<?php else : ?>
-			<time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>">
+			<time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>" title="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>">
 				<?php /* translators: %s: Human-readable time ago */ ?>
 				<?php echo esc_html( sprintf( __( '%s ago', 'feed-reader' ), human_time_diff( strtotime( $entry->published ), time() ) ) ); ?>
 			</time>
 		<?php endif; ?>
 	<?php else : ?>
-		<time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>">
+		<time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>" title="<?php echo esc_attr( date( 'Y-m-d\TH:i:s\Z', strtotime( $entry->published ) ) ); ?>">
 			<?php /* translators: %s: Human-readable time ago */ ?>
 			<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'entries', 'view', $entry->id ) ); ?>"><?php echo esc_html( sprintf( __( '%s ago', 'feed-reader' ), human_time_diff( strtotime( $entry->published ), time() ) ) ); ?></a>
 		</time>
