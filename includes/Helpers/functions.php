@@ -112,11 +112,12 @@ function kses( $string ) {
 		),
 		'br'         => array(),
 		'cite'       => array(),
-		'code'       => array(),
+		'code'       => array(
+			'div' => array(),
+		),
 		'del'        => array(
 			'datetime' => true,
 		),
-		'div'        => array(),
 		'em'         => array(),
 		'figure'     => array(),
 		'figcaption' => array(),
@@ -149,7 +150,9 @@ function kses( $string ) {
 			'rowspan' => true,
 		),
 		'tr'         => array(),
-		'pre'        => array(),
+		'pre'        => array(
+			'div' => array(),
+		),
 		'dl'         => array(
 			'dd' => array(),
 			'dt' => array(),
@@ -287,7 +290,7 @@ function proxy_images( $html ) {
 		return $html;
 	}
 
-	$html = '<div>' . mb_convert_encoding( $html, 'HTML-ENTITIES', \FeedReader\Helpers\detect_encoding( $html ) ) . '</div>';
+	$html = '<div>' . mb_encode_numericentity( $html, array( 0x80, 0x10FFFF, 0, 0x1FFFFF ), detect_encoding( $html ) ) . '</div>';
 
 	libxml_use_internal_errors( true );
 
@@ -374,11 +377,11 @@ function get_user_agent( $url = '' ) {
 /**
  * Wrapper around PHP's built-in `mb_detect_encoding()`.
  *
- * @param  string $string The string being inspected.
- * @return string         Detected encoding.
+ * @param  string $text The string being inspected.
+ * @return string       Detected encoding.
  */
-function detect_encoding( $string ) {
-	$encoding = mb_detect_encoding( $string );
+function detect_encoding( $text ) {
+	$encoding = mb_detect_encoding( $text );
 
 	if ( 'ASCII' === $encoding ) {
 		$encoding = 'UTF-8';

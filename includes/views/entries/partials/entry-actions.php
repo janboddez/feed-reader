@@ -28,7 +28,7 @@ if ( empty( $options['show_actions'] ) ) {
 		//-->
 		<li class="action-like">
 			<button class="button-link button-like">
-				<svg class="icon icon-star" aria-hidden="true" role="img" width="16" height="16"><use href="#icon-star"></use></svg>
+				<svg class="icon icon-heart" aria-hidden="true" role="img" width="16" height="16"><use href="#icon-heart"></use></svg>
 				<span class="screen-reader-text"><?php esc_html_e( 'Like', 'feed-reader' ); ?></span>
 			</button>
 		</li>
