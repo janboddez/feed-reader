@@ -160,7 +160,7 @@ jQuery( document ).ready( function ( $ ) {
 		};
 
 		$.post( ajaxurl, data, function( response ) {
-			entry.find( '.icon-star use' ).attr( 'fill', 'currentColor' );
+			entry.find( '.icon-heart use' ).attr( 'fill', 'currentColor' );
 		} );
 	} );
 
