@@ -208,17 +208,19 @@ class Poll_Feeds {
 			}
 		}
 
+		// @codingStandardsIgnoreStart
 		// Look for mf2.
-		$hash = hash( 'sha256', esc_url_raw( $feed->url ) );
-		$mf2  = get_transient( "feed-reader:mf2:$hash" );
-		if ( false === $mf2 ) {
-			$mf2 = \FeedReader\Mf2\parse( $body, $feed->url );
-			set_transient( "feed-reader:mf2:$hash", $mf2, 3600 );
-		}
+		// $hash = hash( 'sha256', esc_url_raw( $feed->url ) );
+		// $mf2  = get_transient( "feed-reader:mf2:$hash" );
+		// if ( false === $mf2 ) {
+		// 	$mf2 = \FeedReader\Mf2\parse( $body, $feed->url );
+		// 	set_transient( "feed-reader:mf2:$hash", $mf2, 3600 );
+		// }
 
-		if ( ! empty( $mf2['items'][0]['type'] ) && in_array( 'h-feed', $mf2['items'][0]['type'], true ) ) {
-			return 'mf2';
-		}
+		// if ( ! empty( $mf2['items'][0]['type'] ) && in_array( 'h-feed', $mf2['items'][0]['type'], true ) ) {
+		// 	return 'mf2';
+		// }
+		// @codingStandardsIgnoreEnd
 
 		if ( in_array( $content_type, array( 'application/rss+xml', 'application/atom+xml', 'text/xml', 'application/xml' ), true ) ) {
 			return 'xml';

@@ -331,21 +331,23 @@ class Feed_Controller extends Controller {
 				}
 			}
 
+			// @codingStandardsIgnoreStart
 			// Look for mf2.
-			$hash = hash( 'sha256', esc_url_raw( $url ) );
-			$mf2  = get_transient( "feed-reader:mf2:$hash" );
+			// $hash = hash( 'sha256', esc_url_raw( $url ) );
+			// $mf2  = get_transient( "feed-reader:mf2:$hash" );
 
-			if ( false === $mf2 ) {
-				$mf2 = \FeedReader\Mf2\parse( $body, $url );
-				set_transient( "feed-reader:mf2:$hash", $mf2, 3600 );
-			}
+			// if ( false === $mf2 ) {
+			// 	$mf2 = \FeedReader\Mf2\parse( $body, $url );
+			// 	set_transient( "feed-reader:mf2:$hash", $mf2, 3600 );
+			// }
 
-			if ( ! empty( $mf2['items'][0]['type'] ) && in_array( 'h-feed', $mf2['items'][0]['type'], true ) ) {
-				$feeds[] = array(
-					'format' => 'mf2',
-					'url'    => esc_url_raw( $url ),
-				);
-			}
+			// if ( ! empty( $mf2['items'][0]['type'] ) && in_array( 'h-feed', $mf2['items'][0]['type'], true ) ) {
+			// 	$feeds[] = array(
+			// 		'format' => 'mf2',
+			// 		'url'    => esc_url_raw( $url ),
+			// 	);
+			// }
+			// @codingStandardsIgnoreEnd
 		}
 
 		header( 'Content-Type: application/json' );
