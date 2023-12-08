@@ -24,7 +24,7 @@ class OPML_Controller extends Controller {
 			wp_die( esc_html__( 'Invalid user ID.', 'feed-reader' ) );
 		}
 
-		$user_settings = get_user_meta( $user[0]->ID, 'feed_reader_settings', true );
+		$user_settings = get_user_meta( $users[0]->ID, 'feed_reader_settings', true );
 		if ( empty( $user_settings['opml_endpoint'] ) ) {
 			wp_die( esc_html__( 'No such route.', 'feed-reader' ) ); // Or something.
 		}
