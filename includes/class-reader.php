@@ -3,6 +3,7 @@
 namespace FeedReader;
 
 use FeedReader\Commands\Commands;
+use FeedReader\Controllers\OPML_Controller;
 use FeedReader\Helpers\Image_Proxy;
 use FeedReader\Jobs\Poll_Feeds;
 use FeedReader\Models\Category;
@@ -41,6 +42,7 @@ class Reader {
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 
 		add_filter( 'login_redirect', array( $this, 'login_redirect' ), 10, 3 );
+		add_action( 'rest_api_init', array( $this, 'register_opml_endpoint' ) );
 		add_action( 'rest_api_init', array( Image_Proxy::class, 'register' ) );
 
 		// Additional admin styles and functions.
@@ -52,6 +54,18 @@ class Reader {
 		add_action( 'admin_footer', array( $this, 'include_icon_sprites' ) );
 
 		Router::register();
+	}
+
+	public function register_opml_endpoint() {
+		register_rest_route(
+			'feed-reader/v1',
+			'/users/(?P<user_id>[\w\-\.]+)/opml',
+			array(
+				'methods'             => array( 'GET' ),
+				'callback'            => array( OPML_Controller::class, 'rest_api_endpoint' ),
+				'permission_callback' => '__return_true',
+			)
+		);
 	}
 
 	public function add_cron_schedule( $schedules ) {
