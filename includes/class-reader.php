@@ -75,6 +75,8 @@ class Reader {
 
 	public function register_settings() {
 		// General plugin settings.
+		add_option( 'feed_reader_settings', array() );
+
 		register_setting(
 			'feed-reader-settings-group',
 			'feed_reader_settings',
@@ -90,9 +92,10 @@ class Reader {
 
 	public function sanitize_settings( $settings ) {
 		return array(
-			'show_actions'       => isset( $settings['show_actions'] ) ? true : false,
-			'image_proxy'        => isset( $settings['image_proxy'] ) ? true : false,
-			'image_proxy_secret' => isset( $settings['image_proxy_secret'] ) ? $settings['image_proxy_secret'] : '',
+			'show_actions'          => isset( $settings['show_actions'] ) ? true : false,
+			'image_proxy'           => isset( $settings['image_proxy'] ) ? true : false,
+			'image_proxy_secret'    => isset( $settings['image_proxy_secret'] ) ? $settings['image_proxy_secret'] : '',
+			'image_proxy_http_only' => isset( $settings['image_proxy_http_only'] ) ? $settings['image_proxy_http_only'] : '',
 		);
 	}
 
@@ -127,6 +130,12 @@ class Reader {
 						<td><label><input type="checkbox" name="feed_reader_settings[login_redirect]" <?php checked( ! empty( $user_settings['login_redirect'] ) ); ?> />
 						<?php esc_html_e( 'After logging in, get sent to your feed reader rather than WordPress&rsquo; dashboard', 'feed-reader' ); ?></label></td>
 					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Public OPML Endpoint', 'feed-reader' ); ?></th>
+						<td><label><input type="checkbox" name="feed_reader_settings[opml_endpoint]" <?php checked( ! empty( $user_settings['opml_endpoint'] ) ); ?> />
+						<?php /* translators: %s: public OPML API endpoint */ ?>
+						<?php printf( esc_html__( 'Enable others to see your list of feeds at %s', 'feed-reader' ), esc_url( rest_url( "feed-reader/v1/users/{$user->ID}/opml" ) ) ); ?></label></td>
+					</tr>
 				</table>
 		</div>
 		<?php
@@ -157,6 +166,7 @@ class Reader {
 			'system_fonts'   => isset( $settings['system_fonts'] ) ? true : false,
 			'hide_sidebar'   => isset( $settings['hide_sidebar'] ) ? true : false,
 			'login_redirect' => isset( $settings['login_redirect'] ) ? true : false,
+			'opml_endpoint'  => isset( $settings['opml_endpoint'] ) ? true : false,
 		);
 
 		update_user_meta( $user_id, 'feed_reader_settings', $user_settings );

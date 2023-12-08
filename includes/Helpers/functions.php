@@ -84,15 +84,15 @@ function show_in_full( $entry ) {
 /**
  * Cleans up potentially unsafe HTML.
  *
- * @param  string $string Raw HTML.
- * @return string         Sanitized HTML.
+ * @param  string $text Raw HTML.
+ * @return string       Sanitized HTML.
  */
-function kses( $string ) {
-	$string = preg_replace( '~<!--.*?-->~s', '', $string );
-	$string = preg_replace( '~<script.*?>.*?</script>~s', '', $string );
-	$string = preg_replace( '~<style.*?>.*?</style>~s', '', $string );
+function kses( $text ) {
+	$text = preg_replace( '~<!--.*?-->~s', '', $text );
+	$text = preg_replace( '~<script.*?>.*?</script>~s', '', $text );
+	$text = preg_replace( '~<style.*?>.*?</style>~s', '', $text );
 
-	$string = \FeedReader\zz\Html\HTMLMinify::minify( $string );
+	$text = \FeedReader\zz\Html\HTMLMinify::minify( $text );
 
 	/** @todo: Allow certain `iframe` elements, like the ones that point to YouTube, only? */
 	$allowed_html = array(
@@ -195,10 +195,10 @@ function kses( $string ) {
 		'hr'         => array(),
 	);
 
-	$string = wp_kses( $string, $allowed_html );
-	$string = str_replace( array( '<p></p>', '<div></div>' ), '', $string );
+	$text = wp_kses( $text, $allowed_html );
+	$text = str_replace( array( '<p></p>', '<div></div>' ), '', $text );
 
-	return $string;
+	return $text;
 }
 
 /**
@@ -348,6 +348,10 @@ function proxy_image( $url ) {
 	}
 
 	if ( empty( $options['image_proxy_secret'] ) ) {
+		return $url;
+	}
+
+	if ( ! empty( $options['image_proxy_http_only'] ) && 0 === stripos( $url, 'https://' ) ) {
 		return $url;
 	}
 

@@ -26,6 +26,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<td>
 					<label><input type="checkbox" name="feed_reader_settings[image_proxy]" <?php checked( ! empty( $options['image_proxy'] ) ); ?> /> <?php esc_html_e( '(Experimental) &ldquo;Proxy&rdquo; images and video', 'feed-reader' ); ?></label>
 					<p class="description"><?php esc_html_e( 'Avoid &ldquo;mixed context&rdquo; errors when reading feeds.', 'feed-reader' ); ?></p>
+
+					<div style="margin-block-start: 0.5em; margin-inline-start: 1.5em;">
+						<label><input type="checkbox" name="feed_reader_settings[image_proxy_http_only]" <?php checked( ! empty( $options['image_proxy_http_only'] ) ); ?> /> <?php esc_html_e( '&ldquo;Proxy&rdquo; HTTP URLs only', 'feed-reader' ); ?></label>
+						<p class="description"><?php esc_html_e( 'Save (some) bandwith by &ldquo;rewriting&rdquo; only non-HTTPS URLs.', 'feed-reader' ); ?></p>
+					</div>
 				</td>
 			</tr>
 			<tr valign="top">
