@@ -24,7 +24,10 @@ class OPML_Controller extends Controller {
 			wp_die( esc_html__( 'Invalid user ID.', 'feed-reader' ) );
 		}
 
-		/** @todo: Exit if this user's disabled their public OPML endpoint. */
+		$user_settings = get_user_meta( $user[0]->ID, 'feed_reader_settings', true );
+		if ( empty( $user_settings['opml_endpoint'] ) ) {
+			wp_die( esc_html__( 'No such route.', 'feed-reader' ) ); // Or something.
+		}
 
 		$categories = Category::all( $users[0]->ID );
 		if ( ! empty( $categories ) ) {
