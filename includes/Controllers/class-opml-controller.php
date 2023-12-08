@@ -12,6 +12,32 @@ class OPML_Controller extends Controller {
 		static::render( 'opml/form' );
 	}
 
+	public static function rest_api_endpoint( $request ) {
+		$user_id = $request->get_param( 'user_id' );
+		if ( empty( $user_id ) || ! ctype_digit( (string) $user_id ) ) {
+			wp_die( esc_html__( 'Invalid user ID.', 'feed-reader' ) );
+		}
+
+		// Get only the current site's users whose IDs are in the `include` arg.
+		$users = get_users( array( 'include' => $user_id ) );
+		if ( empty( $users[0] ) ) {
+			wp_die( esc_html__( 'Invalid user ID.', 'feed-reader' ) );
+		}
+
+		/** @todo: Exit if this user's disabled their public OPML endpoint. */
+
+		$categories = Category::all( $users[0]->ID );
+		if ( ! empty( $categories ) ) {
+			foreach ( $categories as $i => $category ) {
+				$categories[ $i ]->feeds = Category::feeds( $category->id, 'all', $users[0]->ID ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			}
+		}
+
+		/** @todo: Add uncategorized feeds, too. */
+
+		static::render( 'opml/opml', compact( 'categories' ) );
+	}
+
 	public static function export() {
 		if ( ! current_user_can( 'edit_others_posts' ) ) {
 			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
