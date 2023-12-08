@@ -134,7 +134,7 @@ class Reader {
 						<th scope="row"><?php esc_html_e( 'Public OPML Endpoint', 'feed-reader' ); ?></th>
 						<td><label><input type="checkbox" name="feed_reader_settings[opml_endpoint]" <?php checked( ! empty( $user_settings['opml_endpoint'] ) ); ?> />
 						<?php /* translators: %s: public OPML API endpoint */ ?>
-						<?php printf( esc_html__( 'Enable others to see your list of feeds at %s', 'feed-reader' ), esc_url( rest_url( "feed-reader/v1/users/{$user->ID}/opml" ) ) ); ?></label></td>
+						<?php printf( esc_html__( 'Enable others to see your list of feeds at %s', 'feed-reader' ), '<code>' . esc_url( rest_url( "feed-reader/v1/users/{$user->ID}/opml" ) ) . '</code>' ); ?></label></td>
 					</tr>
 				</table>
 		</div>
