@@ -81,7 +81,8 @@ class Entry_Controller extends Controller {
 			wp_die( esc_html__( 'You have insufficient permissions to access this page.', 'feed-reader' ) );
 		}
 
-		if ( empty( $_POST['_wpnonce'] ) || empty( $_POST['id'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'feed-reader-entries:mark-unread:' . intval( $_POST['id'] ) ) ) {
+		// We use `mark-read` in the nonce key in order to be able to use the same nonce for both actions.
+		if ( empty( $_POST['_wpnonce'] ) || empty( $_POST['id'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'feed-reader-entries:mark-read:' . intval( $_POST['id'] ) ) ) {
 			wp_die( esc_html__( 'This page should not be accessed directly.', 'feed-reader' ) );
 		}
 

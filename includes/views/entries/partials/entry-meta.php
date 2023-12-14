@@ -53,7 +53,7 @@ $options = get_option( 'feed_reader_settings' );
 			<?php esc_html_e( 'Mark read', 'feed-reader' ); ?>
 		</button>
 	<?php else : ?>
-		<button class="button-link mark-unread" data-nonce="<?php echo esc_attr( wp_create_nonce( "feed-reader-entries:mark-unread:{$entry->id}" ) ); ?>">
+		<button class="button-link mark-unread" data-nonce="<?php echo esc_attr( wp_create_nonce( "feed-reader-entries:mark-read:{$entry->id}" ) ); // We use `mark-read` in the nonce key in order to be able to use the same nonce for both actions. ?>">
 			<?php esc_html_e( 'Mark unread', 'feed-reader' ); ?>
 		</button>
 	<?php endif; ?>
