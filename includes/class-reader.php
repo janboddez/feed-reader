@@ -66,6 +66,22 @@ class Reader {
 				'permission_callback' => '__return_true',
 			)
 		);
+
+		register_rest_route(
+			'feed-reader/v1',
+			'/unread-count',
+			array(
+				'methods'             => array( 'GET' ),
+				'callback'            => array( $this, 'get_unread_count' ),
+				'permission_callback' => function () {
+					return current_user_can( 'edit_others_posts' );
+				},
+			)
+		);
+	}
+
+	public function get_unread_count( $request ) {
+		return array( 'unread' => Entry::count() );
 	}
 
 	public function add_cron_schedule( $schedules ) {
@@ -256,7 +272,7 @@ class Reader {
 			wp_enqueue_style( 'feed-reader', plugins_url( '/assets/style.css', __DIR__ ), array(), self::PLUGIN_VERSION );
 
 			// wp_enqueue_script( 'highlight-js', plugins_url( '/assets/highlight.min.js', __DIR__ ), array(), '11.7.0', true );
-			wp_enqueue_script( 'feed-reader', plugins_url( '/assets/feed-reader.js', __DIR__ ), array( 'jquery' /*, 'highlight-js'*/ ), self::PLUGIN_VERSION, true );
+			wp_enqueue_script( 'feed-reader', plugins_url( '/assets/feed-reader.js', __DIR__ ), array( 'jquery', 'wp-api-fetch' /*, 'highlight-js'*/ ), self::PLUGIN_VERSION, true );
 
 			wp_localize_script(
 				'feed-reader',

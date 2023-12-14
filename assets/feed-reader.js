@@ -34,6 +34,7 @@ jQuery( document ).ready( function ( $ ) {
 		};
 
 		$.post( ajaxurl, data, function( response ) {
+
 			var feed = entry.closest( '.hfeed' );
 
 			if ( feed.length && ! ( new URLSearchParams( window.location.search ) ).has( 'all' ) ) {
@@ -43,6 +44,8 @@ jQuery( document ).ready( function ( $ ) {
 					feed.html( feed_reader_obj.all_done );
 				}
 
+				updateReadCount();
+
 				return;
 			}
 
@@ -51,6 +54,8 @@ jQuery( document ).ready( function ( $ ) {
 
 			button.toggleClass( 'mark-read mark-unread' );
 			button.text( feed_reader_obj.mark_unread );
+
+			updateReadCount();
 		} );
 	}
 
@@ -64,11 +69,14 @@ jQuery( document ).ready( function ( $ ) {
 		};
 
 		$.post( ajaxurl, data, function( response ) {
+
 			button.unbind( 'click', mark_unread );
 			button.bind( 'click', mark_read );
 
 			button.toggleClass( 'mark-read mark-unread' );
 			button.text( feed_reader_obj.mark_read );
+
+			updateReadCount();
 		} );
 	}
 
@@ -97,6 +105,8 @@ jQuery( document ).ready( function ( $ ) {
 				if ( ! feed.find( '.hentry' ).length ) {
 					feed.html( feed_reader_obj.all_done );
 				}
+
+				updateReadCount();
 			} else {
 				var url = new URL( window.location.href );
 				url.searchParams.delete( 'paged' );
@@ -288,5 +298,57 @@ jQuery( document ).ready( function ( $ ) {
 		}
 
 		$( '#feed-reader-image-proxy-secret' ).val( pass );
+	} );
+
+	var menuLabel = $( '#wp-admin-bar-feed-reader .ab-label');
+
+	// Fetch unread post count, and all categories and feeds and their unread post count.
+	// Something something update `#wp-admin-bar-feed-reader .ab-label`.
+	// And then each `.feed-reader-sidebar details summary a` and `.feed-reader-sidebar details li a`.
+	function updateReadCount() {
+		// Like a time-out.
+		const controller = new AbortController();
+		const timeoutId  = setTimeout( () => {
+			controller.abort();
+		}, 6000 );
+
+		window.wp.apiFetch( {
+			path: '/feed-reader/v1/unread-count',
+			signal: controller.signal, // That time-out thingy.
+		} ).then( function( response ) {
+			console.log( response );
+
+			clearTimeout( timeoutId );
+
+			menuLabel.text( 'Reader (' + response['unread'] + ')' );
+		} ).catch( function( error ) {
+			// The request timed out or otherwise failed. Leave as is.
+		} );
+	}
+
+	var lastReload = parseInt( Date.now() / 1000 );
+
+	function setTimer() {
+		return setInterval( () => {
+			if ( parseInt( Date.now() / 1000 ) - lastReload > 30 ) {
+				// The data was last refreshed over 30 seconds ago.
+				lastReload = parseInt( Date.now() / 1000 );
+				updateReadCount();
+			}
+		}, 5000 ); // Run every 5 seconds.
+	};
+
+	// Do we need to immediately update unread counts? After all, they've just
+	// been updated server-side.
+	// updateReadCount();
+
+	var intervalId = setTimer();
+
+	window.addEventListener( 'blur', () => {
+		clearInterval( intervalId );
+	} );
+
+	window.addEventListener( 'focus', () => {
+		intervalId = setTimer();
 	} );
 } );
