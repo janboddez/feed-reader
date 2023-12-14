@@ -320,6 +320,7 @@ jQuery( document ).ready( function ( $ ) {
 
 			clearTimeout( timeoutId );
 
+			/** @todo: Get rid of hardcoded label. */
 			menuLabel.text( 'Reader (' + response['unread'] + ')' );
 		} ).catch( function( error ) {
 			// The request timed out or otherwise failed. Leave as is.
