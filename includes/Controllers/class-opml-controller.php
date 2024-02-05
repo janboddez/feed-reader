@@ -39,6 +39,7 @@ class OPML_Controller extends Controller {
 		/** @todo: Add uncategorized feeds, too. */
 
 		static::render( 'opml/opml', compact( 'categories' ) );
+		exit;
 	}
 
 	public static function export() {
