@@ -339,9 +339,8 @@ jQuery( document ).ready( function ( $ ) {
 		}, 5000 ); // Run every 5 seconds.
 	};
 
-	// Do we need to immediately update unread counts? After all, they've just
-	// been updated server-side.
-	// updateReadCount();
+	// Immediately update read counts to cover single entries, too.
+	updateReadCount();
 
 	var intervalId = setTimer();
 
