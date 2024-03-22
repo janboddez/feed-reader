@@ -336,7 +336,7 @@ jQuery( document ).ready( function ( $ ) {
 						if ( 0 === value ) {
 							url.searchParams.set( 'all', '1' );
 						} else {
-							url.searchParams.delete( 'all');
+							url.searchParams.delete( 'all' );
 						}
 						link.href = url.toString();
 
@@ -350,12 +350,12 @@ jQuery( document ).ready( function ( $ ) {
 						}
 					}
 				} );
-
 			}
 
 			if ( response.hasOwnProperty( 'feeds' ) ) {
 				Object.entries( response.feeds ).forEach( function ( entry ) {
 					const [ key, value ] = entry;
+
 					const link = document.querySelector( '[data-feed-id="' + key + '"] a' );
 					if ( link ) {
 						const url = new URL( link.href );
@@ -363,7 +363,7 @@ jQuery( document ).ready( function ( $ ) {
 						if ( 0 === value ) {
 							url.searchParams.set( 'all', '1' );
 						} else {
-							url.searchParams.delete( 'all');
+							url.searchParams.delete( 'all' );
 						}
 						link.href = url.toString();
 
