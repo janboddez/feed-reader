@@ -84,37 +84,22 @@ class Reader {
 		$output = array(
 			'unread'     => Entry::count(),
 			'categories' => array(),
+			'feeds'      => array(),
 		);
 
 		$categories = array_values( \FeedReader\Models\Category::all() );
 
 		if ( ! empty( $categories ) ) {
-			foreach ( $categories as $i => $category ) {
-				$cat = array(
-					'unread' => 0,
-					'feeds'  => array(),
-				);
+			foreach ( $categories as $category ) {
+				$output['categories'][ $category->id ] = Category::entries_count( $category->id );
+			}
+		}
 
-				$feeds = \FeedReader\Models\Category::feeds( $category->id, 'all' );
+		$feeds = array_values( \FeedReader\Models\Feed::all() );
 
-				if ( ! empty( $feeds ) ) {
-					// Probably a smarter way to do this in SQL, but this'll do for now.
-					$cat['unread'] = array_reduce(
-						$feeds,
-						function ( $carry, $item ) {
-							$carry += $item->unread_count;
-							return $carry;
-						}
-					);
-
-					foreach ( $feeds as $feed ) {
-						$cat['feeds'][ $feed->id ] = array(
-							'unread' => $feed->unread_count,
-						);
-					}
-				}
-
-				$output['categories'][ $category->id ] = $cat;
+		if ( ! empty( $feeds ) ) {
+			foreach ( $feeds as $feed ) {
+				$output['feeds'][ $feed->id ] = Feed::entries_count( $feed->id );
 			}
 		}
 

@@ -316,12 +316,68 @@ jQuery( document ).ready( function ( $ ) {
 			path: '/feed-reader/v1/unread-count',
 			signal: controller.signal, // That time-out thingy.
 		} ).then( function( response ) {
-			console.log( response );
-
 			clearTimeout( timeoutId );
 
-			/** @todo: Get rid of hardcoded label. */
-			menuLabel.text( 'Reader (' + response['unread'] + ')' );
+			if ( response.hasOwnProperty( 'unread' ) ) {
+				/** @todo: Get rid of hardcoded label. */
+				menuLabel.text( 'Reader (' + response.unread + ')' );
+			}
+
+			// Next, loop over categories and feeds, and update sidebar unread
+			// counts.
+			if ( response.hasOwnProperty( 'categories' ) ) {
+				Object.entries( response.categories ).forEach( function ( entry ) {
+					const [ key, value ] = entry;
+
+					const link = document.querySelector( '[data-category-id="' + key + '"] > summary a' );
+					if ( link ) {
+						const url = new URL( link.href )
+
+						if ( 0 === value ) {
+							url.searchParams.set( 'all', '1' );
+						} else {
+							url.searchParams.delete( 'all');
+						}
+						link.href = url.toString();
+
+						const counter = link.querySelector( '[data-category-id="' + key + '"] > summary .unread-count' );
+						if ( counter ) {
+							if ( 0 === value ) {
+								counter.textContent = '';
+							} else {
+								counter.textContent = '(' + value + ')';
+							}
+						}
+					}
+				} );
+
+			}
+
+			if ( response.hasOwnProperty( 'feeds' ) ) {
+				Object.entries( response.feeds ).forEach( function ( entry ) {
+					const [ key, value ] = entry;
+					const link = document.querySelector( '[data-feed-id="' + key + '"] a' );
+					if ( link ) {
+						const url = new URL( link.href )
+
+						if ( 0 === value ) {
+							url.searchParams.set( 'all', '1' );
+						} else {
+							url.searchParams.delete( 'all');
+						}
+						link.href = url.toString();
+
+						const counter = document.querySelector( '[data-feed-id="' + key + '"] .unread-count' );
+						if ( counter ) {
+							if ( 0 === value ) {
+								counter.textContent = '';
+							} else {
+								counter.textContent = '(' + value + ')';
+							}
+						}
+					}
+				} );
+			}
 		} ).catch( function( error ) {
 			// The request timed out or otherwise failed. Leave as is.
 		} );

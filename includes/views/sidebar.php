@@ -74,17 +74,17 @@ if ( ! empty( $categories ) ) :
 				}
 			);
 			?>
-			<details <?php echo ( $cur_cat === (int) $category->id || in_array( $cur_feed, array_map( 'intval', array_column( $feeds, 'id' ) ), true ) || ( empty( $cur_feed ) && empty( $cur_cat ) && 0 === $i ) ? 'open="open"' : '' ); ?>>
+			<details <?php echo ( $cur_cat === (int) $category->id || in_array( $cur_feed, array_map( 'intval', array_column( $feeds, 'id' ) ), true ) || ( empty( $cur_feed ) && empty( $cur_cat ) && 0 === $i ) ? 'open="open"' : '' ); ?> data-category-id="<?php echo esc_attr( $category->id ); ?>">
 				<summary>
-					<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'categories', 'view', $category->id, empty( $unread ) ) ); ?>"><?php echo esc_html( $category->name ); ?> <?php echo esc_html( ! empty( $unread ) ? "($unread)" : '' ); ?></a>
+					<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'categories', 'view', $category->id, empty( $unread ) ) ); ?>"><?php echo esc_html( $category->name ); ?> <span class="unread-count"><?php echo esc_html( ! empty( $unread ) ? "($unread)" : '' ); ?></span></a>
 				</summary>
 				<ul>
 					<?php foreach ( $feeds as $feed ) : ?>
-						<li <?php echo ( $cur_feed === (int) $feed->id ? 'class="active"' : '' ); ?>>
+						<li <?php echo ( $cur_feed === (int) $feed->id ? 'class="active"' : '' ); ?> data-feed-id="<?php echo esc_attr( $feed->id ); ?>">
 							<?php if ( ! empty( $feed->icon ) ) : ?>
 								<img class="avatar" src="<?php echo esc_url( $feed->icon ); ?>" width="16" height="16" loading="lazy">
 							<?php endif; ?>
-							<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'feeds', 'view', $feed->id, empty( $feed->unread_count ) ) ); ?>"><?php echo esc_html( ! empty( $feed->name ) ? $feed->name : preg_replace( '~^www.~', '', wp_parse_url( $feed->url, PHP_URL_HOST ) ) ); ?> <?php echo esc_html( ! empty( $feed->unread_count ) ? "({$feed->unread_count})" : '' ); ?></a>
+							<a href="<?php echo esc_url( \FeedReader\Helpers\get_url( 'feeds', 'view', $feed->id, empty( $feed->unread_count ) ) ); ?>"><?php echo esc_html( ! empty( $feed->name ) ? $feed->name : preg_replace( '~^www.~', '', wp_parse_url( $feed->url, PHP_URL_HOST ) ) ); ?> <span class="unread-count"><?php echo esc_html( ! empty( $feed->unread_count ) ? "({$feed->unread_count})" : '' ); ?></span></a>
 						</li>
 					<?php endforeach; ?>
 				</ul>
