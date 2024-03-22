@@ -80,8 +80,45 @@ class Reader {
 		);
 	}
 
-	public function get_unread_count( $request ) {
-		return array( 'unread' => Entry::count() );
+	public function get_unread_count() {
+		$output = array(
+			'unread'     => Entry::count(),
+			'categories' => array(),
+		);
+
+		$categories = array_values( \FeedReader\Models\Category::all() );
+
+		if ( ! empty( $categories ) ) {
+			foreach ( $categories as $i => $category ) {
+				$cat = array(
+					'unread' => 0,
+					'feeds'  => array(),
+				);
+
+				$feeds = \FeedReader\Models\Category::feeds( $category->id, 'all' );
+
+				if ( ! empty( $feeds ) ) {
+					// Probably a smarter way to do this in SQL, but this'll do for now.
+					$cat['unread'] = array_reduce(
+						$feeds,
+						function ( $carry, $item ) {
+							$carry += $item->unread_count;
+							return $carry;
+						}
+					);
+
+					foreach ( $feeds as $feed ) {
+						$cat['feeds'][ $feed->id ] = array(
+							'unread' => $feed->unread_count,
+						);
+					}
+				}
+
+				$output['categories'][ $category->id ] = $cat;
+			}
+		}
+
+		return $output;
 	}
 
 	public function add_cron_schedule( $schedules ) {
@@ -268,9 +305,11 @@ class Reader {
 				wp_enqueue_style( 'feed-reader-fonts', plugins_url( '/assets/fonts.css', __DIR__ ), array(), self::PLUGIN_VERSION );
 			}
 
+			// phpcs:ignore Squiz.PHP.CommentedOutCode.Found
 			// wp_enqueue_style( 'highlight-js-css', plugins_url( '/assets/highlight.min.css', __DIR__ ), array(), self::PLUGIN_VERSION ); // Our "own" highlight.js styles.
 			wp_enqueue_style( 'feed-reader', plugins_url( '/assets/style.css', __DIR__ ), array(), self::PLUGIN_VERSION );
 
+			// phpcs:ignore Squiz.PHP.CommentedOutCode.Found,Squiz.Commenting.InlineComment.InvalidEndChar
 			// wp_enqueue_script( 'highlight-js', plugins_url( '/assets/highlight.min.js', __DIR__ ), array(), '11.7.0', true );
 			wp_enqueue_script( 'feed-reader', plugins_url( '/assets/feed-reader.js', __DIR__ ), array( 'jquery', 'wp-api-fetch' /*, 'highlight-js'*/ ), self::PLUGIN_VERSION, true );
 
