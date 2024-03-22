@@ -30,6 +30,7 @@
  */
 namespace FeedReader\zz\Html;
 
+/** @internal */
 class HTMLTokenizer
 {
     const DataState = 'DataState';

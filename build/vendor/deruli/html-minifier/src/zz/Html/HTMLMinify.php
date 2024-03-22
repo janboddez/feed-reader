@@ -7,6 +7,7 @@
  */
 namespace FeedReader\zz\Html;
 
+/** @internal */
 class HTMLMinify
 {
     const DOCTYPE_HTML4 = 'HTML4.01';

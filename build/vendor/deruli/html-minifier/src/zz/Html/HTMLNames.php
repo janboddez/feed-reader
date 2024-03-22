@@ -28,6 +28,7 @@
  */
 namespace FeedReader\zz\Html;
 
+/** @internal */
 class HTMLNames
 {
     // Tags

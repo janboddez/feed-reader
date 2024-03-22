@@ -22,6 +22,7 @@
  */
 namespace FeedReader\zz\Html;
 
+/** @internal */
 class SegmentedString
 {
     const ENCODING = 'UTF-8';
