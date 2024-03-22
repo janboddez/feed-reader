@@ -68,7 +68,7 @@ if ( ! empty( $categories ) ) :
 			// Probably a smarter way to do this in SQL, but this'll do for now.
 			$unread = array_reduce(
 				$feeds,
-				function( $carry, $item ) {
+				function ( $carry, $item ) {
 					$carry += $item->unread_count;
 					return $carry;
 				}
