@@ -331,7 +331,7 @@ jQuery( document ).ready( function ( $ ) {
 
 					const link = document.querySelector( '[data-category-id="' + key + '"] > summary a' );
 					if ( link ) {
-						const url = new URL( link.href )
+						const url = new URL( link.href );
 
 						if ( 0 === value ) {
 							url.searchParams.set( 'all', '1' );
@@ -358,7 +358,7 @@ jQuery( document ).ready( function ( $ ) {
 					const [ key, value ] = entry;
 					const link = document.querySelector( '[data-feed-id="' + key + '"] a' );
 					if ( link ) {
-						const url = new URL( link.href )
+						const url = new URL( link.href );
 
 						if ( 0 === value ) {
 							url.searchParams.set( 'all', '1' );
