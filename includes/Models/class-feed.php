@@ -244,7 +244,7 @@ class Feed extends Model {
 
 		if ( ! file_is_valid_image( $file ) || ! file_is_displayable_image( $file ) ) {
 			// Somehow not a valid image. Delete it.
-			unlink( $file );
+			wp_delete_file( $file );
 
 			error_log( '[Reader] Invalid image file: ' . esc_url_raw( $icon ) . '.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 
