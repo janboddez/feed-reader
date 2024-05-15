@@ -84,6 +84,11 @@ class Image_Proxy {
 
 		// Send all headers.
 		foreach ( $headers as $key => $value ) {
+			if ( 'location' === strtolower( $key ) ) {
+				// Except this one.
+				continue;
+			}
+
 			header( $key . ': ' . $value );
 		}
 
