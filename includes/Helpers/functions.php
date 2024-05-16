@@ -193,6 +193,8 @@ function kses( $text ) {
 
 		),
 		'hr'         => array(),
+		'sub'        => array(),
+		'sup'        => array(),
 	);
 
 	$text = wp_kses( $text, $allowed_html );
