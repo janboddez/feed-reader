@@ -111,4 +111,44 @@ class Commands {
 
 		WP_CLI::success( 'All done!' );
 	}
+
+	/**
+	 * Updates WordPress' built-in bookmarks' icons, if they're also in our feed
+	 * list.
+	 *
+	 * @subcommand update-bookmark-icons
+	 */
+	public function update_bookmark_icons() {
+		$links = get_bookmarks();
+
+		if ( empty( $links ) || ! is_array( $links ) ) {
+			\WP_CLI::warning( 'No links found.' );
+			return;
+		}
+
+		global $wpdb;
+
+		foreach ( $links as $link ) {
+			if ( empty( $link->link_rss ) ) {
+				continue;
+			}
+
+			$sql  = sprintf( 'SELECT icon FROM %s WHERE url = %%s LIMIT 1', Feed::table() );
+			$icon = $wpdb->get_var( $wpdb->prepare( $sql, esc_url_raw( $link->link_rss ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+
+			if ( empty( $icon ) ) {
+				\WP_CLI::log( 'Could not find feed icon for ' . esc_url_raw( $link->link_rss ) . '.' );
+				continue;
+			}
+
+			wp_update_link(
+				array(
+					'link_id'    => $link->link_id,
+					'link_image' => $icon,
+				)
+			);
+		}
+
+		\WP_CLI::success( 'All done.' );
+	}
 }
