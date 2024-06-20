@@ -282,7 +282,7 @@ class Feed_Controller extends Controller {
 				'format' => 'xml',
 				'url'    => esc_url_raw( $url ),
 			);
-		} else {
+		} elseif ( ! empty( $body ) ) {
 			$body = mb_convert_encoding( $body, 'HTML-ENTITIES', \FeedReader\Helpers\detect_encoding( $body ) );
 			$dom  = new \DOMDocument();
 
