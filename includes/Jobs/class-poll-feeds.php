@@ -20,12 +20,18 @@ class Poll_Feeds {
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
 		$feeds = $wpdb->get_results( $wpdb->prepare( $sql, current_time( 'mysql', 1 ) ) );
-
 		if ( ! empty( $feeds ) ) {
 			foreach ( $feeds as $feed ) {
 				static::poll_feed( $feed );
 			}
-		} else {
+
+			// All done!
+			return;
+		}
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+		$all = $wpdb->get_var( sprintf( 'SELECT COUNT(*) FROM %s', Feed::table() ) );
+		if ( ! empty( $all ) ) {
 			error_log( '[Reader] No feeds due.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		}
 	}
@@ -195,7 +201,7 @@ class Poll_Feeds {
 		);
 	}
 
-	protected static function get_format( $content_type, $body, $feed ) {
+	protected static function get_format( $content_type, $body, $feed ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		$content_type = array_pop( $content_type );
 		$content_type = strtok( $content_type, ';' );
 		strtok( '', '' );
