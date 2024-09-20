@@ -13,7 +13,7 @@ class Format {
 	 * @param  mixed  $source Item source.
 	 * @return array          Entry, ready to be inserted into the database.
 	 */
-	protected static function parse_item( $item, $feed, $source = null ) {
+	protected static function parse_item( $item, $feed, $source = null ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		$orig = $item;
 		unset( $item['properties']['original_name'] );
 
