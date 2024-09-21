@@ -123,8 +123,13 @@ class Commands {
 	public function mark_read( $args, $assoc_args ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		global $wpdb;
 
-		$sql  = sprintf( 'UPDATE %s SET is_read = %%d, modified_at = %%s WHERE is_read <> %%d', Entry::table() );
-		$rows = $wpdb->query( $wpdb->prepare( $sql, 1, current_time( 'mysql', 1 ), 1 ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+		$data = array(
+			'is_read'     => 1,
+			'modified_at' => current_time( 'mysql', 1 ),
+		);
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		$rows = (int) $wpdb->update( Entry::table(), $data, array( 'is_read' => 0 ) );
 
 		WP_CLI::success( "All done! Modified {$rows} row(s)." );
 	}
