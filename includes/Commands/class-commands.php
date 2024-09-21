@@ -144,7 +144,7 @@ class Commands {
 		$links = get_bookmarks();
 
 		if ( empty( $links ) || ! is_array( $links ) ) {
-			\WP_CLI::warning( 'No links found.' );
+			WP_CLI::warning( 'No links found.' );
 			return;
 		}
 
@@ -159,7 +159,7 @@ class Commands {
 			$icon = $wpdb->get_var( $wpdb->prepare( $sql, esc_url_raw( $link->link_rss ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
 
 			if ( empty( $icon ) ) {
-				\WP_CLI::log( 'Could not find feed icon for ' . esc_url_raw( $link->link_rss ) . '.' );
+				WP_CLI::log( 'Could not find feed icon for ' . esc_url_raw( $link->link_rss ) . '.' );
 				continue;
 			}
 
@@ -171,6 +171,6 @@ class Commands {
 			);
 		}
 
-		\WP_CLI::success( 'All done.' );
+		WP_CLI::success( 'All done.' );
 	}
 }
