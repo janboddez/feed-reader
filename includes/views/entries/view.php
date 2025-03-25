@@ -30,7 +30,7 @@ $user_settings = get_user_meta( get_current_user_id(), 'feed_reader_settings', t
 
 			<?php if ( ! empty( $entry->content ) ) : ?>
 				<div class="entry-content">
-					<?php echo \FeedReader\Helpers\proxy_images( $entry->content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo $entry->content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</div>
 				<?php
 			endif;

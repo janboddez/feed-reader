@@ -4,7 +4,6 @@ namespace FeedReader;
 
 use FeedReader\Commands\Commands;
 use FeedReader\Controllers\OPML_Controller;
-use FeedReader\Helpers\Image_Proxy;
 use FeedReader\Jobs\Poll_Feeds;
 use FeedReader\Models\Category;
 use FeedReader\Models\Entry;
@@ -12,7 +11,7 @@ use FeedReader\Models\Feed;
 use FeedReader\Router;
 
 class Reader {
-	const PLUGIN_VERSION = '0.3.2';
+	const PLUGIN_VERSION = '0.3.3';
 	const DB_VERSION     = '3';
 
 	/** @var Feed_Reader $instance */
@@ -43,7 +42,6 @@ class Reader {
 
 		add_filter( 'login_redirect', array( $this, 'login_redirect' ), 10, 3 );
 		add_action( 'rest_api_init', array( $this, 'register_opml_endpoint' ) );
-		add_action( 'rest_api_init', array( Image_Proxy::class, 'register' ) );
 
 		// Additional admin styles and functions.
 		add_action( 'admin_bar_menu', array( $this, 'top_bar_menu' ), 40 ); // After "home" button.
@@ -144,10 +142,7 @@ class Reader {
 
 	public function sanitize_settings( $settings ) {
 		return array(
-			'show_actions'          => isset( $settings['show_actions'] ) ? true : false,
-			'image_proxy'           => isset( $settings['image_proxy'] ) ? true : false,
-			'image_proxy_secret'    => isset( $settings['image_proxy_secret'] ) ? $settings['image_proxy_secret'] : '',
-			'image_proxy_http_only' => isset( $settings['image_proxy_http_only'] ) ? $settings['image_proxy_http_only'] : '',
+			'show_actions' => isset( $settings['show_actions'] ) ? true : false,
 		);
 	}
 

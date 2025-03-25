@@ -7,19 +7,19 @@ namespace Composer\Autoload;
 class ComposerStaticInit921cfcffa9d41f15961a6e35c91e3476
 {
     public static $files = array (
-        '757772e28a0943a9afe83def8db95bdf' => __DIR__ . '/..' . '/mf2/mf2/Mf2/Parser.php',
-        '5d5e9acf267403f6978e5ef62f5f38d2' => __DIR__ . '/../..' . '/../includes/Helpers/functions.php',
+        'FeedReader_757772e28a0943a9afe83def8db95bdf' => __DIR__ . '/..' . '/mf2/mf2/Mf2/Parser.php',
+        'FeedReader_5d5e9acf267403f6978e5ef62f5f38d2' => __DIR__ . '/../..' . '/../includes/Helpers/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'F' => 
+        'F' =>
         array (
             'FeedReader\\zz\\' => 14,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'FeedReader\\zz\\' => 
+        'FeedReader\\zz\\' =>
         array (
             0 => __DIR__ . '/..' . '/deruli/html-minifier/src/zz',
         ),
@@ -45,7 +45,6 @@ class ComposerStaticInit921cfcffa9d41f15961a6e35c91e3476
         'FeedReader\\Helpers\\IcoParser\\IcoParser' => __DIR__ . '/../..' . '/../includes/Helpers/IcoParser/IcoParser.php',
         'FeedReader\\Helpers\\IcoParser\\Icon' => __DIR__ . '/../..' . '/../includes/Helpers/IcoParser/Icon.php',
         'FeedReader\\Helpers\\IcoParser\\IconImage' => __DIR__ . '/../..' . '/../includes/Helpers/IcoParser/IconImage.php',
-        'FeedReader\\Helpers\\Image_Proxy' => __DIR__ . '/../..' . '/../includes/Helpers/class-image-proxy.php',
         'FeedReader\\Helpers\\OPML_Parser' => __DIR__ . '/../..' . '/../includes/Helpers/class-opml-parser.php',
         'FeedReader\\Jobs\\Poll_Feeds' => __DIR__ . '/../..' . '/../includes/Jobs/class-poll-feeds.php',
         'FeedReader\\Models\\Category' => __DIR__ . '/../..' . '/../includes/Models/class-category.php',

@@ -6,6 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    '757772e28a0943a9afe83def8db95bdf' => $vendorDir . '/mf2/mf2/Mf2/Parser.php',
-    '5d5e9acf267403f6978e5ef62f5f38d2' => $baseDir . '/../includes/Helpers/functions.php',
+    'FeedReader_757772e28a0943a9afe83def8db95bdf' => $vendorDir . '/mf2/mf2/Mf2/Parser.php',
+    'FeedReader_5d5e9acf267403f6978e5ef62f5f38d2' => $baseDir . '/../includes/Helpers/functions.php',
 );

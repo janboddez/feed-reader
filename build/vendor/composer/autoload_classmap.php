@@ -25,7 +25,6 @@ return array(
     'FeedReader\\Helpers\\IcoParser\\IcoParser' => $baseDir . '/../includes/Helpers/IcoParser/IcoParser.php',
     'FeedReader\\Helpers\\IcoParser\\Icon' => $baseDir . '/../includes/Helpers/IcoParser/Icon.php',
     'FeedReader\\Helpers\\IcoParser\\IconImage' => $baseDir . '/../includes/Helpers/IcoParser/IconImage.php',
-    'FeedReader\\Helpers\\Image_Proxy' => $baseDir . '/../includes/Helpers/class-image-proxy.php',
     'FeedReader\\Helpers\\OPML_Parser' => $baseDir . '/../includes/Helpers/class-opml-parser.php',
     'FeedReader\\Jobs\\Poll_Feeds' => $baseDir . '/../includes/Jobs/class-poll-feeds.php',
     'FeedReader\\Models\\Category' => $baseDir . '/../includes/Models/class-category.php',

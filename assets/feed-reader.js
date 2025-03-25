@@ -287,19 +287,6 @@ jQuery( document ).ready( function ( $ ) {
 		}
 	} );
 
-	$( '#feed-reader-generate-secret' ).click( function() {
-		var chars = '0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		var pass  = '';
-		var rand  = 0;
-
-		for ( var i = 0; i <= 32; i++ ) {
-			rand  = Math.floor( Math.random() * chars.length );
-			pass += chars.substring( rand, rand + 1 );
-		}
-
-		$( '#feed-reader-image-proxy-secret' ).val( pass );
-	} );
-
 	var menuLabel = $( '#wp-admin-bar-feed-reader .ab-label');
 
 	// Fetch unread post count, and all categories and feeds and their unread post count.

@@ -88,7 +88,7 @@ $user_settings = get_user_meta( get_current_user_id(), 'feed_reader_settings', t
 						<?php if ( \FeedReader\Helpers\show_in_full( $entry ) ) : ?>
 							<div class="entry-content">
 								<?php /** @todo: Check content exists. */ ?>
-								<?php echo \FeedReader\Helpers\proxy_images( $entry->content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+								<?php echo $entry->content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							</div>
 						<?php elseif ( ! empty( $entry->summary ) ) : ?>
 							<div class="entry-summary">
@@ -107,7 +107,7 @@ $user_settings = get_user_meta( get_current_user_id(), 'feed_reader_settings', t
 								?>
 								<div class="entry-photo">
 									<?php foreach ( $data['properties']['photo'] as $photo ) : /** @todo: Add alt text support. */ ?>
-										<img src="<?php echo esc_url( \FeedReader\Helpers\proxy_image( $photo ) ); ?>" alt="" loading="lazy" />
+										<img src="<?php echo esc_url( $photo ); ?>" alt="" loading="lazy" />
 									<?php endforeach; ?>
 								</div>
 								<?php
@@ -117,7 +117,7 @@ $user_settings = get_user_meta( get_current_user_id(), 'feed_reader_settings', t
 								?>
 								<div class="entry-video">
 									<?php foreach ( $data['properties']['video'] as $video ) : ?>
-										<video src="<?php echo esc_url( \FeedReader\Helpers\proxy_image( $video ) ); ?>" controls="controls"></video>
+										<video src="<?php echo esc_url( $video ); ?>" controls="controls"></video>
 									<?php endforeach; ?>
 								</div>
 								<?php
