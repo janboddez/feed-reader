@@ -30,11 +30,17 @@ class Image_Proxy {
 		}
 
 		$hash = $request->get_param( 'hash' );
+		if ( empty( $hash ) ) {
+			return new \WP_Error( 'invalid_hash', esc_html__( 'Invalid hash.', 'indieblocks' ), array( 'status' => 400 ) );
+		}
 
-		$options = get_option( 'feed_reader_settings' );
+		$options = \IndieBlocks\get_options();
+		if ( empty( $options['image_proxy_secret'] ) ) {
+			return new \WP_Error( 'invalid_hash', esc_html__( 'Invalid hash.', 'indieblocks' ), array( 'status' => 400 ) );
+		}
 
-		if ( ! empty( $options['image_proxy'] ) && ! empty( $options['image_proxy_secret'] ) && hash_hmac( 'sha1', $url, $options['image_proxy_secret'] ) !== $hash ) {
-			return new \WP_Error( 'invalid_hash', esc_html__( 'Invalid hash.', 'feed-reader' ), array( 'status' => 400 ) );
+		if ( hash_hmac( 'sha1', $url, $options['image_proxy_secret'] ) !== $hash ) {
+			return new \WP_Error( 'invalid_hash', esc_html__( 'Invalid hash.', 'indieblocks' ), array( 'status' => 400 ) );
 		}
 
 		$headers = array_filter(

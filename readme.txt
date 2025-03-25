@@ -1,8 +1,8 @@
 === Feed Reader ===
 Contributors: janboddez
 Tags: reader, feeds, web feeds, rss, atom, opml, bookmarks
-Tested up to: 6.4
-Stable tag: 0.3.1
+Tested up to: 6.7
+Stable tag: 0.3.2
 Requires at least: 5.9
 License: GNU General Public License v3.0
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -22,6 +22,9 @@ After activation, head over to *Reader > Settings*, and enable or disable the fe
 More details can be found on [https://jan.boddez.net/wordpress/feed-reader](https://jan.boddez.net/wordpress/feed-reader). Issues may be filed at [https://github.com/janboddez/feed-reader](https://github.com/janboddez/feed-reader).
 
 == Changelog ==
+= 0.3.2 =
+Force "image proxy" hash.
+
 = 0.3.0 =
 New WP_CLI command: `reader cleanup`, to remove old entries.
 

@@ -12,7 +12,7 @@ use FeedReader\Models\Feed;
 use FeedReader\Router;
 
 class Reader {
-	const PLUGIN_VERSION = '0.3.1';
+	const PLUGIN_VERSION = '0.3.2';
 	const DB_VERSION     = '3';
 
 	/** @var Feed_Reader $instance */
